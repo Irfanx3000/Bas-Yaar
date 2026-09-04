@@ -1,0 +1,1270 @@
+{
+  "splash": {
+    "tagline": "Navigate Your Maritime Career"
+  },
+  "common": {
+    "back": "Back",
+    "retry": "Retry",
+    "offline": "No internet connection",
+    "backOnline": "Back online",
+    "couldNotLoad": "Couldn’t load. Check your connection.",
+    "cancel": "Cancel",
+    "save": "Save",
+    "delete": "Delete",
+    "next": "Next",
+    "skip": "Skip",
+    "ok": "OK",
+    "loading": "Loading...",
+    "viewAll": "View All",
+    "seeAll": "See All",
+    "somethingWentWrong": "Something went wrong. Please try again.",
+    "helpSupport": "Help & Support",
+    "contactSupport": "Contact Support",
+    "privacyPolicy": "Privacy Policy",
+    "termsConditions": "Terms & Conditions",
+    "error": "Error",
+    "search": "Search...",
+    "searchJobsPlaceholder": "Search by job title, skills...",
+    "noResults": "No results found",
+    "moreOptions": {
+      "supportBody": "For support, please contact us at:\n{{email}}",
+      "emailUs": "Email Us",
+      "mailError": "Could not open mail app.",
+      "privacyBody": "We take your privacy seriously. Tap \"View More\" below to read our full Privacy Policy.",
+      "termsBody": "By using CrewApply, you agree to our Terms & Conditions. Tap \"View More\" below to read them in full.",
+      "viewMore": "View More"
+    }
+  },
+  "language": {
+    "title": "Language",
+    "subtitle": "Choose your preferred language for a better experience",
+    "recommended": "Recommended",
+    "all": "All Languages",
+    "comingSoon": "Coming Soon",
+    "comingSoonAlertTitle": "Coming soon",
+    "comingSoonAlertBody": "{{language}} isn't available yet — we're still working on it. English and Hindi are fully supported today."
+  },
+  "sidebar": {
+    "profileStrength": "Profile Strength",
+    "logout": "Log Out",
+    "sections": {
+      "careerTools": "Career Tools",
+      "growCareer": "Grow Your Career",
+      "support": "Support"
+    },
+    "items": {
+      "cv": "My CV",
+      "saved": "Saved Jobs",
+      "documents": "My Documents",
+      "alerts": "Job Alerts",
+      "subscription": "Subscription Plans",
+      "refer": "Refer & Earn",
+      "interview": "Interview Prep",
+      "supportCenter": "Support / Help Center",
+      "language": "Language",
+      "settings": "Settings"
+    }
+  },
+  "home": {
+    "subscriptionAlert": {
+      "title": "No Active\nSubscription",
+      "subtitle": "Subscribe Now & Start\napplying for Jobs",
+      "subscribe": "Subscribe"
+    },
+    "subscriptionStatus": {
+      "activeUntil": "Active until {{date}}",
+      "expiresIn": "Expires in {{count}} day",
+      "expiresIn_plural": "Expires in {{count}} days",
+      "active": "Active",
+      "manage": "Manage",
+      "renew": "Renew"
+    },
+    "header": {
+      "welcomeBack": "Welcome Back 👋",
+      "exploreCareer": "Explore Global Cruise Career",
+      "taglines": {
+        "jobsAvailable": "{{count}} job open now",
+        "jobsAvailable_plural": "{{count}} jobs open now",
+        "activeApplications": "{{count}} active application",
+        "activeApplications_plural": "{{count}} active applications",
+        "cvIncomplete": "Your CV is {{percent}}% complete",
+        "jobsSaved": "{{count}} saved job waiting",
+        "jobsSaved_plural": "{{count}} saved jobs waiting",
+        "findVoyage": "Find Your Next Voyage"
+      }
+    },
+    "cvStatus": {
+      "title": "Your CV",
+      "subtitle": "A strong CV increases your chances of getting hired",
+      "completion": "CV {{percent}}% Complete",
+      "updated": "Updated {{date}}",
+      "preview": "Preview",
+      "update": "Update CV",
+      "complete": "Complete CV"
+    },
+    "applicationTracker": {
+      "title": "Track Your Applications and stay updated",
+      "subtitle": "We'll Notify you when there is an Update"
+    },
+    "consultancy": {
+      "title": "Personal Consultancy",
+      "subtitle": "Get expert guidance for your marine career in a live 1-on-1 meeting.",
+      "book": "Book a Live Meeting"
+    },
+    "categories": {
+      "title": "Categories"
+    },
+    "jobSearch": {
+      "searchPlaceholder": "Search by job title, skills...",
+      "locationPlaceholder": "All locations",
+      "searchButton": "Search Jobs",
+      "noSuggestions": "No matching jobs found"
+    }
+  },
+  "categories": {
+    "deck": "Deck",
+    "engine": "Engine",
+    "hospitality": "Hospitality",
+    "catering": "Catering",
+    "others": "Others"
+  },
+  "subscription": {
+    "screenTitle": "Subscription and Plans",
+    "screenSubtitle": "Choose the plan that helps you get closer to your dream job.",
+    "bannerHeading": "Unlock more opportunities",
+    "bannerBody": "Upgrade your plan to apply to more jobs, get featured and receive priority support.",
+    "launchBadge": "LAUNCH OFFER",
+    "infoHeading": "Important Information",
+    "infoBody": "Crew Connect helps candidates discover and apply for cruise ship jobs. We do not guarantee job placement or hiring outcomes. Final decisions are made by recruiters and cruise companies.",
+    "terms": "By continuing, you agree to our Terms & Privacy Policy.",
+    "saveUpTo": "Save up to {{percent}}%",
+    "noPlans": "No plans available right now.",
+    "currentPlan": "CURRENT PLAN",
+    "processing": "Processing...",
+    "onPlan": "You're on the {{tier}} plan",
+    "onPlanUntil": "You're on the {{tier}} plan · active until {{date}}",
+    "alerts": {
+      "alreadySubscribedTitle": "Already subscribed",
+      "onThisPlan": "You are already on this plan.",
+      "activeOtherPlan": "You already have an active {{tier}} plan — it stays active until it expires.",
+      "updateRequiredTitle": "Update required",
+      "updateRequiredBody": "Payments are unavailable in this build. Please rebuild/update the app.",
+      "paymentFailedTitle": "Payment failed",
+      "paymentFailedBody": "The payment did not go through. You have not been charged.",
+      "subscribedTitle": "Subscribed",
+      "subscribedBody": "Your subscription is now active.",
+      "almostThereTitle": "Almost there",
+      "almostThereBody": "Payment received — your subscription will activate shortly. Pull down to refresh.",
+      "paymentReceivedTitle": "Payment received",
+      "successTitle": "Success",
+      "successBody": "You're now on {{plan}}. Enjoy your benefits!",
+      "renewedBody": "Your {{plan}} plan has been renewed.",
+      "unavailableTitle": "Unavailable",
+      "unavailableBody": "Payments are temporarily unavailable. Please try again later.",
+      "couldNotSubscribeTitle": "Could not subscribe"
+    },
+    "loadError": "Could not load plans. Check your connection and try again.",
+    "summary": {
+      "headers": {
+        "purchase": "Purchase Plan",
+        "renewal": "Renew Subscription",
+        "upgrade": "Upgrade Plan",
+        "downgrade": "Switch Plan",
+        "walletPurchase": "Wallet Purchase"
+      },
+      "currentPlanLabel": "Current Plan",
+      "newPlanLabel": "New Plan",
+      "remainingDays": "{{count}} day remaining",
+      "remainingDays_plural": "{{count}} days remaining",
+      "unusedCredit": "Unused Subscription Credit",
+      "walletCreditAdded": "Wallet Credit Added",
+      "notes": {
+        "purchaseStarts": "Your subscription will start immediately after successful payment.",
+        "renewalContinues": "Your existing subscription will continue without interruption.",
+        "startsImmediately": "Your new subscription starts immediately.",
+        "oldEndsAutomatically": "Your old subscription ends automatically.",
+        "valueAdjusted": "Remaining value has already been adjusted.",
+        "noValueLost": "No remaining subscription value is lost.",
+        "oldEndsImmediately": "Your current subscription ends immediately.",
+        "transferredToWallet": "Remaining balance has been transferred to your CrewApply Wallet.",
+        "walletFutureUse": "Wallet balance can be used for future purchases.",
+        "walletPurchase": "This purchase will be completed using your wallet balance."
+      },
+      "buttons": {
+        "continueToPayment": "Continue to Payment",
+        "renewSubscription": "Renew Subscription",
+        "upgradeAndPay": "Upgrade & Pay",
+        "confirmSwitch": "Confirm Switch",
+        "confirmPurchase": "Confirm Purchase"
+      }
+    },
+    "success": {
+      "activatedTitle": "{{plan}} Activated",
+      "renewedTitle": "Subscription Renewed",
+      "switchedTitle": "Plan Switched Successfully",
+      "walletPurchaseTitle": "Wallet Purchase Completed",
+      "currentPlan": "Current Plan",
+      "expiryDate": "Expiry Date",
+      "walletRemaining": "Wallet Remaining",
+      "exploreJobs": "Explore Jobs",
+      "goToProfile": "Go to Profile"
+    }
+  },
+  "profile": {
+    "personalOverview": "Personal Overview",
+    "editProfile": "Edit Profile",
+    "contactSupport": "Contact Support",
+    "subscriptionCard": {
+      "noPlan": "No active plan",
+      "viewPlans": "View plans",
+      "activeUntil": "Active until {{date}}",
+      "expiring": "Expires in {{count}} day · Renew",
+      "expiring_plural": "Expires in {{count}} days · Renew",
+      "active": "Active"
+    },
+    "header": {
+      "greeting": "Hi 👋",
+      "subtitle": "Manage Your Details and\ntrack your Journey"
+    },
+    "completion": {
+      "title": "Profile Completion"
+    },
+    "support": {
+      "needHelp": "Need Help?",
+      "helpText": "Have a question or run into an issue? We're here to help — reach out and we'll get back to you."
+    },
+    "menu": {
+      "personalInfo": {
+        "title": "Personal Information",
+        "subtitle": "Basic Personal Details"
+      },
+      "documents": {
+        "title": "Documents",
+        "subtitle": "Upload and Manage Documents"
+      },
+      "cv": {
+        "title": "Your CV",
+        "subtitle": "Career Profile & Resumes"
+      },
+      "preferences": {
+        "title": "Preferences",
+        "subtitle": "Get notified about your favorite job categories"
+      },
+      "appHistory": {
+        "title": "Application History",
+        "subtitle": "Track your job applications"
+      }
+    },
+    "preferencesScreen": {
+      "title": "Preferences",
+      "subtitle": "Pick the job categories you want to be notified about",
+      "save": "Save Preferences",
+      "loadError": "Unable to load your preferences. Please try again.",
+      "saveError": "Unable to save your preferences. Please try again."
+    },
+    "personalInfo": {
+      "title": "Personal Information",
+      "subtitle": "Update your basic personal details",
+      "save": "Save Changes",
+      "selectLabel": "Select {{label}}",
+      "validationErrorTitle": "Check your details",
+      "validationErrorBody": "Please fix the highlighted fields before saving.",
+      "sections": {
+        "photo": "Profile Photo",
+        "basic": "Basic Details",
+        "contact": "Contact Details",
+        "location": "Location"
+      },
+      "labels": {
+        "fullName": "Full Name",
+        "dob": "Date of Birth",
+        "gender": "Gender",
+        "nationality": "Nationality",
+        "maritalStatus": "Marital Status",
+        "email": "Email Address",
+        "phone": "Phone Number",
+        "altPhone": "Alternate Phone (Optional)",
+        "location": "Current Location"
+      },
+      "placeholders": {
+        "fullName": "Enter full name",
+        "dob": "Select date of birth",
+        "gender": "Select gender",
+        "nationality": "Select nationality",
+        "maritalStatus": "Select marital status",
+        "email": "Enter email address",
+        "phone": "Enter phone number",
+        "altPhone": "Enter alternate phone number",
+        "location": "Select current location"
+      },
+      "options": {
+        "gender": {
+          "male": "Male",
+          "female": "Female",
+          "other": "Other"
+        },
+        "maritalStatus": {
+          "single": "Single",
+          "married": "Married",
+          "divorced": "Divorced",
+          "widowed": "Widowed"
+        }
+      }
+    },
+    "photo": {
+      "unavailableTitle": "Photo unavailable",
+      "unavailableBody": "Could not access the camera / gallery. Check app permissions.",
+      "errorTitle": "Photo error",
+      "errorBody": "Something went wrong selecting the photo. Please try again.",
+      "sheetTitle": "Profile Photo",
+      "takePhoto": "Take Photo",
+      "chooseGallery": "Choose from Gallery",
+      "removePhoto": "Remove Photo",
+      "adjustTitle": "Adjust photo",
+      "adjustHint": "Drag to reposition, pinch to zoom",
+      "adjustConfirm": "Use this photo"
+    },
+    "upload": {
+      "title": "Upload New Photo",
+      "subtitle": "JPG, PNG up to 5MB"
+    },
+    "locationField": {
+      "placeholder": "e.g. Mumbai, Maharashtra",
+      "detecting": "Detecting your location…",
+      "hint": "Type your city and state, or tap the arrow to auto-detect.",
+      "locationTitle": "Location",
+      "couldNotDetermine": "Could not determine your city. Please type it manually.",
+      "permissionTitle": "Location permission needed",
+      "permissionBody": "Allow location access to auto-fill your city, or just type it manually below.",
+      "unavailableTitle": "Location unavailable",
+      "unavailableBody": "Could not detect your location. Please type your city manually."
+    }
+  },
+  "tier": {
+    "start": "Crew Start",
+    "premium": "Crew Premium",
+    "elite": "Crew Elite",
+    "badge": {
+      "start": "START",
+      "premium": "PREMIUM",
+      "elite": "ELITE",
+      "free": "FREE PLAN"
+    }
+  },
+  "wallet": {
+    "title": "Wallet",
+    "cardTitle": "CrewApply Wallet",
+    "availableBalance": "Available Balance",
+    "stats": {
+      "balance": "Wallet Balance",
+      "totalCredited": "Total Credits Earned",
+      "totalSpent": "Total Spent",
+      "pendingCredits": "Pending Credits"
+    },
+    "info": {
+      "heading": "Your wallet can be used for",
+      "subscriptions": "Subscription Purchases",
+      "futureMarketplace": "Future Marketplace Purchases",
+      "expiryNote": "Wallet credits never expire unless defined by promotional rules."
+    },
+    "activityHeading": "Wallet Activity",
+    "emptyTitle": "No wallet activity yet.",
+    "emptySubtitle": "Subscription credits, rewards and promotional balances will appear here.",
+    "types": {
+      "referralReward": "Referral Reward",
+      "redemption": "Purchase",
+      "adjustment": "Admin Promotional Credit",
+      "planSwitchCredit": "Subscription Credit"
+    },
+    "status": {
+      "completed": "Completed"
+    },
+    "detail": {
+      "referenceId": "Reference ID",
+      "transactionType": "Transaction Type",
+      "description": "Description",
+      "status": "Status",
+      "date": "Date",
+      "paymentMethod": "Payment Method",
+      "relatedSubscription": "Related Subscription",
+      "invoiceReference": "Invoice Reference",
+      "paymentMethodRazorpay": "Razorpay",
+      "paymentMethodSystem": "CrewApply"
+    }
+  },
+  "errors": {
+    "ALREADY_SUBSCRIBED": "You already have an active subscription. It stays active until it expires.",
+    "PAYMENT_IN_PROGRESS": "A payment is already in progress. Please complete or wait for it before starting another.",
+    "PAYMENT_ALREADY_MADE": "Your previous payment already went through — your subscription is now active.",
+    "PAYMENTS_NOT_CONFIGURED": "Payments are temporarily unavailable. Please try again later.",
+    "INVALID_CREDENTIALS": "Invalid login credentials.",
+    "EMAIL_EXISTS": "An account with this email already exists.",
+    "PHONE_EXISTS": "An account with this phone number already exists.",
+    "ALREADY_VERIFIED": "This account is already verified.",
+    "EMAIL_NOT_VERIFIED": "Please verify your email before continuing.",
+    "PDF_NETWORK_ERROR": "Couldn't reach the server. Check your connection and try again.",
+    "PDF_DOWNLOAD_FAILED": "Couldn't download this document. Please try again.",
+    "PDF_TOKEN_ERROR": "This document isn't available right now. Please try again.",
+    "generic": "Something went wrong. Please try again.",
+    "accountBlockedTitle": "Account Blocked",
+    "accountBlockedBody": "Your account has been blocked by an administrator. Please contact support if you believe this is a mistake.",
+    "accountBlockedBodyWithReason": "Your account has been blocked by an administrator for the following reason:\n\n\"{{reason}}\"\n\nPlease contact support if you believe this is a mistake.",
+    "accountDeletedTitle": "Account Deleted",
+    "accountDeletedBody": "Your account has been deleted. Please contact support if you believe this is a mistake.",
+    "INVALID_CREDENTIALS_attemptsOne": "Incorrect password. You have 1 attempt left before your account is locked for {{minutes}} minutes.",
+    "INVALID_CREDENTIALS_attemptsMany": "Incorrect password. You have {{attempts}} attempts left before your account is locked for {{minutes}} minutes.",
+    "ACCOUNT_LOCKED": "Too many failed login attempts. Your account is temporarily locked. Please try again later.",
+    "ACCOUNT_LOCKED_wait": "Too many failed login attempts. Your account is locked — please try again in {{wait}}.",
+    "RATE_LIMIT_EXCEEDED": "Too many attempts. Please wait a moment and try again.",
+    "RATE_LIMIT_EXCEEDED_wait": "Too many attempts from this device. Please try again in {{wait}}."
+  },
+  "auth": {
+    "common": {
+      "basicInfoSubtitle": "Let's start with some basic informations",
+      "next": "Next →",
+      "login": "Login",
+      "alreadyHaveAccount": "Already have an account?",
+      "cancel": "Cancel",
+      "stepIndicator": "Step {{current}} of {{total}}"
+    },
+    "welcome": {
+      "titleLine1": "Welcome to",
+      "titleHighlight": "Crew Apply",
+      "subtitle": "Your Gateway to\nGlobal Cruise Careers",
+      "createAccount": "Create Account",
+      "socialProof": "Join 10,000+ seafarers building their future"
+    },
+    "login": {
+      "title": "Login to Your Account",
+      "mobileOrEmailLabel": "Email",
+      "mobileOrEmailPlaceholder": "Enter your email",
+      "passwordLabel": "Enter Password",
+      "passwordPlaceholder": "Password",
+      "forgotPassword": "Forgot Password?",
+      "noAccount": "Don't have an account?",
+      "signUp": "Sign Up",
+      "missingFieldsTitle": "Missing fields",
+      "missingFieldsBody": "Please enter your email and password.",
+      "loginFailedTitle": "Login failed",
+      "lockedRetryIn": "You can try again in {{wait}}",
+      "lockedRetryNow": "You can try signing in again now"
+    },
+    "tellUs": {
+      "title": "Tell Us About Yourself",
+      "fullNameLabel": "Full Name",
+      "fullNamePlaceholder": "Enter Full Name",
+      "dobLabel": "Date of Birth",
+      "dobPlaceholder": "DD-MM-YYYY",
+      "genderLabel": "Gender",
+      "male": "Male",
+      "female": "Female",
+      "others": "Others",
+      "fullNameRequiredTitle": "Full name required",
+      "fullNameRequiredBody": "Please enter your full name.",
+      "invalidNameTitle": "Invalid name",
+      "invalidNameLengthBody": "Name must be between 2 and 50 characters.",
+      "invalidNameCharsBody": "Name may only contain letters, spaces, hyphens, and apostrophes.",
+      "dobRequiredTitle": "Date of birth required",
+      "dobRequiredBody": "Please enter your date of birth as DD-MM-YYYY.",
+      "invalidDateTitle": "Invalid date",
+      "invalidDateBody": "Please enter a valid date of birth (DD-MM-YYYY).",
+      "ageRequirementTitle": "Age requirement",
+      "ageRequirementBody": "You must be at least 18 years old to register."
+    },
+    "location": {
+      "title": "Where are you located?",
+      "nationalityLabel": "Nationality",
+      "nationalityPlaceholder": "Select your nationality",
+      "countryLabel": "Country",
+      "countryPlaceholder": "Select your Country",
+      "stateLabel": "State / Province",
+      "statePlaceholderEnabled": "Select your state",
+      "statePlaceholderDisabled": "Select a country first",
+      "cityLabel": "City",
+      "cityPlaceholderEnabled": "Select your city",
+      "cityPlaceholderDisabled": "Select a state first",
+      "selectNationality": "Select Nationality",
+      "searchNationality": "Search nationality...",
+      "selectCountry": "Select Country",
+      "searchCountry": "Search country...",
+      "selectState": "Select State / Province",
+      "searchState": "Search state...",
+      "selectCity": "Select City",
+      "searchCity": "Search city...",
+      "nationalityRequiredTitle": "Nationality required",
+      "nationalityRequiredBody": "Please select your nationality.",
+      "countryRequiredTitle": "Country required",
+      "countryRequiredBody": "Please select your country."
+    },
+    "stayConnected": {
+      "title": "Let's Stay Connected",
+      "mobileLabel": "Mobile Number",
+      "mobilePlaceholder": "Enter your phone number",
+      "emailLabel": "Email Address",
+      "emailPlaceholder": "Enter your Email Address",
+      "setPasswordLabel": "Set Password",
+      "setPasswordPlaceholder": "Set Password",
+      "confirmPasswordLabel": "Confirm Password",
+      "confirmPasswordPlaceholder": "Re-enter Password",
+      "referralCodeLabel": "Referral or Promo Code (Optional)",
+      "referralCodePlaceholder": "Have a friend's or influencer's code? Enter it here",
+      "sendCode": "Send Verification Code",
+      "sending": "Sending...",
+      "missingFieldsTitle": "Missing fields",
+      "missingFieldsBody": "Please fill in all required fields.",
+      "invalidPhoneTitle": "Invalid phone number",
+      "invalidPhoneBody": "Please enter a valid mobile number.",
+      "invalidEmailTitle": "Invalid email",
+      "invalidEmailBody": "Please enter a valid email address.",
+      "passwordShortTitle": "Password too short",
+      "passwordShortBody": "Password must be at least 8 characters.",
+      "passwordMismatchTitle": "Password mismatch",
+      "passwordMismatchBody": "Passwords do not match.",
+      "accountExistsTitle": "Account already exists",
+      "loginPrompt": "Would you like to log in instead?",
+      "registrationFailedTitle": "Registration failed",
+      "invalidReferralTitle": "Code Not Recognised",
+      "invalidReferralMessage": "That code isn't valid or has expired. You can continue without it, or go back and fix the code.",
+      "invalidReferralRetry": "Fix Code",
+      "invalidReferralContinue": "Continue Anyway"
+    },
+    "otp": {
+      "title": "Verify Your Email",
+      "subtitle": "Enter the 6-Digit Code",
+      "emailLabel": "Email Address",
+      "edit": "Edit",
+      "verify": "Verify",
+      "verifying": "Verifying...",
+      "didntReceive": "Didn't receive OTP?",
+      "resend": "Resend OTP",
+      "enterOtpTitle": "Enter OTP",
+      "enterOtpBody": "Please enter the 6-digit verification code.",
+      "verificationFailedTitle": "Verification failed",
+      "otpSentTitle": "OTP Sent",
+      "otpSentBody": "A new verification code has been sent to your email.",
+      "resendFailedTitle": "Failed to resend"
+    },
+    "maritime": {
+      "title": "Your Maritime Profile",
+      "subtitle": "Tell us about your professional background",
+      "departmentLabel": "Department",
+      "departmentPlaceholder": "Select your department",
+      "rankLabel": "Rank",
+      "rankPlaceholderEnabled": "Select your rank",
+      "rankPlaceholderDisabled": "Select a department first",
+      "designationLabel": "Designation",
+      "designationPlaceholder": "Select your designation",
+      "experienceLabel": "Experience",
+      "startDate": "Start Date",
+      "endDate": "End Date",
+      "saving": "Saving...",
+      "skip": "Skip",
+      "selectDepartment": "Select Department",
+      "searchDepartment": "Search department...",
+      "selectRank": "Select Rank",
+      "searchRank": "Search rank...",
+      "selectDesignation": "Select Designation",
+      "searchDesignation": "Search designation...",
+      "couldNotSaveTitle": "Could not save profile",
+      "couldNotSaveHint": "You can complete this later from your profile.",
+      "continue": "Continue"
+    },
+    "success": {
+      "title": "You're All Set!",
+      "subtitle": "Starts exploring jobs, and apply\nyour dream jobs",
+      "exploreJobs": "Explore Jobs →",
+      "completeProfile": "Complete Profile"
+    },
+    "forgotPassword": {
+      "title": "Forgot Password?",
+      "subtitle": "Enter your email and we'll send you a code to reset your password.",
+      "emailLabel": "Email",
+      "emailPlaceholder": "Enter your email",
+      "submit": "Send Code",
+      "missingEmailTitle": "Email required",
+      "missingEmailBody": "Please enter your email address.",
+      "failedTitle": "Something went wrong"
+    },
+    "resetPassword": {
+      "title": "Reset Password",
+      "subtitle": "Enter the code sent to {{email}} and choose a new password.",
+      "newPasswordLabel": "New Password",
+      "newPasswordPlaceholder": "Enter new password",
+      "confirmPasswordLabel": "Confirm Password",
+      "confirmPasswordPlaceholder": "Re-enter new password",
+      "submit": "Reset Password",
+      "missingFieldsTitle": "Missing fields",
+      "missingFieldsBody": "Please enter and confirm your new password.",
+      "mismatchTitle": "Passwords don't match",
+      "mismatchBody": "Please make sure both passwords match.",
+      "successTitle": "Password reset",
+      "successBody": "Your password has been reset. Please log in with your new password.",
+      "failedTitle": "Reset failed"
+    }
+  },
+  "jobs": {
+    "hero": {
+      "title": "Find Your Next\nSea Opportunity",
+      "subtitle": "Explore 500+ cruise and marine jobs from trusted companies worldwide",
+      "applicationsUsed": "{{used}} of {{limit}} applications used this period"
+    },
+    "filterBar": {
+      "applied": "{{count}} Filter Applied",
+      "applied_plural": "{{count}} Filters Applied"
+    },
+    "categoryFilter": {
+      "label": "Category: {{category}}"
+    },
+    "results": {
+      "title": "Search Results",
+      "jobsFound": "{{n}} Jobs Found"
+    },
+    "list": {
+      "retry": "Retry",
+      "noJobs": "No jobs found. Try adjusting your search or filters."
+    },
+    "card": {
+      "applyNow": "Apply Now",
+      "applied": "Applied"
+    },
+    "featured": {
+      "title": "Featured Jobs",
+      "empty": "No featured jobs right now — check back soon."
+    },
+    "filterModal": {
+      "title": "Filter Jobs",
+      "subtitle": "Refine your search and find the perfect job for you",
+      "applied": "{{count}} filter applied",
+      "applied_plural": "{{count}} filters applied",
+      "resetAll": "Reset All",
+      "category": "Category",
+      "department": "Department",
+      "deptSearchPlaceholder": "Search by job title, skills...",
+      "vesselType": "Vessel Type",
+      "vesselSearchPlaceholder": "Search vessel type...",
+      "more": "+ More",
+      "less": "- Less",
+      "viewJobs": "View {{n}} Jobs"
+    },
+    "referModal": {
+      "title": "Refer This Job",
+      "subtitle": "Know someone who might be a great fit?\nRefer them and help them get noticed.",
+      "referVia": "Refer Via",
+      "whatsapp": "Whatsapp",
+      "email": "Email",
+      "copyLink": "Copy Link",
+      "more": "More",
+      "linkCopiedTitle": "Link Copied",
+      "linkCopiedMessage": "Job link copied to clipboard successfully!"
+    },
+    "shareModal": {
+      "title": "Share This Job"
+    },
+    "saved": {
+      "title": "Saved Jobs",
+      "subtitle": "Jobs you have saved for later",
+      "searchPlaceholder": "Search by job title, skills...",
+      "counter": "{{count}} Saved Jobs",
+      "counter_plural": "{{count}} Saved Jobs",
+      "emptyTitle": "No Saved Jobs Yet",
+      "emptySubtitle": "Bookmark a job to see it here",
+      "noMatches": "No saved jobs match"
+    },
+    "docTypes": {
+      "resume": "Resume",
+      "passport": "Passport",
+      "certificate": "Certificate",
+      "stcw": "STCW",
+      "cdc": "CDC",
+      "medical": "Medical",
+      "visa": "Visa"
+    },
+    "details": {
+      "submittedAlertTitle": "Application Submitted",
+      "submittedAlertMessage": "Your application has been submitted successfully.",
+      "ok": "OK",
+      "applyErrorTitle": "Could not apply",
+      "tagRejected": "REJECTED",
+      "tagApplied": "APPLIED",
+      "tagUnderReview": "UNDER REVIEW",
+      "tagInterview": "INTERVIEW",
+      "tagSelected": "SELECTED",
+      "tagFeatured": "FEATURED",
+      "notSelectedTitle": "Application Not Selected",
+      "notSelectedSubtitle": "Thank you for your interest. Unfortunately, your application was not selected for this position.",
+      "submittedBannerTitle": "Application Submitted",
+      "submittedBannerSubtitle": "You hav Successfully applied for this job on {{date}}",
+      "underReviewBannerTitle": "Application Under Review",
+      "underReviewBannerSubtitle": "Your application is currently being reviewed by the recruiter.",
+      "interviewBannerTitle": "Interview Scheduled",
+      "interviewBannerSubtitle": "Congratulations! You've been shortlisted for an interview. Check your email and notifications for details.",
+      "selectedBannerTitle": "You're Selected!",
+      "selectedBannerSubtitle": "Congratulations! You have been selected for this position.",
+      "eligibleTitle": "You're eligible to apply for this job",
+      "eligibleSubtitle": "Great! You meet the most of the requirements.",
+      "ineligibleTitle": "You are not eligible to Apply for this Job",
+      "ineligibleSubtitle": "You need to Upload complete documents to meet the requirements.",
+      "tabOverview": "Overview",
+      "tabRequirements": "Requirements",
+      "aboutTitle": "About the Job",
+      "noDescription": "No description provided for this position.",
+      "documentsSubmitted": "Documents Submitted",
+      "documentsRequired": "Documents Required",
+      "noDocsRequired": "No documents are required for this job",
+      "haveAllDocs": "You have all required documents for this position",
+      "missingDocs": "You don't have all required documents for this position",
+      "appreciation": "We appreciate the time you took to apply. We encourage you to explore other suitable opportunities.",
+      "unlockTitle": "Unlock to Apply for this Job",
+      "unlockSubtitle": "Subscribe to any plan to apply for unlimited jobs",
+      "unlockTitleTier": "Upgrade to Apply",
+      "unlockSubtitleTier": "This job requires {{tier}} or higher. Upgrade to unlock access to jobs like this one.",
+      "unlockTitleLimit": "Monthly Limit Reached",
+      "unlockSubtitleLimit": "You've used all your applications for this billing period. Upgrade to {{tier}} for more.",
+      "applicationsUsed": "{{used}} of {{limit}} applications used this period",
+      "tierRequiredAlertTitle": "Upgrade Required",
+      "tierRequiredAlertMessage": "This job requires {{tier}} or higher.",
+      "limitReachedAlertTitle": "Monthly Limit Reached",
+      "limitReachedAlertMessage": "You've used all your applications for this billing period. Upgrade to {{tier}} for more.",
+      "viewPlans": "View Plans",
+      "subscribe": "Subscribe",
+      "referTitle": "Refer This Job",
+      "referSubtitle": "Help your friends discover cruise job opportunities and start their journey at sea",
+      "referButton": "Refer This Job",
+      "viewOtherJobs": "View Other Jobs",
+      "viewSimilarJobs": "View Similar Jobs",
+      "saveJob": "Save Job",
+      "savedJob": "Saved",
+      "applying": "Applying...",
+      "applyNow": "Apply Now",
+      "cantApply": "Can't Apply",
+      "alreadyApplied": "Already Applied"
+    }
+  },
+  "applications": {
+    "tabs": {
+      "all": "All",
+      "active": "Active",
+      "selected": "Selected",
+      "closed": "Closed"
+    },
+    "title": "My Applications",
+    "subtitle": "Track the Status of all the jobs you've applied for",
+    "empty": "No applications in this category yet.",
+    "yourCV": "Your CV",
+    "recentlyApplied": "Recently Applied",
+    "recentlyAppliedEmpty": "You haven't applied to any jobs yet — start exploring.",
+    "card": {
+      "applied": "Applied {{date}}",
+      "viewDetails": "View Details"
+    },
+    "withdraw": {
+      "confirmTitle": "Withdraw this application?",
+      "confirmMessage": "This will remove your application from consideration for \"{{title}}\". This can't be undone — you'll need to apply again if you change your mind.",
+      "confirmButton": "Withdraw",
+      "successTitle": "Application withdrawn",
+      "successMessage": "Your application for \"{{title}}\" has been withdrawn.",
+      "errorTitle": "Couldn't withdraw",
+      "errorMessage": "Something went wrong. Please try again."
+    },
+    "support": {
+      "help": "Have a question about an application? We're here to help — reach out and we'll get back to you.",
+      "contact": "Contact Support"
+    }
+  },
+  "support": {
+    "title": "Contact Support",
+    "subtitle": "Send us a message and we'll get back to you",
+    "nameLabel": "Name",
+    "namePlaceholder": "Your name",
+    "emailLabel": "Email address",
+    "emailPlaceholder": "name@example.com",
+    "messageLabel": "How can we help?",
+    "messagePlaceholder": "Describe the issue you're facing…",
+    "submit": "Submit",
+    "successTitle": "Message sent",
+    "successMessage": "Thanks for reaching out — our team will reply as soon as possible.",
+    "errors": {
+      "nameRequired": "Please enter your name.",
+      "emailRequired": "Please enter your email address.",
+      "emailInvalid": "Please enter a valid email address.",
+      "messageRequired": "Please describe the issue you're facing.",
+      "dangerousContent": "This cannot contain script tags, HTML markup, or command-like text."
+    }
+  },
+  "consultancy": {
+    "topics": {
+      "career_guidance": "Career Guidance & Advice",
+      "resume_review": "Resume & CV Review",
+      "interview_prep": "Interview Preparation",
+      "visa_support": "Visa & Documents Support",
+      "sea_time": "Sea Time Calculation"
+    },
+    "weekdays": {
+      "sun": "Sun",
+      "mon": "Mon",
+      "tue": "Tue",
+      "wed": "Wed",
+      "thurs": "Thurs",
+      "fri": "Fri",
+      "sat": "Sat"
+    },
+    "selectionRequired": {
+      "title": "Selection Required",
+      "message": "Please select a topic before continuing."
+    },
+    "headerTitle": "Book a Live Meeting",
+    "headerSubtitle": "Schedule a one-on-one session with our\nsupport expert.",
+    "myBookingsLink": "My Bookings",
+    "steps": {
+      "booking": "Booking",
+      "payment": "Payment"
+    },
+    "selectTopic": "Select a Topic",
+    "selectTopicPlaceholder": "Select a topic",
+    "selectDate": "Select Date",
+    "unavailable": "Unavailable",
+    "selectTimeSlot": "Select Time Slot",
+    "selectDateFirst": "Select a date to see available times.",
+    "noSlotsForDate": "No time slots available for this date.",
+    "describeRequirement": "Describe your requirement",
+    "requirementPlaceholder": "Tell us about your query, job preference, interview preparation needs, or anything you'd like to discuss.",
+    "attachedResume": "Attached Resume",
+    "noResumeUploaded": "No resume uploaded yet",
+    "noResumeTitle": "No Resume Uploaded",
+    "noResumeBody": "Upload a resume so our expert can review it during your session.",
+    "uploadedOn": "Upload on {{date}}",
+    "replace": "Replace",
+    "upload": "Upload",
+    "calendarInviteNotice": "You will receive a calendar invite with google meet link once your booking is confirmed.",
+    "priceNotice": "This is a paid consultation session — {{amount}} per session.",
+    "reviewBooking": "Review Booking",
+    "reviewBookingWithPrice": "Review Booking — {{amount}}",
+    "needHelp": "Need help? Reach us at",
+    "searchTopics": "Search topics...",
+    "review": {
+      "title": "Review Your Booking",
+      "topic": "Topic",
+      "date": "Date",
+      "time": "Time",
+      "requirement": "Your Requirement",
+      "resume": "Resume",
+      "resumeNotAttached": "Not attached",
+      "sessionFee": "Session Fee",
+      "payButton": "Pay {{amount}}",
+      "editDetails": "Edit Details"
+    },
+    "alerts": {
+      "slotRequired": "Please select a time slot before continuing.",
+      "bookedTitle": "Booking Request Sent",
+      "bookedBody": "Your session request has been submitted and paid for. You'll be notified as soon as it's confirmed.",
+      "paymentAlreadyMade": "Your previous payment already went through — your booking request has been submitted.",
+      "slotTakenTitle": "Slot No Longer Available",
+      "slotTakenBody": "Someone else just booked this slot. Please choose another time.",
+      "paymentFailedTitle": "Payment Failed",
+      "paymentFailedBody": "Something went wrong processing your payment. Please try again.",
+      "almostThereTitle": "Almost There",
+      "almostThereBody": "We're still confirming your payment. Check My Bookings in a moment — you'll be notified once it's confirmed.",
+      "bookingFailedTitle": "Couldn't Complete Booking",
+      "resumeUploadFailedTitle": "Couldn't Upload Resume"
+    },
+    "myBookings": {
+      "screenTitle": "My Bookings",
+      "emptyTitle": "No Consultancy Bookings Yet",
+      "emptySubtitle": "Book a live session with our support expert to see it here.",
+      "meetingDetails": "Meeting Details",
+      "rejectedNotice": "This booking request could not be confirmed. Contact support if you have questions.",
+      "status": {
+        "awaitingConfirmation": "Awaiting Confirmation",
+        "confirmed": "Confirmed",
+        "rejected": "Rejected"
+      }
+    }
+  },
+  "search": {
+    "title": "Search",
+    "tooShort": "Keep typing — at least 2 characters.",
+    "empty": "No jobs found for \"{{query}}\".",
+    "relatedJobsTitle": "You might be interested in these jobs"
+  },
+  "notifications": {
+    "title": "Notification",
+    "groups": {
+      "today": "Today",
+      "yesterday": "Yesterday",
+      "earlier": "Earlier"
+    },
+    "items": {
+      "subscriptionRenewal": {
+        "title": "Subscription Renewal",
+        "subtitle": "Your subscription has been renewed"
+      },
+      "medicalCertificate": {
+        "title": "Medical Fitness Certificate",
+        "subtitle": "Valid Passport Copy\nPDF, JPG, PNG (2 MB Max)"
+      },
+      "resume": {
+        "title": "Resume / CV",
+        "subtitle": "Valid Passport Copy\nPDF, JPG, PNG (2 MB Max)"
+      },
+      "meetingRescheduled": {
+        "title": "Meeting Rescheduled",
+        "subtitle": "Rescheduled {{from}} to {{to}}"
+      },
+      "completeProfile": {
+        "title": "Complete Your Profile",
+        "subtitle": "Complete profile to get better job matches"
+      }
+    },
+    "time": {
+      "hoursAgo": "{{count}} hour ago",
+      "hoursAgo_plural": "{{count}} hours ago",
+      "daysAgo": "{{count}} day ago",
+      "daysAgo_plural": "{{count}} days ago"
+    },
+    "status": {
+      "notUploaded": "Not Uploaded",
+      "pending": "Pending"
+    },
+    "accept": "Accept",
+    "decline": "Decline",
+    "percent": "{{value}} %",
+    "updateProfile": "Update Profile",
+    "viewAll": "View All",
+    "empty": "You're all caught up",
+    "markAsRead": "Mark as read",
+    "markAllAsRead": "Mark all as read",
+    "settingsScreen": {
+      "title": "Notification Settings",
+      "subtitle": "Choose how long notifications stay before they disappear",
+      "pushToggleLabel": "Push Notifications",
+      "pushToggleHint": "Get alerts as pop-ups on your device. Notifications will still appear here either way.",
+      "expiryLabel": "Auto-hide after",
+      "daysOption": "{{count}} days",
+      "save": "Save",
+      "loadError": "Unable to load your notification settings.",
+      "saveError": "Unable to save your notification settings."
+    }
+  },
+  "referEarn": {
+    "title": "Refer & Earn",
+    "subtitle": "Invite friends and earn wallet credit when they subscribe",
+    "yourCode": "Your Referral Code",
+    "copyCode": "Copy",
+    "codeCopiedTitle": "Copied!",
+    "codeCopiedMessage": "Your referral code has been copied to the clipboard.",
+    "generateButton": "Generate Referral Code",
+    "generateErrorTitle": "Couldn't Generate Code",
+    "generateErrorMessage": "Something went wrong while generating your referral code. Please try again.",
+    "shareButton": "Share",
+    "shareSubtitle": "Invite a friend to CrewApply",
+    "shareSubject": "Join me on CrewApply",
+    "walletBalance": "Wallet Balance",
+    "stats": {
+      "invited": "Invited",
+      "qualified": "Qualified",
+      "rewarded": "Rewarded"
+    },
+    "history": {
+      "title": "Referral History",
+      "empty": "You haven't referred anyone yet."
+    },
+    "status": {
+      "pending": "Not Purchased Yet",
+      "qualified": "Qualified",
+      "rewarded": "Rewarded",
+      "rejected": "Rejected"
+    }
+  },
+  "jobAlerts": {
+    "screenTitle": "Job Alerts",
+    "screenSubtitle": "Jobs matching your subscription plan, as soon as they're posted.",
+    "searchPlaceholder": "Search job alerts...",
+    "noMatches": "No matches found",
+    "counter": "{{count}} jobs match your plan",
+    "emptyTitle": "No Matching Jobs Yet",
+    "emptySubtitle": "We'll notify you the moment a job matching your plan is posted.",
+    "noSubscriptionTitle": "No Active Subscription",
+    "noSubscriptionSubtitle": "Job Alerts are matched to your subscription plan. Once you subscribe, jobs matching your plan will automatically show up here — and you'll get notified the moment a new one is posted.",
+    "subscribeCta": "View Subscription Plans"
+  },
+  "interviewPrep": {
+    "screenTitle": "Interview Prep",
+    "screenSubtitle": "What to expect once you're shortlisted for a job.",
+    "phasesTitle": "The Interview Process",
+    "phasesSubtitle": "Most maritime recruitment interviews follow these 5 phases.",
+    "phases": {
+      "applicationReview": {
+        "title": "Application & Profile Review",
+        "description": "The manning agent or recruiter reviews your Career Profile, resume, and rank against the job's requirements."
+      },
+      "documentVerification": {
+        "title": "Document & Certificate Verification",
+        "description": "Your STCW certificates, COC, medical fitness, passport, and CDC are checked for validity and expiry."
+      },
+      "screeningInterview": {
+        "title": "Screening Interview",
+        "description": "A short call with HR or the manning agent covering your availability, sea time, and basic rank suitability."
+      },
+      "technicalInterview": {
+        "title": "Technical Interview",
+        "description": "In-depth questions on your rank-specific duties, safety procedures, and vessel-type experience — usually with a senior officer or technical superintendent."
+      },
+      "finalOffer": {
+        "title": "Final Interview & Offer",
+        "description": "A final round with the shipping company or principal, followed by an offer and joining formalities if you're selected."
+      }
+    },
+    "tipsTitle": "Interview Tips for Seafarers",
+    "tips": {
+      "certificates": "Keep your STCW, COC, medical, and CDC certificates valid and easy to share — recruiters check these early.",
+      "seaTime": "Be ready to discuss your sea time in detail: vessel types, routes, and rank-specific responsibilities.",
+      "research": "Research the company and the vessel type you're applying for before the interview.",
+      "punctuality": "For video or phone interviews, join on time from a quiet location with a stable connection.",
+      "questions": "Prepare clear answers for common questions: why this vessel or company, how you handle emergencies, and safety procedures for your rank.",
+      "documents": "Keep digital copies of all required documents ready to share immediately if you're shortlisted."
+    }
+  },
+  "careerProfile": {
+    "header": {
+      "title": "Career Profile",
+      "subtitle": "Build your profile once — generate\nas many tailored resumes as you need."
+    },
+    "present": "Present",
+    "emptyAggregated": "Nothing on file yet.",
+    "completion": {
+      "title": "Profile Completion",
+      "subtitle": "Fill in more sections to strengthen your resumes."
+    },
+    "deleteEntry": {
+      "title": "Remove this entry?",
+      "message": "\"{{label}}\" will be removed from your Career Profile."
+    },
+    "sections": {
+      "personal": "Personal",
+      "contact": "Contact",
+      "maritime": "Maritime Profile",
+      "certificates": "Certificates",
+      "experience": "Experience",
+      "education": "Education",
+      "skills": "Skills",
+      "languages": "Languages"
+    },
+    "editor": {
+      "requiredTitle": "Missing information",
+      "requiredBody": "Please fill in the required field before saving.",
+      "saveErrorTitle": "Couldn't save",
+      "saveErrorBody": "Something went wrong. Please try again.",
+      "errors": {
+        "required": "This field is required.",
+        "tooLong": "Must not exceed {{max}} characters.",
+        "noHtml": "Must not contain HTML or script tags.",
+        "tooManyLines": "You can list at most {{max}} responsibilities."
+      }
+    },
+    "personal": {
+      "fullName": "Full Name",
+      "dateOfBirth": "Date of Birth",
+      "gender": "Gender",
+      "nationality": "Nationality"
+    },
+    "contact": {
+      "email": "Email",
+      "phone": "Phone",
+      "location": "Location"
+    },
+    "maritime": {
+      "editSubtitle": "Keep your department, rank and\nsea time up to date.",
+      "department": "Department",
+      "rank": "Rank",
+      "currentVessel": "Current Vessel",
+      "seaExperience": "Sea Experience",
+      "years": "{{count}} year",
+      "years_plural": "{{count}} years"
+    },
+    "certificates": {
+      "empty": "No certificates uploaded yet.",
+      "noExpiry": "No expiry",
+      "noIssueDate": "No issue date"
+    },
+    "experience": {
+      "empty": "Add your sea-going and shore experience.",
+      "add": "Add Experience",
+      "addTitle": "Add Experience",
+      "editTitle": "Edit Experience",
+      "editorSubtitle": "Vessel, rank and dates for this\nposition.",
+      "role": "Role / Rank",
+      "rolePlaceholder": "e.g. Chief Officer",
+      "vesselName": "Vessel Name",
+      "vesselType": "Vessel Type",
+      "vesselTypePlaceholder": "Select vessel type",
+      "company": "Company",
+      "location": "Location",
+      "startDate": "Start Date",
+      "endDate": "End Date",
+      "isCurrent": "I currently work here",
+      "responsibilities": "Responsibilities",
+      "responsibilitiesPlaceholder": "One per line"
+    },
+    "education": {
+      "empty": "Add your educational background.",
+      "add": "Add Education",
+      "addTitle": "Add Education",
+      "editTitle": "Edit Education",
+      "editorSubtitle": "Institution, degree and dates for\nthis qualification.",
+      "institution": "Institution",
+      "degree": "Degree",
+      "fieldOfStudy": "Field of Study",
+      "location": "Location",
+      "description": "Description"
+    },
+    "skills": {
+      "empty": "Add skills that make you stand out.",
+      "add": "Add Skill",
+      "addTitle": "Add Skill",
+      "editTitle": "Edit Skill",
+      "editorSubtitle": "Name the skill and how strong\nyou are at it.",
+      "name": "Skill",
+      "namePlaceholder": "e.g. ECDIS",
+      "level": "Level",
+      "levelPlaceholder": "Select level",
+      "category": "Category"
+    },
+    "languages": {
+      "empty": "Add the languages you speak.",
+      "add": "Add Language",
+      "addTitle": "Add Language",
+      "editTitle": "Edit Language",
+      "editorSubtitle": "The language and how fluently\nyou speak it.",
+      "name": "Language",
+      "namePlaceholder": "e.g. English",
+      "proficiency": "Proficiency",
+      "proficiencyPlaceholder": "Select proficiency"
+    },
+    "resumes": {
+      "title": "My Resumes",
+      "new": "New Resume",
+      "empty": "You haven't created a resume yet.",
+      "createFirst": "Create Your First Resume",
+      "templateUnknown": "Template",
+      "lastGenerated": "Last generated {{date}}",
+      "neverGenerated": "Not generated yet",
+      "outdated": "Out of date",
+      "generate": "Generate",
+      "regenerate": "Update",
+      "view": "View",
+      "generateErrorTitle": "Couldn't generate",
+      "generateErrorBody": "Something went wrong. Please try again.",
+      "previewError": "Couldn't load the preview.",
+      "download": "Download",
+      "downloadSuccessTitle": "Saved to your device",
+      "downloadSuccessBodyAndroid": "\"{{filename}}\" was saved to your Downloads folder.",
+      "downloadSuccessBodyIos": "\"{{filename}}\" is ready to save.",
+      "downloadErrorTitle": "Couldn't download",
+      "downloadErrorBody": "Something went wrong while saving the file. Please try again."
+    },
+    "resumeEditor": {
+      "createTitle": "New Resume",
+      "editTitle": "Edit Resume",
+      "editorSubtitle": "Pick a template and choose what\ngoes on this resume.",
+      "titleLabel": "Resume Title",
+      "titlePlaceholder": "e.g. Chief Officer Resume",
+      "requiredBody": "Please give this resume a title and pick a template.",
+      "template": "Template",
+      "objectiveOverride": "Career Objective (for this resume)",
+      "objectivePlaceholder": "Uses your Career Profile's objective if left blank",
+      "delete": "Delete this resume",
+      "deleteTitle": "Delete this resume?",
+      "deleteMessage": "\"{{title}}\" and its generated PDFs will be removed."
+    }
+  },
+  "documents": {
+    "header": {
+      "title": "My Documents",
+      "subtitle": "Manage and keep your documents\nupdated for faster applications."
+    },
+    "search": {
+      "placeholder": "Search by document name..."
+    },
+    "empty": "No documents found",
+    "noMatches": "No documents match",
+    "alertBanner": {
+      "body": "You need to Upload {{name}}.",
+      "multiTitle": "{{count}} documents required",
+      "multiBody": "You need to upload: {{names}}."
+    },
+    "filters": {
+      "all": "All",
+      "uploaded": "Uploaded",
+      "pending": "Pending",
+      "missing": "Missing"
+    },
+    "status": {
+      "uploaded": "Uploaded",
+      "pending": "Pending",
+      "notUploaded": "Not Uploaded"
+    },
+    "modal": {
+      "maxSize": "Max {{maxSizeMB}} MB",
+      "uploading": "Uploading...",
+      "deleting": "Deleting...",
+      "opening": "Opening...",
+      "view": "View",
+      "takePhoto": "Take Photo",
+      "retakePhoto": "Retake Photo",
+      "chooseFromGallery": "Choose from Gallery",
+      "replaceFromGallery": "Replace from Gallery",
+      "chooseFile": "Choose File (PDF)",
+      "replaceFile": "Replace File (PDF)",
+      "replace": "Replace",
+      "delete": "Delete",
+      "cancel": "Cancel",
+      "downloadingPdf": "Downloading {{docName}}...",
+      "retry": "Retry"
+    },
+    "alerts": {
+      "fileTooLargeTitle": "File too large",
+      "fileTooLargeMessage": "This document must be under {{maxSizeMB}} MB.",
+      "uploadFailedTitle": "Upload failed",
+      "photoUnavailableTitle": "Photo unavailable",
+      "photoUnavailableMessage": "Could not access the camera / gallery. Check app permissions.",
+      "photoErrorTitle": "Photo error",
+      "photoErrorMessage": "Something went wrong selecting the photo. Please try again.",
+      "fileErrorTitle": "File error",
+      "fileErrorMessage": "Something went wrong selecting the file. Please try again.",
+      "couldNotOpenTitle": "Could not open document",
+      "pdfDisplayError": "This PDF could not be displayed. Please try again.",
+      "deleteTitle": "Delete document?",
+      "deleteMessage": "This will remove your uploaded {{docName}}. You can upload a new one anytime.",
+      "couldNotDeleteTitle": "Could not delete",
+      "confirmReplaceTitle": "Replace document?",
+      "confirmReplaceMessage": "This will replace your uploaded {{docName}} with \"{{fileName}}\". Continue?"
+    },
+    "certMetadata": {
+      "title": "Certificate Details",
+      "subtitle": "These details appear on any resume you generate.",
+      "name": "Certificate Name",
+      "namePlaceholder": "e.g. Basic Safety Training, ECDIS, GMDSS",
+      "issuingAuthority": "Issuing Authority",
+      "issueDate": "Issue Date",
+      "expiryDate": "Expiry Date",
+      "invalidDate": "Enter a valid date as DD-MM-YYYY",
+      "issueDateFuture": "Issue date cannot be in the future",
+      "expiryBeforeIssue": "Expiry date must be after the issue date",
+      "save": "Save & Upload"
+    }
+  },
+  "nav": {
+    "home": "Home",
+    "profile": "Profile",
+    "applications": "My Applications",
+    "jobs": "Jobs"
+  },
+  "time": {
+    "second": "second",
+    "seconds": "seconds",
+    "minute": "minute",
+    "minutes": "minutes",
+    "hour": "hour",
+    "hours": "hours"
+  }
+}

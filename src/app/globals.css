@@ -1,26 +1,335 @@
 @import "tailwindcss";
 
+/* ─────────────────────────────────────────────────────────────────────────────
+   CrewApply design tokens — ported 1:1 from the mobile app's src/theme/.
+   Source of truth: CrewApply/src/theme/{colors,typography,spacing,shadows,motion}.js
+   which are themselves traced to the Figma file YHYKC3U9gnUdVtJtRy7bb1.
+
+   Rules for this file:
+   · Hex values are copied verbatim. Never "adjust" one to taste.
+   · The app has no dark mode, so neither does the web. Light only, on purpose.
+   · Token NAMES are chosen so the Tailwind utility reads well
+     (app `text.primary` → `--color-heading` → `text-heading`). The app-side
+     name is in a comment on every line that was renamed.
+   · responsive.js (scale/verticalScale/moderateScale) is deliberately NOT
+     ported. At the app's own 375px baseline every one of those helpers is the
+     identity function, so the raw numbers below ARE the app's values.
+   ───────────────────────────────────────────────────────────────────────────── */
+
+/* `static` emits every token as a CSS variable instead of only the ones a
+   generated utility happens to reference. Without it Tailwind tree-shakes the
+   unused ones, and any `var(--color-…)` written in an inline style or in custom
+   CSS silently resolves to nothing — which is exactly what the theme reference
+   page does. Costs a few KB, removes a whole class of invisible bug. */
+@theme static {
+  /* ── Typeface ──────────────────────────────────────────────────────────────
+     The app bundles Manrope-{Regular,Medium,SemiBold,Bold,ExtraBold}.ttf.
+     Manrope is on Google Fonts, so the web gets the identical typeface as a
+     self-hosted variable font via next/font — no conversion, no FOUT. */
+  --font-sans: var(--font-manrope), ui-sans-serif, system-ui, -apple-system, sans-serif;
+
+  /* ── Colour: primary ─────────────────────────────────────────────────────── */
+  --color-primary:         #056DEC;  /* brand blue — buttons, icons, links */
+  --color-primary-light:   #EFF5FF;  /* icon tile / soft fill */
+  --color-primary-tint:    #E4EFFD;  /* progress track / soft chip */
+  --color-primary-accent:  #4289F7;
+  --color-primary-vivid:   #1C55E8;  /* welcome name / emphasis */
+  --color-primary-dark:    #1962BA;  /* primary gradient end */
+  --color-on-primary:      #FFFFFF;  /* primary.contrastText */
+
+  /* ── Colour: secondary ───────────────────────────────────────────────────── */
+  --color-secondary:       #FD7C03;  /* accent orange */
+  --color-secondary-light: #FEF0E7;
+  --color-secondary-tint:  #FFEFDB;
+  --color-secondary-dark:  #D77B19;
+  --color-on-secondary:    #FFFFFF;
+
+  /* ── Colour: surfaces ────────────────────────────────────────────────────── */
+  --color-canvas:        #CCE2FA;                   /* background.default */
+  --color-canvas-top:    #F4F6F6;                   /* background.gradientStart */
+  --color-canvas-bottom: #CCE2FA;                   /* background.gradientEnd */
+  --color-surface:       #FFFFFF;                   /* background.paper — cards */
+  --color-glass:         rgba(255, 255, 255, 0.58); /* background.glass */
+  --color-header:        #0D3E85;                   /* background.header */
+
+  /* ── Colour: text ────────────────────────────────────────────────────────── */
+  --color-heading:     #1E1E1E;               /* text.primary */
+  --color-body:        #556172;               /* text.secondary — slate body */
+  --color-muted:       #595959;               /* text.muted */
+  --color-hint:        #727272;               /* text.hint */
+  --color-placeholder: #7D7D7D;               /* text.placeholder */
+  --color-chevron:     rgba(60, 60, 67, 0.6); /* text.chevron */
+
+  /* ── Colour: status ──────────────────────────────────────────────────────── */
+  --color-success:       #0FA66A;
+  --color-success-light: #E2F5EB;
+  --color-success-text:  #12AF68;
+  --color-warning:       #FD7C03;
+  --color-warning-light: #FEF0E7;
+  --color-warning-text:  #D77B19;
+  --color-info:          #1C55E8;
+  --color-info-light:    #E8EEFD;
+  --color-info-text:     #056DEC;
+  --color-danger:        #EC0509;
+  --color-danger-light:  rgba(236, 5, 9, 0.2);
+  --color-danger-text:   #EC0509;
+  --color-accent:        #483FF6;             /* purple — Interview Prep */
+  --color-accent-light:  #EDEDFD;
+  --color-accent-text:   #483FF6;
+
+  /* ── Colour: lines ────────────────────────────────────────────────────────
+     Named `line-*` so utilities read `border-line-soft`, not `border-border-light`. */
+  --color-line:         #D9D9D9;                   /* border.main */
+  --color-line-soft:    rgba(183, 218, 255, 0.35); /* border.light — soft blue stroke */
+  --color-line-mint:    #C6ECE8;                   /* border.mint — help/support cards */
+  --color-line-divider: rgba(0, 0, 0, 0.2);        /* border.divider */
+  --color-line-input:   #E2E8F0;                   /* border.input — unfocused fields */
+
+  /* ── Colour: misc ────────────────────────────────────────────────────────── */
+  --color-nav-inactive: #5B6475;  /* bottom-nav inactive icon + label */
+  --color-navy-deep:    #081B33;  /* splash.navyDeep */
+
+  /* ── Type scale ────────────────────────────────────────────────────────────
+     min = the app's exact px value at its 375px design baseline.
+     max = the desktop value, reached at 1440px.
+     Fluid via clamp() rather than breakpoint tiers: one definition per size,
+     no jumps, and the mobile end is byte-identical to the app.
+     Line heights are unitless RATIOS derived from the app's own size/height
+     pairs, so they track the clamp automatically. */
+  --text-xs:      clamp(0.625rem,  0.581rem + 0.188vw, 0.75rem);    /* 10 → 12 */
+  --text-xs--line-height: 1.4;                                      /* app 10/14 */
+  --text-nav:     clamp(0.6875rem, 0.666rem + 0.094vw, 0.75rem);    /* 11 → 12 */
+  --text-nav--line-height: 1.4545;                                  /* app 11/16 */
+  --text-sm:      clamp(0.75rem,   0.728rem + 0.094vw, 0.8125rem);  /* 12 → 13 */
+  --text-sm--line-height: 1.5;                                      /* app 12/18 */
+  --text-md:      clamp(0.875rem,  0.853rem + 0.094vw, 0.9375rem);  /* 14 → 15 */
+  --text-md--line-height: 1.4286;                                   /* app 14/20 */
+  --text-lg:      clamp(1rem,      0.978rem + 0.094vw, 1.0625rem);  /* 16 → 17 */
+  --text-lg--line-height: 1.5;                                      /* app 16/24 */
+  --text-xl:      clamp(1.125rem,  1.081rem + 0.188vw, 1.25rem);    /* 18 → 20 */
+  --text-xl--line-height: 1.4444;                                   /* app 18/26 */
+  --text-xxl:     clamp(1.25rem,   1.162rem + 0.376vw, 1.5rem);     /* 20 → 24 */
+  --text-xxl--line-height: 1.4;                                     /* app 20/28 */
+  --text-h3:      clamp(1.25rem,   1.162rem + 0.376vw, 1.5rem);     /* 20 → 24 */
+  --text-h3--line-height: 1.4;
+  --text-h2:      clamp(1.5rem,    1.324rem + 0.751vw, 2rem);       /* 24 → 32 */
+  --text-h2--line-height: 1.4167;                                   /* app 24/34 */
+  --text-h1:      clamp(1.875rem,  1.523rem + 1.502vw, 2.875rem);   /* 30 → 46 */
+  --text-h1--line-height: 1.4;                                      /* app 30/42 */
+  --text-display: clamp(2.0625rem, 1.556rem + 2.16vw,  3.5rem);     /* 33 → 56 */
+  --text-display--line-height: 1.3939;                              /* app 33/46 */
+
+  /* ── Letter spacing ────────────────────────────────────────────────────────
+     RN letterSpacing is in px, so px here is an exact match. */
+  --tracking-tight:  0.2px;
+  --tracking-normal: 0.3px;
+  --tracking-wide:   0.7px;
+
+  /* ── Spacing ───────────────────────────────────────────────────────────────
+     DELIBERATELY NOT TOKENISED. Do not add --spacing-sm/md/lg/xl back.
+
+     Tailwind resolves max-w-*, min-w-* and basis-* against the --spacing-*
+     namespace BEFORE --container-*, so a token named --spacing-sm silently
+     turns `max-w-sm` into max-width:8px instead of 24rem. That shipped once and
+     collapsed every card on the site to the width of its longest word.
+
+     Tailwind's numeric scale already IS the app's scale (base 0.25rem = 4px),
+     so spacing.js maps onto it directly with no tokens at all:
+
+       app spacing.xxs      2px  → 0.5      app spacing.xl       20px → 5
+       app spacing.xs       5px  → [5px]    app spacing.xxl      24px → 6
+       app spacing.sm       8px  → 2        app spacing.xxxl     32px → 8
+       app spacing.base    10px  → 2.5      layout.gutter        12px → 3
+       app spacing.md      12px  → 3        layout.screenHMargin 15px → [15px]
+       app spacing.lg      16px  → 4
+
+     Only 5px and 15px are off Tailwind's 4px grid; those stay arbitrary rather
+     than being rounded, because the app's values are copied, not adjusted.
+
+     Radius, shadow and text below DO override Tailwind's same-named defaults.
+     That is intended and safe — nothing resolves across those namespaces. */
+
+  /* ── Radius ──────────────────────────────────────────────────────────────── */
+  --radius-xs:    0.3125rem; /*  5px */
+  --radius-sm:    0.5rem;    /*  8px */
+  --radius-md:    0.625rem;  /* 10px */
+  --radius-lg:    1rem;      /* 16px */
+  --radius-xl:    1.25rem;   /* 20px */
+  --radius-xxl:   1.5625rem; /* 25px */
+  --radius-pill:  2.6875rem; /* 43px */
+  --radius-round: 9999px;
+
+  /* ── Shadows ───────────────────────────────────────────────────────────────
+     Taken from the Figma boxShadow values quoted in shadows.js's own comments,
+     NOT converted from the RN shadowOffset/Radius props — those comments are
+     the original CSS, so this is a copy rather than a translation. */
+  --shadow-sm:    0 2px 4px    rgba(0, 0, 0, 0.25);
+  --shadow-md:    0 2px 7px    rgba(0, 0, 0, 0.25);
+  --shadow-lg:    0 2px 9px    rgba(0, 0, 0, 0.25);
+  --shadow-float: 0 0   6.2px  rgba(0, 0, 0, 0.14);    /* glass bottom-nav halo */
+  --shadow-glow:  0 2px 10.7px rgba(20, 59, 113, 0.7); /* profile-strength blue glow */
+
+  /* ── Easing ────────────────────────────────────────────────────────────────
+     standard = motion.easing.standard verbatim.
+     decelerate/accelerate = CSS equivalents of Easing.out/in(Easing.cubic). */
+  --ease-standard:   cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-decelerate: cubic-bezier(0.215, 0.61, 0.355, 1);
+  --ease-accelerate: cubic-bezier(0.55, 0.055, 0.675, 0.19);
+
+  /* Reading column: use Tailwind's built-in `max-w-prose` (65ch). A
+     --container-prose token here is DEAD — the built-in wins the lookup, as the
+     built CSS confirms. 65ch already satisfies the under-80ch rule for job
+     descriptions and legal copy. */
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   Values consumed by CSS rather than by utilities.
+   ───────────────────────────────────────────────────────────────────────────── */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  color-scheme: light; /* the app has no dark mode — stop browsers auto-inverting controls */
+
+  /* motion.duration */
+  --duration-fast:  180ms;
+  --duration-base:  280ms;
+  --duration-slow:  420ms;
+  --duration-sheet: 300ms;
+
+  /* motion.distance — verticalScale/scale are identity at the 375 baseline */
+  --rise-sm: 12px;
+  --rise-md: 24px;
+  --rise-lg: 40px;
+  --slide-x: 24px;
+
+  /* motion.scale */
+  --press-scale:      0.96;
+  --card-press-scale: 0.985;
+
+  /* motion.stagger */
+  --stagger-step: 55ms;
+
+  /* Gradients. RN LinearGradient defaults to top→bottom, so 180deg. */
+  --gradient-primary:   linear-gradient(180deg, #056DEC 0%, #1962BA 100%);
+  --gradient-secondary: linear-gradient(180deg, #FE7802 0%, #E87C1C 100%);
+  --gradient-header:    linear-gradient(180deg, #2252A3 0%, #0E2D63 100%);
+  --gradient-canvas:    linear-gradient(180deg, #F4F6F6 0%, #CCE2FA 100%);
+  --gradient-splash:    linear-gradient(180deg, #081B33 0%, #0D3E85 55%, #1C55E8 100%);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+/* ─────────────────────────────────────────────────────────────────────────────
+   Base
+   ───────────────────────────────────────────────────────────────────────────── */
+body {
+  /* The app's Home background. `fixed` so it paints once instead of tiling
+     down a long web page — the app's screens never scroll far enough for the
+     difference to exist there. */
+  background: var(--gradient-canvas) fixed;
+  color: var(--color-body);
+  font-family: var(--font-sans);
+  font-size: var(--text-md);
+  line-height: 1.4286;
+  letter-spacing: var(--tracking-normal);
+  -webkit-font-smoothing: antialiased;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+/* Keyboard focus must stay visible everywhere. Brand-coloured, not the UA default.
+
+   MUST live in @layer base. Unlayered CSS outranks every layer, including
+   Tailwind's utilities — so an unlayered :focus-visible here beat `outline-none`
+   on any element that draws its own focus treatment, and Input rendered a second
+   ring inside its bordered wrapper. In `base` it is still the default everywhere
+   but a utility can now override it, which is the whole point of layers. */
+@layer base {
+  :focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+    border-radius: 2px;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   Utilities the tokens above cannot express on their own.
+   ───────────────────────────────────────────────────────────────────────────── */
+
+@utility bg-gradient-primary   { background-image: var(--gradient-primary); }
+@utility bg-gradient-secondary { background-image: var(--gradient-secondary); }
+@utility bg-gradient-header    { background-image: var(--gradient-header); }
+@utility bg-gradient-canvas    { background-image: var(--gradient-canvas); }
+@utility bg-gradient-splash    { background-image: var(--gradient-splash); }
+
+/* Glassmorphic surface — the app's floating bottom nav and glass cards.
+   blur(15px) is AppNavigator.jsx's own blurAmount={15}. That nav hardcodes
+   rgba(255,255,255,0.5) on iOS and 0.94 on Android (no blur there); the web
+   uses the documented --color-glass token and falls back to the Android
+   value where backdrop-filter is unsupported. */
+@utility glass {
+  background-color: var(--color-glass);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+}
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .glass { background-color: rgba(255, 255, 255, 0.94); }
+}
+
+/* Card grid that fits as many columns as the CONTAINER allows, rather than as
+   many as a breakpoint guesses.
+
+   Fixed breakpoints (sm:grid-cols-2 xl:grid-cols-3) were wrong on real screens:
+   three columns only appeared above 1280px, so a laptop at 100% zoom got two
+   very wide tiles — and because the image band is an aspect ratio, widening the
+   tile made the image grow past half its height. auto-fill fixes both at once by
+   keeping tile width in a sane band, so the ratio stays honest.
+
+   min(100%, 17.5rem) stops the 280px floor from overflowing a container
+   narrower than one card. */
+@utility grid-cards {
+  display: grid;
+  gap: 0.75rem;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 17.5rem), 1fr));
+}
+
+/* Modern thin scrollbar for our own scroll containers (dropdown lists, filter
+   rails, the two-pane job list). No library: `scrollbar-width`/`scrollbar-color`
+   is the standard property, and the ::-webkit- rules cover Safari and older
+   Chrome. Track is transparent so the panel's own background shows through, and
+   the thumb only gains contrast on hover — the default Windows scrollbar is the
+   grey slab this replaces. */
+@utility scrollbar-thin {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-line) transparent;
+
+  &::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: var(--color-line);
+    border-radius: var(--radius-round);
+  }
+  &::-webkit-scrollbar-thumb:hover {
+    background-color: var(--color-nav-inactive);
+  }
+}
+
+/* Press feedback — the web stand-in for Reanimated's withSpring press scale. */
+@utility press {
+  transition: transform var(--duration-fast) var(--ease-standard);
+  &:active { transform: scale(var(--press-scale)); }
+}
+@utility press-card {
+  transition: transform var(--duration-fast) var(--ease-standard);
+  &:active { transform: scale(var(--card-press-scale)); }
 }
