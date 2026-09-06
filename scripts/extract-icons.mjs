@@ -29,7 +29,7 @@ education exclamation-circle exclamation-triangle eye eye-slash file-alt file-do
 folder-open genderless graduation-cap help-circle hourglass-half image info-circle lightbulb
 link location-arrow lock magic map-marker-alt mars paper-plane pencil-alt
 phone-alt plus route search share-alt sign-out-alt sync-alt tag times
-times-circle trash-alt upload user user-circle venus wallet whatsapp
+times-circle trash-alt upload user user-circle venus wallet whatsapp gem ship
 `.split(/\s+/).filter(Boolean);
 
 /* App-side name → FontAwesome name, for the few the app borrows from
