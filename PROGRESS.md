@@ -814,8 +814,79 @@ from app source, which is why the original harvest missed them.
 - [x] `/subscription` — wired to the backend, `MOCKUP_TIERS` deleted
 - [x] `/subscription/plan` — Razorpay web checkout, all three payment fallbacks
 - [x] `/subscription/success`
-- [ ] `/wallet` (295)
+- [x] `/wallet` — the missing half of the mid-subscription flow
 - [ ] `/refer` — ReferEarn (427)
+
+**Why the wallet is not a side feature**
+
+Switching plans mid-term does not refund to a card. `subscription.service.js`
+computes a prorated credit for the unused part of the current plan and puts it
+on the summary as **"Unused Subscription Credit" — a NEGATIVE row** in
+`priceBreakdown` (which is why /subscription/plan renders a negative amount as a
+credit rather than looking for a field named for one). When that credit exceeds
+the new plan's entire price, the leftover has no bill to come off, so
+`activate()` deposits it here as `plan_switch_credit`, and the next purchase
+auto-applies it as `walletApplied`.
+
+Summary → wallet → next summary. Without this screen the middle step was
+invisible: money left the visible flow and came back as a discount with nothing
+to check it against. The deposit is fire-and-forget on the backend
+("non-fatal"), so it can lag the subscription by a moment — reloading on mount
+is what makes it appear.
+
+`amount` is **signed paise**; `formatCurrency` divides by 100. Types are keyed on
+the model's snake_case enum, and getting that wrong fails silently — the row just
+prints the raw type string. `stats.totalDebited` is labelled "Total Spent"; the
+field and the label do not share a name.
+
+### Job alerts & saved jobs — audited against the app and the backend
+
+- [x] **`/saved` remove was dead.** `handleRemoveJob` takes a job **ID** and does
+      `allJobs.find((j) => j.id === jobId)`; `JobCard` already passes `job.id`.
+      The page wrapped it as `() => handleRemoveJob(job)`, so `find()` compared an
+      id to an object, never matched, and removing a saved job did nothing at
+      all. The app passes the handler directly. Now it does too.
+- [x] **`/alerts` was telling users the wrong thing.** It said "jobs matching the
+      preferences on your profile" and linked to /preferences. Preferences are
+      never read: `listJobAlertsForUser` takes the user's tier, expands it to
+      every tier at or below it, and returns published jobs whose `minimumTier`
+      is in that set. The app's own copy — "Jobs matching your subscription
+      plan" — is now used verbatim.
+- [x] **`/alerts` rendered two competing states.** The endpoint returns
+      `{ jobs: [], total: 0 }` outright for anyone without an active
+      subscription, so the page showed the upsell card AND fell through to "no
+      matching jobs yet… update preferences" — two explanations at once, and a
+      button that fixes neither. The app branches noSubscription → empty → list
+      as one chain; so does this now, with search and pagination hidden while
+      there is nothing they could act on.
+
+**The notification is broader than the feed, and that is deliberate.**
+`notifyEligibleUsersForJob` fans out on `$or` of TWO match reasons: an active
+qualifying tier, **or** the job's category being in the user's
+`preferredCategories` regardless of plan. So an unsubscribed user with a matching
+category can be notified about a job this feed will not show them. That
+asymmetry belongs to the backend — the feed is "jobs regarding my plan" by
+design — and the no-plan card now explains the rule rather than pretending the
+list is merely empty.
+
+### Toasts — save/unsave feedback
+
+- [x] `utils/toastRef.js` + `components/layout/ToastHost.jsx`, the same host-ref
+      pattern as `alertRef`, kept separate on purpose: an alert is a modal that
+      demands an answer, a toast is a confirmation you may ignore. Bookmarking is
+      the second kind.
+- [x] Raised from **`SavedJobsContext.toggleSaved`**, not from the call sites.
+      Every save and unsave in the product routes through that one function —
+      JobCard's bookmark on /jobs, /alerts, /dashboard and /saved, plus the Job
+      Details button — so five copies would only drift apart.
+- [x] It also fixes a **silent failure**: the optimistic update reverts and
+      rethrows, but every caller swallows it with `.catch(() => {})`, so a failed
+      save just made the bookmark quietly snap back with no explanation. There is
+      now an error toast on both directions.
+- 4 icons added (`user-friends`, `shopping-bag`, `sliders-h`, `exchange-alt`) —
+      **72** now. The extractor's `textwrap` pass split hyphenated names across
+      lines and silently tore `folder-open` and `info-circle` in half; it now
+      wraps with `break_on_hyphens=False`.
 
 **What the merged subscription PR actually shipped, and the four bugs in it**
 

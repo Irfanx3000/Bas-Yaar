@@ -22,14 +22,15 @@ import { writeFileSync } from "node:fs";
    these app-side names, so a component ported from the app keeps name="email"
    and does not need rewriting. */
 const NAMES = `
-arrow-left arrow-right bars bell bell-slash bookmark briefcase calendar-alt
-calendar-check calendar-times camera check check-circle chevron-down chevron-left
-certificate chevron-right cloud-download-alt cog copy download ellipsis-h ellipsis-v email
-education exclamation-circle exclamation-triangle eye eye-slash file-alt file-document-outline
-folder-open genderless globe graduation-cap help-circle hourglass-half image info-circle lightbulb
-id-card link location-arrow lock magic map-marker-alt mars paper-plane pencil-alt
-phone-alt plus route search share-alt sign-out-alt sync-alt tag times
-times-circle trash-alt upload user user-circle venus wallet whatsapp gem ship
+arrow-left arrow-right bars bell bell-slash bookmark briefcase calendar-alt calendar-check
+calendar-times camera certificate check check-circle chevron-down chevron-left chevron-right
+cloud-download-alt cog copy download education ellipsis-h ellipsis-v email exchange-alt
+exclamation-circle exclamation-triangle eye eye-slash file-alt file-document-outline
+folder-open gem genderless globe graduation-cap help-circle hourglass-half id-card image
+info-circle lightbulb link location-arrow lock magic map-marker-alt mars paper-plane
+pencil-alt phone-alt plus route search share-alt ship shopping-bag sign-out-alt sliders-h
+sync-alt tag times times-circle trash-alt upload user user-circle user-friends venus wallet
+whatsapp
 `.split(/\s+/).filter(Boolean);
 
 /* App-side name → FontAwesome name, for the few the app borrows from

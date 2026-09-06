@@ -103,7 +103,12 @@ export default function SavedJobsPage() {
                 job={job}
                 href={jobHref(job)}
                 saved
-                onToggleSave={() => handleRemoveJob(job)}
+                /* handleRemoveJob takes the job ID — it does
+                   `allJobs.find((j) => j.id === jobId)` — and JobCard already
+                   passes `job.id`. Wrapping it to pass the whole object made
+                   that find() compare an id to an object, so it never matched
+                   and removing a saved job did nothing at all. */
+                onToggleSave={handleRemoveJob}
               />
             ))}
           </div>

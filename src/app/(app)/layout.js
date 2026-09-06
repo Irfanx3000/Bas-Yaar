@@ -23,6 +23,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { AppShell } from "@/components/layout/AppShell";
 import { AuthGuard, isPublicPath } from "@/components/layout/AuthGuard";
 import { AlertHost } from "@/components/layout/AlertHost";
+import { ToastHost } from "@/components/layout/ToastHost";
 import { useProfile } from "@/context/ProfileContext";
 import { ProfileProvider } from "@/context/ProfileContext";
 import { SubscriptionProvider } from "@/context/SubscriptionContext";
@@ -75,6 +76,7 @@ export default function AppLayout({ children }) {
                     in the copied hooks — and in api/client.js's interceptor —
                     silently no-ops. */}
                 <AlertHost />
+                <ToastHost />
               </CareerProfileProvider>
             </AppliedJobsProvider>
           </SavedJobsProvider>
