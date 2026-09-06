@@ -28,7 +28,8 @@
  */
 
 import Link from "next/link";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { PersonalInfoModal } from "@/components/profile/PersonalInfoModal";
 import { useProfile } from "@/context/ProfileContext";
 import { useCareerProfile } from "@/context/CareerProfileContext";
 import {
@@ -85,11 +86,13 @@ function CardHeading({ icon, title, action }) {
 }
 
 export default function ProfilePage() {
-  const { profile, completion, loading } = useProfile() ?? {};
+  const { profile, completion, loading, refresh: refreshProfile } = useProfile() ?? {};
+  const [editingPersonal, setEditingPersonal] = useState(false);
   const {
     profile: career,
     isLoading: careerLoading,
     load: loadCareer,
+    reload: reloadCareer,
   } = useCareerProfile() ?? {};
 
   /* The context fetches at most once per session and exposes `load` rather than
@@ -145,13 +148,18 @@ export default function ProfilePage() {
                 </div>
               </div>
 
-              <Link
-                href="/profile/personal"
+              {/* Was a Link to /profile/personal, which does not exist — so
+                  both Edit affordances navigated nowhere. The app has no such
+                  route either: PersonalInformationScreen is mounted inside
+                  PersonalInfoEditModal, taking onClose/onSaveSuccess. */}
+              <button
+                type="button"
+                onClick={() => setEditingPersonal(true)}
                 aria-label="Edit profile"
                 className="shrink-0 cursor-pointer rounded-round p-2 text-hint hover:bg-primary-light hover:text-primary"
               >
                 <Icon name="pencil-alt" size={14} />
-              </Link>
+              </button>
             </div>
 
             {completion?.percentage != null ? (
@@ -165,12 +173,13 @@ export default function ProfilePage() {
               icon="user"
               title="Personal Info"
               action={
-                <Link
-                  href="/profile/personal"
-                  className="text-sm font-semibold text-primary hover:underline"
+                <button
+                  type="button"
+                  onClick={() => setEditingPersonal(true)}
+                  className="cursor-pointer text-sm font-semibold text-primary hover:underline"
                 >
                   Edit
-                </Link>
+                </button>
               }
             />
             <div className="divide-y divide-line-soft">
@@ -279,6 +288,21 @@ export default function ProfilePage() {
           </Card>
         </div>
       </div>
+
+      {/* Mounted only while open, so opening it is the reset — the hook loads
+          fresh values on mount and staged photo changes cannot survive a
+          cancel. Both contexts are refreshed on save for the app's own reason:
+          this screen reads the user profile while the CV reads the career
+          profile, and a name change shows in both. */}
+      {editingPersonal ? (
+        <PersonalInfoModal
+          onClose={() => setEditingPersonal(false)}
+          onSaved={() => {
+            refreshProfile?.();
+            reloadCareer?.();
+          }}
+        />
+      ) : null}
     </div>
   );
 }

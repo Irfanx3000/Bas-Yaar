@@ -698,9 +698,59 @@ that is usually one image. Add drag when there is a real carousel to drag.
 - [x] `education` icon added via `scripts/extract-icons.mjs`, aliased onto
       FontAwesome's `graduation-cap` — **63 icons** now
 
-- [ ] `/profile/personal` — PersonalInformationScreen (231)
-- [ ] `/profile/personal` — PersonalInformationScreen (231)
+- [x] **Edit profile** — PersonalInformationScreen (231) as a MODAL, not a route
 - [ ] `/profile/maritime` — MaritimeProfileEditScreen (345)
+
+**Both Edit buttons on /profile navigated nowhere.** They linked to
+`/profile/personal`, which has never existed here — and has no counterpart in
+the app either: `PersonalInformationScreen` takes `onClose` / `onSaveSuccess`
+and is mounted inside `PersonalInfoEditModal` → `AppBottomSheet`. So a modal is
+the mirror, not a web shortcut, and it reuses the CV `EntryModal` shell.
+
+**Two mismatches that made saving fail, both present in the app**
+
+Verified against the live API, not inferred:
+
+1. **Gender "Other" could never be saved.** `GENDER_OPTIONS` had `value: 'other'`;
+   the service capitalises the first letter, and `user.validation.js` requires
+   `Others`. `PATCH /user/profile {"gender":"Other"}` answers *"Gender must be
+   Male, Female, or Others."* The value is now `'others'` — the label is still
+   "Other". It also broke the READ path: the service lowercases the stored value
+   to `'others'`, which matched no option, so the dropdown showed its
+   placeholder for anyone already set that way.
+2. **Marital status was missing two options.** The backend accepts
+   Single/Married/Divorced/Widowed and the copy deck has all four; only the
+   constant was short. A divorced or widowed user could not say so, and a stored
+   value rendered as the placeholder.
+
+Every one of the seven values now round-trips to an enum the server accepts.
+**Both bugs are in the app's own constants file** and want the same fix there.
+
+**Three field shapes that would have been easy to get wrong**
+
+- `dob` is `"DD-MM-YYYY"` in BOTH directions — the service formats it that way
+  on read and posts it verbatim as `dateOfBirth`. Confirmed the backend accepts
+  it (`02-05-1990` → stored `1990-05-02`). DatePicker speaks `YYYY-MM-DD`, so it
+  converts at that boundary and nowhere else, by splitting on the separator —
+  `new Date("1990-05-02")` is UTC midnight and lands a day early west of
+  Greenwich.
+- `phone` holds only the LOCAL number. The dial code was split off at load and
+  is re-attached on save, so it is shown locked beside the field; typing a
+  country code there would double it.
+- Email and nationality are read-only, as in the app — the hook does not even
+  re-validate them, because there is nothing for the user to fix.
+
+**Photo changes are staged.** Picking or removing touches nothing on the server;
+`handleSave` applies whichever is pending first, so cancelling leaves the stored
+photo intact. The preview has to be a local object URL — revoked when it changes
+and on unmount, via a cleanup keyed on the value rather than a manual revoke at
+each call site. `uploadProfilePhoto` also stopped deriving a name and mime from a
+filesystem path: a File carries both, and `uri.split('/')` would have thrown on
+one. Verified with a real `PATCH /user/profile-photo` — note PATCH, not POST.
+
+The app's LocationField adds GPS and suggestions; this is a plain text field.
+`currentLocation` is free text on the backend, and a geolocation prompt on a form
+someone opened to type their city is the worse trade.
 - [x] `/cv` — the career profile is ONE resolved document, and it holds **two
       kinds of section**, which decides what is editable:
       **NATIVE** (experience · education · skills · languages · references) are

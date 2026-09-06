@@ -69,23 +69,22 @@ export const personalInformationService = {
   },
 
   /**
-   * @param {string} uri
+   * @param {File} file
    * @param {{x:number,y:number,width:number,height:number}} [crop] normalised
    *   rectangle from the adjuster. Omitted means "decide for me" — the server
    *   falls back to subject detection, which is also what older clients get.
    */
-  uploadProfilePhoto: async (uri, crop = null) => {
-    const filename = uri.split('/').pop();
-    const ext = filename.split('.').pop()?.toLowerCase() || 'jpg';
-    const mimeMap = { jpg: 'image/jpeg', jpeg: 'image/jpeg', png: 'image/png', webp: 'image/webp' };
-    const mime = mimeMap[ext] || 'image/jpeg';
+  uploadProfilePhoto: async (file, crop = null) => {
+    // WEB: the argument is the File the user picked, not a filesystem URI.
+    // React Native derives a name and mime from the path and posts
+    // { uri, name, type }; a browser stringifies that object to
+    // "[object Object]" and multer receives no file at all. A File already
+    // carries its own name and type, so both derivations simply go away.
+    const filename = file?.name || 'photo.jpg';
 
     const formData = new FormData();
     // Backend expects the field named 'file' (profileUpload.single('file')).
-    // WEB: a browser cannot post RN's { uri, name, type } — it stringifies to
-    // "[object Object]". When `uri` is already a File/Blob it is sent as-is;
-    // the derived name/mime above still describe it correctly.
-    formData.append('file', uri, filename);
+    formData.append('file', file, filename);
 
     // Sent as separate scalar fields rather than a JSON blob: multipart text
     // parts are strings either way, and four named numbers are far easier to
@@ -102,7 +101,10 @@ export const personalInformationService = {
       headers: { 'Content-Type': 'multipart/form-data' },
     });
     // Backend stores a relative path (uploads/profile/x.webp) — resolve to a URL.
-    return { success: true, photoUrl: toMediaUrl(data.data?.document?.path) || uri };
+    // RN fell back to the local file URI here when the server sent no path; a
+    // File is not a URL, so there is nothing to fall back to on the web. The
+    // caller ignores this value either way — handleSave only awaits it.
+    return { success: true, photoUrl: toMediaUrl(data.data?.document?.path) || null };
   },
 
   // Backend doesn't have a delete-photo endpoint yet — clear via profile update
