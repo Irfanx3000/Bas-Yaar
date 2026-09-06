@@ -29,7 +29,7 @@ site loads and every single API call fails.
 
 ```bash
 # on the server
-nano /var/www/crewapply-backend/.env
+nano /var/www/CrewApply-backend/.env
 #   ALLOWED_ORIGINS=https://crewapply.com,https://www.crewapply.com,<whatever is already there>
 pm2 reload crewapply-api --update-env
 ```
@@ -97,6 +97,11 @@ echo '/swapfile none swap sw 0 0' >> /etc/fstab
 Order matters: the TLS block references certificate files that do not exist yet.
 
 ```bash
+# TLS settings are ours, not certbot's — copy the snippet first or nginx -t
+# fails on a missing include.
+mkdir -p /etc/nginx/snippets
+cp deploy/nginx/snippets/crewapply-tls.conf /etc/nginx/snippets/
+
 # a) port-80 block only, so certbot can answer its own challenge
 cp deploy/nginx/crewapply.com.conf /etc/nginx/sites-available/crewapply.com
 # comment out both `listen 443` server blocks for now
