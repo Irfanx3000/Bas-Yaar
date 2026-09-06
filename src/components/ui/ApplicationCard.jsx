@@ -29,8 +29,14 @@ export function ApplicationCard({ application, onWithdraw }) {
     ? jobHref({ id: application.jobId, title: application.title })
     : null;
 
+  /* Stretched link, same pattern as JobCard: the title is the one real link and
+     its ::after covers the whole tile. Withdraw stays clickable because it sits
+     above the overlay, rather than being nested inside a link. */
   const title = href ? (
-    <Link href={href} className="hover:text-primary">
+    <Link
+      href={href}
+      className="after:absolute after:inset-0 after:content-[''] hover:text-primary"
+    >
       {application.title}
     </Link>
   ) : (
@@ -38,7 +44,7 @@ export function ApplicationCard({ application, onWithdraw }) {
   );
 
   return (
-    <Card radius="lg" padding="none" className="flex h-full flex-col overflow-hidden">
+    <Card radius="lg" padding="none" className="relative flex h-full flex-col overflow-hidden">
       <div className="flex aspect-[16/9] max-h-44 w-full items-center justify-center border-b border-line-soft bg-primary-light">
         {logo ? (
           <Image
@@ -53,15 +59,18 @@ export function ApplicationCard({ application, onWithdraw }) {
         )}
       </div>
 
-      <div className="relative flex flex-1 flex-col p-3">
-        {/* Status takes the reserved top-right slot that JobCard gives to save —
-            same position, so the two card types scan identically in a grid. */}
-        <div className="absolute top-2 right-2 z-10">
-          <StatusBadge status={application.status} />
-        </div>
-
-        <div className="pr-24">
-          <h3 className="line-clamp-2 text-[15px] leading-[18px] font-bold text-heading">{title}</h3>
+      {/* NOT relative — Card is the positioned ancestor, so the title's
+          stretched ::after covers the whole tile including the image band. */}
+      <div className="flex flex-1 flex-col p-3">
+        <div className="grid grid-cols-[1fr_auto] gap-2">
+          <h3 className="line-clamp-2 min-w-0 text-[15px] leading-[18px] font-bold text-heading">
+            {title}
+          </h3>
+          {/* Status takes the reserved top-right slot that JobCard gives to
+              save, so the two card types scan identically in a grid. */}
+          <div className="h-fit">
+            <StatusBadge status={application.status} />
+          </div>
         </div>
 
         <div className="mt-auto pt-3">
@@ -76,26 +85,17 @@ export function ApplicationCard({ application, onWithdraw }) {
             <p className="mt-1 text-sm text-hint">{application.dateText}</p>
           ) : null}
 
-          {href || onWithdraw ? (
-            <div className="mt-3 flex gap-2">
-              {href ? (
-                <Link
-                  href={href}
-                  className="press flex-1 rounded-xl border-[1.5px] border-primary px-4 py-2 text-center text-xs font-bold text-primary"
-                >
-                  View job
-                </Link>
-              ) : null}
-              {onWithdraw ? (
-                <button
-                  type="button"
-                  onClick={() => onWithdraw(application)}
-                  className="press rounded-xl border-[1.5px] border-line-input px-4 py-2 text-xs font-bold text-body"
-                >
-                  Withdraw
-                </button>
-              ) : null}
-            </div>
+          {/* "View job" is gone: the whole card now navigates there, and a
+              second link to the same place is one more thing for a screen
+              reader to announce and one more tab stop for no gain. */}
+          {onWithdraw ? (
+            <button
+              type="button"
+              onClick={() => onWithdraw(application)}
+              className="press relative z-10 mt-3 w-full rounded-xl border-[1.5px] border-line-input px-4 py-2 text-xs font-bold text-body"
+            >
+              Withdraw
+            </button>
           ) : null}
         </div>
       </div>

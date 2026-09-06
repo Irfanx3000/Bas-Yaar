@@ -30,6 +30,7 @@ import {
   Tabs,
 } from "@/components/ui";
 import { ICON_PATHS } from "@/components/ui/icon-paths";
+import { jobHref } from "@/lib/jobUrl";
 
 const SAMPLE_JOB = {
   id: "1",
@@ -118,9 +119,10 @@ export default function KitPage() {
         note="A media tile: a 16:9 image band holds ~47% of the height at any column width, with the save control on the title row rather than floating over the image. Titles of different lengths still leave the salary and button on the same baseline — the footer is pinned with mt-auto and the tile fills the grid row's height."
       >
         <div className="grid-cards">
-          <JobCard job={SAMPLE_JOB} saved={saved} onToggleSave={() => setSaved((s) => !s)} />
+          <JobCard job={SAMPLE_JOB} href={jobHref(SAMPLE_JOB)} saved={saved} onToggleSave={() => setSaved((s) => !s)} />
           <JobCard
             job={{ ...SAMPLE_JOB, id: "2", title: "Able Seaman", isFeatured: false, urgent: false, minimumTier: "start" }}
+            href={jobHref({ id: "2", title: "Able Seaman" })}
             applied
           />
           <JobCard
@@ -140,6 +142,7 @@ export default function KitPage() {
                  fallback — see PROGRESS.md. */
               logo: "uploads/company/28987a57-4f52-49e1-982a-c15ea21edd3f.webp",
             }}
+            href={jobHref({ id: "3", title: "Chief Officer — Very Large Crude Carrier, Deep Sea" })}
           />
         </div>
       </Row>
