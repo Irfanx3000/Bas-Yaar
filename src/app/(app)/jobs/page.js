@@ -208,7 +208,7 @@ function JobsBrowser() {
                 <JobCard
                   key={job.id}
                   job={job}
-                  href={`/jobs/${job.id}`}
+                  href={jobHref(job)}
                   saved={!!bookmarkedJobs?.[job.id]}
                   onToggleSave={toggleBookmark}
                 />

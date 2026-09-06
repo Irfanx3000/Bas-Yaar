@@ -578,11 +578,42 @@ already arrive pre-formatted as `dateText`, so only the CV timestamp needs it.
       into a live result count — better than the "View 47" button it was written
       for. Below `lg` it collapses to a `<details>` disclosure rather than a modal:
       same content, no focus-trap machinery to maintain.
-- [x] `/jobs/[id]` — hero, title card, eligibility banner, Overview/Requirements
-      tabs, required-documents grid, subscribe gate, refer card. Apply wired to
-      `applicationService.apply`. Desktop moves the actions into a **sticky right
-      rail** so the CTA never needs scrolling and the description keeps a readable
-      measure.
+- [x] `/jobs/[slug]` — **rebuilt as a full mirror of the app's JobDetailsScreen.**
+      Readable URLs: `/jobs/second-engineer-bulk-carrier-<id>` — slug AND id, the
+      shape LinkedIn and Stack Overflow use. A pure `/jobs/deck-officer` would
+      need a unique slug column and a lookup endpoint, i.e. backend work.
+      **Backward compatible by construction**: the id is parsed as the trailing
+      24 hex chars, so the app's existing `crewapply.com/jobs/<id>` share links
+      (ReferJobModal) still resolve with no redirect table. Slug leads because
+      WhatsApp truncates URLs from the END, and WhatsApp sharing is a first-class
+      feature here.
+
+      Mirrored exactly, and each of these would have been got wrong by design:
+      - **The green/red banner is about DOCUMENTS ONLY** (`isEligible =
+        hasRequiredDocuments`), not overall eligibility. "You're eligible" above a
+        Subscribe card is deliberate — documents own the banner, subscription owns
+        the unlock card.
+      - **Blocker precedence is load-bearing:** tier → noSubscription → tier →
+        limit. Tier is checked *before* "no subscription" when the job needs more
+        than base tier, or a new user on a Premium job buys the cheapest plan and
+        is still blocked. That reasoning is the app's own comment.
+      - **`eligible` is never recomputed client-side.** Hiding Apply is UX; the
+        backend re-checks at apply time.
+      - **Applied is a MODE**: eligibility is not even fetched, documents relabel
+        to "Submitted", missing flags suppressed, refer hidden on rejection, docs
+        status line hidden on rejection, action bar collapses to one button.
+      - Usage pill with three severities (critical / warning ≤30% / normal),
+        hidden for unlimited plans and when there is no subscription.
+
+      **Solved differently on web:** the app gets `application` from route params;
+      a URL has none and there is no `GET /applications?jobId=`. So
+      `AppliedJobsContext.isApplied(jobId)` gates a list fetch — the common case
+      costs nothing and no endpoint was invented.
+
+      🔴 **Copy keys I guessed wrong:** `rejectedBannerTitle`/`Subtitle` do not
+      exist (rejection uses `notSelectedTitle`/`Subtitle`), and `allDocsPresent`
+      is actually `haveAllDocs`. Both would have rendered the raw key on screen.
+      All 23 `t()` keys are now verified against `translation.json`.
 - [x] `/saved` — client-side filter + pagination via `useSavedJobs`
 - [x] `/search` — universal search. Results are **lightweight rows**
       (`{id, title, subtitle, navigable}`), not job objects, so they render as

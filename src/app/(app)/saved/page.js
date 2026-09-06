@@ -24,6 +24,7 @@ import {
   SectionTitle,
 } from "@/components/ui";
 import Link from "next/link";
+import { jobHref } from "@/lib/jobUrl";
 
 export default function SavedJobsPage() {
   const {
@@ -100,7 +101,7 @@ export default function SavedJobsPage() {
               <JobCard
                 key={job.id}
                 job={job}
-                href={`/jobs/${job.id}`}
+                href={jobHref(job)}
                 saved
                 onToggleSave={() => handleRemoveJob(job)}
               />

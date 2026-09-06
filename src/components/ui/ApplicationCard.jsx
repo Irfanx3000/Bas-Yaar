@@ -4,6 +4,7 @@ import { Card } from "./Card";
 import { Icon } from "./Icon";
 import { StatusBadge } from "./Badge";
 import { toMediaUrl } from "@/constants/app.constants";
+import { jobHref } from "@/lib/jobUrl";
 
 /* An application, in the same media-tile shape as JobCard.
  *
@@ -24,7 +25,9 @@ import { toMediaUrl } from "@/constants/app.constants";
  */
 export function ApplicationCard({ application, onWithdraw }) {
   const logo = toMediaUrl(application.logo);
-  const href = application.jobId ? `/jobs/${application.jobId}` : null;
+  const href = application.jobId
+    ? jobHref({ id: application.jobId, title: application.title })
+    : null;
 
   const title = href ? (
     <Link href={href} className="hover:text-primary">

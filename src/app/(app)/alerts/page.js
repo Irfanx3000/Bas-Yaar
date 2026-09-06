@@ -12,6 +12,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { jobHref } from "@/lib/jobUrl";
 import { useJobAlerts } from "@/hooks/useJobAlerts";
 import { useSubscriptionStatus } from "@/context/SubscriptionContext";
 import {
@@ -121,7 +122,7 @@ export default function JobAlertsPage() {
               <JobCard
                 key={job.id}
                 job={job}
-                href={`/jobs/${job.id}`}
+                href={jobHref(job)}
                 saved={!!bookmarkedJobs?.[job.id]}
                 onToggleSave={toggleBookmark}
               />
