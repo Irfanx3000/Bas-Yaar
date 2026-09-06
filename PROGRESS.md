@@ -701,7 +701,37 @@ that is usually one image. Add drag when there is a real carousel to drag.
 - [ ] `/profile/personal` — PersonalInformationScreen (231)
 - [ ] `/profile/personal` — PersonalInformationScreen (231)
 - [ ] `/profile/maritime` — MaritimeProfileEditScreen (345)
-- [ ] `/cv` — CareerProfileScreen (422). CompletionRing, section cards
+- [x] `/cv` — the career profile is ONE resolved document, and it holds **two
+      kinds of section**, which decides what is editable:
+      **NATIVE** (experience · education · skills · languages · references) are
+      stored on it and edited via `addEntry` / `updateEntry` / `removeEntry`.
+      **AGGREGATED** (personal · contact · maritime · certificates ·
+      travelDocuments) are assembled live from the user profile and the
+      documents store — **read-only here**, because editing Personal Details
+      from this screen would write to the wrong place. Each links out to the
+      screen that owns it.
+- [x] **`EntryModal`** — add/edit for all four native sections in ONE
+      parameterised component, which is the app's own choice and its own
+      reasoning: the container logic is identical per section, only the fields
+      differ. A dialog rather than a route is the shell decision the web gets to
+      make; the app pushes a screen because a phone has nowhere else to put a
+      form.
+
+      Constraints copied, not invented — all from `careerProfile.model.js` and
+      the app's `buildPayload()`:
+      - field caps mirror the schema maxlengths, and **`name` cannot be one
+        number**: skills caps at 100, languages at 50
+      - `NO_HTML` is the backend's own `textSanitizer` rule, applied client-side
+        so a bad paste is caught before a round trip
+      - empty optional strings become **null**, not `""` — the schema defaults null
+      - `endDate` is null whenever `isCurrent`, whatever the field holds
+      - `responsibilities` is a newline-split **array**, trimmed, blanks dropped,
+        max 15 lines × 300 chars
+      - languages default to proficiency **Conversational**
+
+      Form state is seeded lazily and reset by a **`key`** on the component
+      rather than an effect syncing props into state — React's own answer to
+      "reset when a prop changes", and it avoids the cascading render.
 - [ ] `/cv/[section]` — CareerProfileEntryEditorScreen (432)
 - [ ] `/cv/resume` — ResumeEditorScreen (447) + TemplateThumbnailPreview (342)
 - [ ] `/documents` — DocumentsScreen (276) + 6 components
