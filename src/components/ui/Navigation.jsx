@@ -46,8 +46,26 @@ export function Tabs({ tabs = [], value, onChange, className = "" }) {
             }`}
           >
             {tabLabel}
+            {/* Count pill. A tab may carry its own `badgeColor` — the
+                applications tabs colour theirs by meaning (active green, closed
+                red), which is the app's behaviour. The values are runtime hex
+                from a constants file, so Tailwind cannot generate classes for
+                them and the colour goes through `style`; `22` is the ~13% alpha
+                fill the app uses. A selected tab always reverts to the brand
+                blue, so the pill never fights the tab's own selected state. */}
             {tab.count != null ? (
-              <span className="ml-2 rounded-round bg-primary-tint px-2 py-0.5 text-xs font-bold text-primary-vivid">
+              <span
+                className={`ml-2 rounded-round px-2 py-0.5 text-xs font-bold ${
+                  selected || tab.badgeColor ? "" : "bg-primary-tint text-primary-vivid"
+                }`}
+                style={
+                  selected
+                    ? { backgroundColor: "rgba(5, 109, 236, 0.15)", color: "var(--color-primary)" }
+                    : tab.badgeColor
+                      ? { backgroundColor: `${tab.badgeColor}22`, color: tab.badgeColor }
+                      : undefined
+                }
+              >
                 {tab.count}
               </span>
             ) : null}

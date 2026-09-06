@@ -75,7 +75,17 @@ export default function ApplicationsPage() {
       </header>
 
       {/* Counts come from the hook, which computes them across ALL applications
-          rather than the current page — so "Active 12" stays 12 on page 2. */}
+          rather than the current page — so "Active 12" stays 12 on page 2.
+
+          Each count pill is coloured by MEANING, not by one house colour:
+          Active is green, Closed is red, Selected and All are brand blue. Those
+          values live on APPLICATION_TABS as `badgeColor`, whose own comment says
+          it "drives the count pill color on each inactive tab".
+
+          The one rule that is not in the data: an INACTIVE "All" pill is grey
+          (#8896A5), because "All" is a scope rather than a status and colouring
+          it blue would imply a state it does not have. A selected tab always
+          reverts to brand blue, handled inside Tabs. */}
       <Tabs
         value={activeTab}
         onChange={setActiveTab}
@@ -83,6 +93,7 @@ export default function ApplicationsPage() {
           value: tab.id,
           label: t(tab.labelKey),
           count: counts?.[tab.id],
+          badgeColor: tab.id === "all" ? "#8896A5" : tab.badgeColor,
         }))}
       />
 
