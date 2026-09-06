@@ -681,7 +681,7 @@ otherwise. The browser does that natively, so the round trip and the
 `ponytail:` no swipe gestures on the carousel — autoplay plus dots, for a strip
 that is usually one image. Add drag when there is a real carousel to drag.
 
-### Block E · Profile & CV — 🟡 1 of 7 (screenshot received)
+### Block E · Profile & CV — 🟡 3 of 7 (screenshot received)
 
 - [x] `/profile` — **reads from TWO sources**, because the app screen shows things
       that live apart:
@@ -734,9 +734,80 @@ that is usually one image. Add drag when there is a real carousel to drag.
       "reset when a prop changes", and it avoids the cascading render.
 - [ ] `/cv/[section]` — CareerProfileEntryEditorScreen (432)
 - [ ] `/cv/resume` — ResumeEditorScreen (447) + TemplateThumbnailPreview (342)
-- [ ] `/documents` — DocumentsScreen (276) + 6 components
-- [ ] **PDF viewing lands here** — deletes `pdf/pdfCache/pdfDownload` services (265 LOC)
-      and the `blob-util` stub, replaced by `<iframe>` + `URL.createObjectURL`
+- [x] `/documents` — DocumentsScreen + its 6 components, in **3 files**. Verified
+      end-to-end against the live API, not just rendered.
+- [x] **PDF viewing landed here as planned** — a browser renders a PDF URL
+      natively, so `<iframe>` replaces the whole `pdf` / `pdfCache` /
+      `pdfDownload` chain (265 LOC) and `react-native-pdf`. No `URL.createObjectURL`
+      either: the view URL carries its own token, so it can be used directly.
+
+**The upload actually works — proven, not assumed**
+
+Against `localhost:5000` with the seeded account: multipart POST returns a real
+document, the view token serves the file, the same URL without a token is 401,
+certificate metadata round-trips, a PDF into an image-only type is refused, and
+both test documents were deleted afterwards.
+
+Two things that only showed up by running it:
+- **The server converts uploaded images to WebP.** `originalName` stays
+  `passport.png` while `mimeType` becomes `image/webp`. The preview branches on
+  `mimeType === 'application/pdf'`, so this is harmless — but branching on the
+  file extension would have been wrong.
+- **`grouped[docType.key]`** is keyed on `doc.category`, which is the document
+  TYPE key. `item.id` is that key; `item.documentId` is the uploaded file's
+  `_id` and is null until something is uploaded. Not interchangeable.
+
+**The one line in the mirror that cannot match the app**
+
+`documents.service.js` appended `{ uri, name, type }` — React Native's FormData
+file shape. A browser stringifies that to `"[object Object]"` and multer sees no
+file at all. The web appends the `File` itself. Everything else in the file is
+untouched, and the explicit `multipart/form-data` header is deliberately left
+alone: axios 1.x unsets it for FormData in a browser so the boundary is added
+correctly. Setting it by hand *without* a boundary is the classic break here.
+
+**Three rows collapse to one**
+
+The app offers Take Photo / Choose from Gallery / Choose File because RN needs a
+different native module for each. The browser has one file input, and its picker
+already offers the camera as a source on Android and iOS — so it is one row,
+with `accept` carrying the type's own rule (`pdf` → `application/pdf`, `image` →
+jpeg/png/webp, `both` → either). The server enforces the same rule again, and
+returns "Invalid file type." when it is violated.
+
+**What is mirrored exactly, because each one prevents a real loss**
+
+- Size is checked against **this type's** `maxSizeMB` before sending. multer's
+  ceiling is a flat 20 MB for every type; the strict per-type check happens
+  server-side only *after* the file has already been uploaded to temp.
+- Replacing asks first and names the **new** file — a misclick otherwise
+  overwrites a passport with the wrong scan and the old one is gone.
+- `certificate` / `stcw` collect metadata **before** upload, once per pick, on
+  every path. Without it a generated resume's Certificates section has the raw
+  category name and blank issuer/expiry columns.
+- Delete asks first, naming the document.
+
+**Status is not a three-state yet.** `documents.service.js` derives it as
+`existing ? Uploaded : Not Uploaded`, with its own comment saying there is no
+admin-verification workflow. The Pending tab renders anyway, at 0, because it is
+in the app and in the design — not because it was forgotten.
+
+**Search refetches per keystroke.** The hook's effect refires on `searchQuery`
+and `getDocuments()` hits the network again, even though the filtering is
+client-side. That is the app's behaviour, left alone on purpose: document types
+are cached in their service and stale responses are dropped by request id, so
+the cost is chatter, not correctness.
+
+Two web-only fixes with no app counterpart:
+- `confirmReplace` sets `dismissible: false`. A native alert always resolves; a
+  web dialog can be dismissed with Escape or a backdrop click, which would leave
+  that promise pending forever.
+- The file input is cleared before use. Picking the **same** file twice fires no
+  change event otherwise, so a failed upload could not be retried with it.
+
+3 icons added to `scripts/extract-icons.mjs` — `certificate`, `id-card`, `globe`
+— **68 icons** now. These come from the admin's DocumentType rows rather than
+from app source, which is why the original harvest missed them.
 
 ### Block F · Money — 🟡 3 of 5
 

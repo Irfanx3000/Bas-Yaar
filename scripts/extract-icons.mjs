@@ -24,10 +24,10 @@ import { writeFileSync } from "node:fs";
 const NAMES = `
 arrow-left arrow-right bars bell bell-slash bookmark briefcase calendar-alt
 calendar-check calendar-times camera check check-circle chevron-down chevron-left
-chevron-right cloud-download-alt cog copy download ellipsis-h ellipsis-v email
+certificate chevron-right cloud-download-alt cog copy download ellipsis-h ellipsis-v email
 education exclamation-circle exclamation-triangle eye eye-slash file-alt file-document-outline
-folder-open genderless graduation-cap help-circle hourglass-half image info-circle lightbulb
-link location-arrow lock magic map-marker-alt mars paper-plane pencil-alt
+folder-open genderless globe graduation-cap help-circle hourglass-half image info-circle lightbulb
+id-card link location-arrow lock magic map-marker-alt mars paper-plane pencil-alt
 phone-alt plus route search share-alt sign-out-alt sync-alt tag times
 times-circle trash-alt upload user user-circle venus wallet whatsapp gem ship
 `.split(/\s+/).filter(Boolean);

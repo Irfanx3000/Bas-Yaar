@@ -94,7 +94,17 @@ export const documentsService = {
   async uploadDocument(categoryKey, asset, metadata = {}) {
     const formData = new FormData();
     formData.append('category', categoryKey);
-    formData.append('file', { uri: asset.uri, name: asset.name, type: asset.type });
+    // ⚠️ THE ONE LINE IN THIS MIRROR THAT CANNOT MATCH THE APP.
+    // React Native's FormData accepts { uri, name, type }; the browser's does
+    // not — it stringifies a plain object to "[object Object]" and multer then
+    // sees no file at all. On the web `asset` IS the File the user picked, so
+    // asset.name / asset.type still read correctly everywhere else below.
+    //
+    // The explicit 'multipart/form-data' header below is left as-is on purpose:
+    // axios 1.x unsets it for FormData in a browser so the boundary is added by
+    // the browser itself. Setting it by hand WITHOUT a boundary is what breaks
+    // multipart uploads, and axios is what prevents that here.
+    formData.append('file', asset, asset.name);
     if (Object.keys(metadata).length) formData.append('metadata', JSON.stringify(metadata));
 
     const { data } = await apiClient.post(ENDPOINTS.USER.DOCUMENTS, formData, {
