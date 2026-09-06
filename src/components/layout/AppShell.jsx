@@ -36,6 +36,7 @@ const SECONDARY = [
   { href: "/documents", label: "Documents", icon: "folder-open" },
   { href: "/saved", label: "Saved jobs", icon: "bookmark" },
   { href: "/alerts", label: "Job alerts", icon: "bell" },
+  { href: "/interview-prep", label: "Interview Prep", icon: "lightbulb" },
   { href: "/subscription", label: "Subscription", icon: "tag" },
   { href: "/wallet", label: "Wallet", icon: "wallet" },
   { href: "/refer", label: "Refer & earn", icon: "share-alt" },
