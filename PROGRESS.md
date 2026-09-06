@@ -1251,3 +1251,70 @@ means a green build only proves names *resolve*, not that they *mean* anything.
   Crew audience is largely Filipino / Indian / Chinese / Arabic-speaking.
 - Mobile web will carry most traffic — the app's phone design is the mobile reference
   almost pixel-for-pixel. Desktop is the expansion.
+
+---
+
+## Phase 7 · Deployment — prepared, not yet cut over
+
+Everything the VPS needs is committed under `deploy/`. Two facts change the
+shape of this, both verified rather than assumed:
+
+**crewapply.com is not on the VPS. It is on Vercel.**
+
+```
+crewapply.com      -> 216.198.79.1   (Vercel — the demo site)
+api.crewapply.com  -> 200.141.6.212  (the VPS, already serving the API)
+```
+
+So the site cannot appear at the domain until the **DNS A record is repointed**,
+which happens in the DNS provider's panel and cannot be done over SSH. It is the
+last step deliberately: build and verify on the VPS first, then flip one record.
+Nothing needs deleting on Vercel — leaving the project intact makes rollback a
+one-record change.
+
+**The API will reject the new origin until `ALLOWED_ORIGINS` is updated.** The
+backend builds its CORS allow-list from that env var (`config/index.js`), and a
+preflight from `https://crewapply.com` currently returns **500** — tested live.
+Until it is added, the site loads and every API call fails. One env line plus
+`pm2 reload crewapply-api`; keep the existing entries or the Vercel demo breaks
+while DNS still points at it.
+
+### What is committed
+
+- `.env.production` — **un-ignored on purpose.** `NEXT_PUBLIC_*` is inlined into
+  the browser bundle at build time, so there is no secret in it, and committing
+  it removes the likeliest deployment failure: building on the server without it
+  and silently baking in the `localhost:5000` fallback.
+- `ecosystem.config.cjs` — pm2, named `crewapply-web` beside `crewapply-api`.
+  `.cjs` because pm2 `require()`s it. Points at Next's binary rather than
+  `npm start`, so pm2 supervises the server instead of a shell wrapper that
+  forks it — otherwise reload can orphan the real process.
+- `deploy/nginx/crewapply.com.conf` — proxy to `127.0.0.1:3000`, www → apex,
+  immutable caching on `/_next/static`, and `X-Forwarded-Proto` (without it Next
+  emits `http://` redirects behind the proxy and loops).
+- `deploy/deploy.sh` — the same one-liner shape as backend and admin.
+- `deploy/DEPLOY.md` — first deploy, cutover, rollback, symptom table.
+
+### Two traps the deploy script now fails on rather than shipping
+
+1. **`--omit=dev` breaks this build.** The backend can drop devDependencies
+   because it only runs; this has to build, and `tailwindcss`,
+   `@tailwindcss/postcss` and `babel-plugin-react-compiler` are all
+   devDependencies. The error points at PostCSS, not at the flag.
+2. **`.env.local` outranks `.env.production` in Next.** Proved it locally: with
+   `.env.local` present the production build baked in `localhost:5000` even
+   though `.env.production` was correct and sitting right there. Moved it aside
+   and the right URL appeared. The script refuses to build if `.env.local`
+   exists, and then **asserts the expected URL is actually in `.next/static`**
+   after building — a positive check, because this failure is invisible until a
+   visitor's browser makes every request to a machine that is not the server.
+
+Verified locally: production build succeeds, `next start` serves `/`, `/login`
+and `/legal/privacy` at 200, and the client bundle contains
+`https://api.crewapply.com/api/v1` and no `localhost:5000`.
+
+### Not done here
+
+The SSH connection itself. This environment has `ssh` but no password-capable
+client, and installing one was blocked, so nothing was run on the server — every
+step is in `deploy/DEPLOY.md` to run directly.
