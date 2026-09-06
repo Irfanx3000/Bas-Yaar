@@ -39,7 +39,13 @@ const SECONDARY = [
   { href: "/interview-prep", label: "Interview Prep", icon: "lightbulb" },
   { href: "/subscription", label: "Subscription", icon: "tag" },
   { href: "/wallet", label: "Wallet", icon: "wallet" },
-  { href: "/refer", label: "Refer & earn", icon: "share-alt" },
+  /* HIDDEN — Refer & earn is not being shown to users yet.
+     To bring it back: uncomment this row and the referral card in
+     jobs/[slug]/page.js, then build /refer (ReferEarn, 427 LOC in the app).
+     Nothing else needs changing — the backend side already works: a new user
+     can still enter someone's code on signup, and a paid referral still credits
+     the wallet as `referral_reward`. Only the two entry points are hidden.
+  { href: "/refer", label: "Refer & earn", icon: "share-alt" }, */
   { href: "/consultancy", label: "Consultancy", icon: "user-circle" },
   { href: "/settings", label: "Settings", icon: "cog" },
 ];

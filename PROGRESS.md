@@ -865,7 +865,24 @@ from app source, which is why the original harvest missed them.
 - [x] `/subscription/plan` — Razorpay web checkout, all three payment fallbacks
 - [x] `/subscription/success`
 - [x] `/wallet` — the missing half of the mid-subscription flow
-- [ ] `/refer` — ReferEarn (427)
+- [~] `/refer` — ReferEarn (427). **HIDDEN, not built.** Refer & earn is not
+      being shown to users, so both entry points are commented out: the sidebar
+      row in `AppShell.jsx` and the referral card in the job-details rail. There
+      were exactly two, and both pointed at `/refer`, which does not exist — so
+      they were dead links as well as unwanted.
+
+      **Only the entry points are hidden; referrals still work.** A new user can
+      still enter someone's code on signup (`referralCode`), and a paid referral
+      still credits the wallet as `referral_reward` — which the Wallet screen
+      already labels. Removing those would break the feature rather than hide it.
+
+      The job-details card keeps its own condition inside the comment: the app
+      hides it on a rejected application, `(!isAppliedMode || !isRejected)`, and
+      that rule is the sort of thing that gets lost on the way back.
+
+      To restore: uncomment both, then build `/refer`. Verified the label appears
+      in no executable chunk — only in source maps, which are not served
+      (`productionBrowserSourceMaps` defaults to false).
 
 **Why the wallet is not a side feature**
 

@@ -529,7 +529,14 @@ export default function JobDetailsPage({ params }) {
             </Card>
           ) : null}
 
-          {/* Refer hides on rejection — the app's `(!isAppliedMode || !isRejected)`. */}
+          {/* HIDDEN — Refer & earn is not being shown to users yet; the sidebar
+              entry in AppShell.jsx is commented out for the same reason, and
+              /refer does not exist. Restore both together.
+
+              Its own condition is kept intact inside the comment: the app hides
+              this card on a rejected application — `(!isAppliedMode ||
+              !isRejected)` — and that rule would be easy to lose on the way back.
+
           {!isAppliedMode || !isRejected ? (
             <Card className="border-line-mint text-center">
               <Icon name="user-circle" size={24} className="mx-auto text-primary" />
@@ -543,6 +550,7 @@ export default function JobDetailsPage({ params }) {
               </Link>
             </Card>
           ) : null}
+          */}
         </aside>
       </div>
 
