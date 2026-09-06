@@ -990,6 +990,66 @@ and calling it again would open a **second order for one purchase**.
 flashed "choose a plan" for one frame at a paying user. `getSnapshot` caches the
 raw string — returning a fresh `JSON.parse` each call renders forever.
 
+### Error dialogs & responsiveness — audited across the web
+
+**An alert could render with no message at all.** The screenshot was
+"Could not open document" with an empty body — a title, an icon, and nothing
+telling the user what went wrong. One call site (the consultancy resume preview)
+passed `message: ""`.
+
+Fixed at BOTH levels, because fixing only the caller leaves the next one free to
+repeat it:
+- that call site now uses `getErrorMessage(err)` like every other catch;
+- **`AlertHost` falls back to `errors.generic`** when the message is missing or
+  blank after trimming, so no caller can produce a wordless dialog again.
+
+An audit of all 41 `showAlert` call sites found no others: `getErrorMessage`
+always terminates at `errors.generic`, and the one mirror call that looked
+message-less (`api/client.js`) is passing a shorthand variable.
+
+**Modal had no height cap and no internal scroll.** It grew past the viewport and
+the browser's own max-height clipped it — taking the footer, and the Save button
+with it. The Personal Info form and a long Terms section both did this. It is now
+a flex column with a bounded height, a fixed header and footer, and one scroll
+container between them.
+
+- **`dvh`, not `vh`** — on mobile Safari and Chrome `vh` is the tallest the
+  viewport ever gets, so a `vh`-sized modal sits partly under the URL bar.
+- Footer buttons **stack below ~380px**, reversed so the primary action stays
+  nearest the thumb. "Cancel" + "Save Changes" side by side overflow a 320px
+  sheet.
+- `overscroll-contain`, so reaching the end of the body does not scroll the page
+  behind the backdrop.
+
+**That change would have clipped every dropdown inside a modal** — an absolutely
+positioned panel is cut off by any ancestor that scrolls, and Personal Info alone
+has two Selects and a DatePicker. So `useDropPlacement` now also returns the
+trigger's rect and `dropStyle()` places panels with **`position: fixed`**, which
+escapes ancestor overflow entirely. The same scroll/resize listeners that decide
+the flip refresh the rect (capture:true, so the modal body's own scrolling
+counts), and `left` is clamped to an 8px gutter so the 19rem calendar cannot hang
+off a phone's right edge under a half-width field. `measure()` runs in the same
+handler as `setOpen`, so both batch and there is no unpositioned first frame.
+
+**The toast covered the mobile bottom nav.** Both sat at `bottom-4`; the toast
+now clears the nav below `lg` and drops back down above it. It was also
+`max-w-sm` — 24rem, wider than a 320px screen minus the stack's padding — so it
+is capped at the available width, and its message wraps rather than overflowing.
+
+**Long unbreakable content.** `adminNote` on a booking is where the meeting URL
+lands, and a long link pushed the card wider than the screen; it and the
+requirement text now wrap. Wallet reference IDs and profile values already did.
+
+**The documents row was carrying four things on one line** — icon, three lines of
+text, the status block, a chevron — leaving the name about 90px at 320px. The
+status moves to its own row below `sm`, with the icon spanning both so the text
+still starts at the same left edge.
+
+The rest of the layout audit came back clean: one fixed pixel width in the whole
+app (`w-[2px]`, a divider), every multi-column grid already has a responsive
+base, `Tabs` already scrolls horizontally, and `AppShell` swaps the sidebar for a
+bottom nav below `lg` with `min-w-0` on main.
+
 ### Block G · Support & settings — 🟡 5 of 8
 
 - [x] `/consultancy` (**1,066**) · `/consultancy/bookings` (210)

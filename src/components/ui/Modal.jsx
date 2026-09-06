@@ -54,24 +54,46 @@ export function Modal({ open, onClose, title, children, footer, size = "md" }) {
         // whose target IS the dialog (not its content) means outside.
         if (e.target === ref.current) onClose?.();
       }}
-      className={`w-full max-w-none rounded-t-xl bg-surface p-0 shadow-lg backdrop:bg-black/40 sm:rounded-xl ${width}
-                  m-0 mt-auto sm:m-auto`}
+      /* Height is CAPPED and the BODY scrolls, not the dialog.
+         A dialog with no cap grows past the viewport and the browser's own
+         max-height then clips it — the Personal Info form and a long Terms
+         section both lose their footer that way, and the Save button with it.
+         So: a flex column with a bounded height, a header and footer that stay
+         put, and one scroll container between them.
+
+         `dvh`, not `vh` — on mobile Safari and Chrome `vh` is the tallest the
+         viewport ever gets, so a modal sized in vh sits partly under the URL
+         bar until you scroll. 90dvh follows the visible area instead.
+
+         `overscroll-contain` stops a scroll that reaches the body's end from
+         chaining to the page behind the backdrop. */
+      className={`m-0 mt-auto flex max-h-[90dvh] w-full max-w-none flex-col overflow-hidden rounded-t-xl
+                  bg-surface p-0 shadow-lg backdrop:bg-black/40 sm:m-auto sm:max-h-[85dvh] sm:rounded-xl ${width}`}
     >
-      <div className="flex items-start justify-between gap-3 px-4 pt-4">
-        {title ? <h2 className="text-xl font-bold text-heading">{title}</h2> : <span />}
+      <div className="flex shrink-0 items-start justify-between gap-3 px-4 pt-4">
+        {title ? <h2 className="min-w-0 text-xl font-bold break-words text-heading">{title}</h2> : <span />}
         <button
           type="button"
           onClick={onClose}
           aria-label="Close"
-          className="-mt-1 -mr-1 cursor-pointer rounded-round p-2 text-hint hover:bg-canvas hover:text-heading"
+          className="-mt-1 -mr-1 shrink-0 cursor-pointer rounded-round p-2 text-hint hover:bg-canvas hover:text-heading"
         >
           <Icon name="times" size={16} />
         </button>
       </div>
 
-      <div className="px-4 py-3 text-md text-body">{children}</div>
+      <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-4 py-3 text-md text-body">
+        {children}
+      </div>
 
-      {footer ? <div className="flex justify-end gap-2 px-4 pb-4">{footer}</div> : null}
+      {/* Buttons stack below 380px or so — two side by side with real labels
+          ("Cancel" / "Save Changes") overflow a 320px sheet otherwise. Reversed
+          when stacked so the primary action stays closest to the thumb. */}
+      {footer ? (
+        <div className="flex shrink-0 flex-col-reverse gap-2 border-t border-line-soft px-4 py-3 min-[380px]:flex-row min-[380px]:justify-end min-[380px]:border-t-0 min-[380px]:pt-0">
+          {footer}
+        </div>
+      ) : null}
     </dialog>
   );
 }

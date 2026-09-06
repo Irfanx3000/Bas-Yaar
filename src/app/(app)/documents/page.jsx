@@ -59,8 +59,12 @@ function DocumentRow({ doc, onSelect }) {
 
   return (
     <Card padding="sm" radius="md" className="relative mb-2.5">
-      <div className="flex items-center gap-3">
-        <span className="flex size-11 shrink-0 items-center justify-center rounded-md bg-primary-light text-primary">
+      {/* Four things compete for one line: icon, three lines of text, the status
+          block and a chevron. Below `sm` that leaves the name about 90px, so the
+          status moves to its own row instead of squeezing everything. The icon
+          spans both rows so the text still starts at the same left edge. */}
+      <div className="grid grid-cols-[auto_1fr] items-center gap-x-3 gap-y-2 sm:flex">
+        <span className="row-span-2 flex size-11 shrink-0 items-center justify-center rounded-md bg-primary-light text-primary sm:row-span-1">
           <Icon name={doc.iconName} size={18} />
         </span>
 
@@ -74,15 +78,15 @@ function DocumentRow({ doc, onSelect }) {
           </p>
         </div>
 
-        <div className="flex shrink-0 items-center gap-2">
-          <div className="flex flex-col items-end gap-[3px]">
+        <div className="flex shrink-0 items-center justify-between gap-2 sm:justify-end">
+          <div className="flex items-center gap-2 sm:flex-col sm:items-end sm:gap-[3px]">
             <span className={`flex items-center gap-1.5 text-sm font-semibold ${status.color}`}>
               {t(status.labelKey)}
               <Icon name={status.icon} size={13} />
             </span>
             <span className="text-xs text-hint">{doc.date}</span>
           </div>
-          <Icon name="chevron-right" size={12} className="text-hint" />
+          <Icon name="chevron-right" size={12} className="shrink-0 text-hint" />
         </div>
       </div>
 

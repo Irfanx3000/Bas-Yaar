@@ -66,7 +66,11 @@ export function ToastHost() {
   return (
     <div
       aria-live="polite"
-      className="pointer-events-none fixed inset-x-0 bottom-4 z-50 flex flex-col items-center gap-2 px-4 sm:inset-x-auto sm:right-6 sm:items-end"
+      /* Below `lg` the bottom nav is itself `fixed bottom-4`, so a toast at
+         bottom-4 lands directly on top of it and covers the tab a user is
+         reaching for. It clears the nav on small screens and drops back down
+         once the nav is gone. z-50 keeps it above the nav's z-40 either way. */
+      className="pointer-events-none fixed inset-x-0 bottom-24 z-50 flex flex-col items-center gap-2 px-4 sm:inset-x-auto sm:right-6 sm:items-end lg:bottom-6"
     >
       {toasts.map((toast) => {
         const [bg, fg, icon] = TONE[toast.tone] ?? TONE.success;
@@ -74,10 +78,15 @@ export function ToastHost() {
         return (
           <div
             key={toast.id}
-            className={`pointer-events-auto flex max-w-sm items-center gap-2.5 rounded-pill px-4 py-2.5 shadow-lg ${bg} ${fg} motion-safe:animate-[toast-in_180ms_var(--ease-decelerate)]`}
+            /* max-w-sm alone overflows a 320px screen — 24rem is wider than the
+               viewport minus the stack's own padding — so it is capped at the
+               available width first. rounded-xl rather than pill because a long
+               message wraps to two lines, and a pill around two lines looks
+               like a mistake. */
+            className={`pointer-events-auto flex w-full max-w-sm items-center gap-2.5 rounded-xl px-4 py-2.5 shadow-lg sm:w-auto ${bg} ${fg} motion-safe:animate-[toast-in_180ms_var(--ease-decelerate)]`}
           >
             <Icon name={toast.icon || icon} size={15} className="shrink-0" />
-            <span className="text-md font-semibold">{toast.message}</span>
+            <span className="min-w-0 text-md font-semibold break-words">{toast.message}</span>
           </div>
         );
       })}

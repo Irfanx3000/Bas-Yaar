@@ -2,7 +2,7 @@
 
 import { useEffect, useId, useMemo, useRef, useState } from "react";
 import { Icon } from "./Icon";
-import { dropClass, useDropPlacement } from "./useDropPlacement";
+import { dropStyle, useDropPlacement } from "./useDropPlacement";
 
 /* A real date picker, styled to match Input.
  *
@@ -96,7 +96,7 @@ export function DatePicker({
   const triggerRef = useRef(null);
 
   /* ~360px: 6-week grid + header + footer. Known, so no measure-then-move. */
-  const { placement, measure } = useDropPlacement(triggerRef, open, 360);
+  const { placement, measure, rect } = useDropPlacement(triggerRef, open, 360);
 
   useEffect(() => {
     if (!open) return;
@@ -197,7 +197,11 @@ export function DatePicker({
           <div
             role="dialog"
             aria-label={label || "Choose a date"}
-            className={`absolute z-50 w-[19rem] max-w-[calc(100vw-2rem)] rounded-md border border-line-soft bg-surface p-3 shadow-lg ${dropClass(placement)}`}
+            /* Fixed for the same reason as Select, and given an explicit width
+               so dropStyle can keep the 19rem calendar inside the viewport when
+               the field itself is narrower. */
+            style={dropStyle(placement, rect, { width: 304 }) ?? { display: "none" }}
+            className="z-50 w-[19rem] max-w-[calc(100vw-1rem)] rounded-md border border-line-soft bg-surface p-3 shadow-lg"
           >
             <div className="mb-2 flex items-center gap-1">
               <button

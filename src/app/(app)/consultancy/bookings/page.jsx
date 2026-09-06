@@ -63,7 +63,7 @@ function BookingCard({ booking }) {
       </p>
 
       {booking.requirement ? (
-        <p className="mt-1.5 text-sm whitespace-pre-line text-body">{booking.requirement}</p>
+        <p className="mt-1.5 text-sm break-words whitespace-pre-line text-body">{booking.requirement}</p>
       ) : null}
 
       {booking.adminNote ? (
@@ -72,7 +72,10 @@ function BookingCard({ booking }) {
           {/* The meeting link arrives as plain text in the note, so it is shown
               as written rather than parsed into an anchor — a wrong guess about
               what is a link in an admin's free text is worse than none. */}
-          <p className="mt-1 text-sm whitespace-pre-line text-heading">{booking.adminNote}</p>
+          {/* break-words matters here specifically: the note is where the
+              meeting URL lands, and a long unbroken link pushes the card wider
+              than a phone screen. */}
+          <p className="mt-1 text-sm break-words whitespace-pre-line text-heading">{booking.adminNote}</p>
         </div>
       ) : null}
 

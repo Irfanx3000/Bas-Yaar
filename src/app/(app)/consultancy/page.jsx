@@ -43,6 +43,7 @@ import { documentsService } from "@/services/documents.service";
 import { formatCurrency, formatDate } from "@/utils/format";
 import { formatTime12h } from "@/lib/time";
 import { showAlert } from "@/utils/alertRef";
+import { getErrorMessage } from "@/i18n/getErrorMessage";
 import { t } from "@/i18n";
 import { Button, Card, Icon, LoadingState, Select } from "@/components/ui";
 
@@ -120,8 +121,8 @@ export default function ConsultancyPage() {
          uses — the server stopped serving these as static files. */
       const url = await documentsService.getViewUrl(hook.resume._id);
       window.open(url, "_blank", "noopener");
-    } catch {
-      showAlert({ type: "error", title: t("documents.alerts.couldNotOpenTitle"), message: "" });
+    } catch (err) {
+      showAlert({ type: "error", title: t("documents.alerts.couldNotOpenTitle"), message: getErrorMessage(err) });
     } finally {
       setOpeningResume(false);
     }

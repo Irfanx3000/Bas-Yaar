@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { setAlertHost } from "@/utils/alertRef";
+import { t } from "@/i18n";
 import { Button, Icon, Modal } from "@/components/ui";
 
 /* Renders the app's global alerts.
@@ -42,6 +43,15 @@ export function AlertHost() {
   if (!alert) return null;
 
   const [bg, fg, icon] = TONE[alert.type] ?? TONE.info;
+
+  /* A dialog with a title, an icon and no words is worse than no dialog — it
+     tells the user something failed and nothing about what. One call site
+     passed an empty string and rendered exactly that. Rather than only fixing
+     that caller, an alert with no usable body falls back to the same generic
+     copy getErrorMessage() ends at, so this cannot happen again from anywhere.
+
+     Trimmed before testing: "  " is as empty as "". */
+  const message = String(alert.message ?? "").trim() || t("errors.generic");
   const dismissible = alert.dismissible !== false;
   const close = () => setAlert(null);
 
@@ -75,7 +85,7 @@ export function AlertHost() {
         <span className={`flex size-10 shrink-0 items-center justify-center rounded-round ${bg} ${fg}`}>
           <Icon name={alert.icon || icon} size={18} />
         </span>
-        <p className="min-w-0 flex-1 text-md whitespace-pre-line text-body">{alert.message}</p>
+        <p className="min-w-0 flex-1 text-md whitespace-pre-line text-body">{message}</p>
       </div>
     </Modal>
   );
