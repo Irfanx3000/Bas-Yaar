@@ -940,13 +940,82 @@ and calling it again would open a **second order for one purchase**.
 flashed "choose a plan" for one frame at a paying user. `getSnapshot` caches the
 raw string — returning a fresh `JSON.parse` each call renders forever.
 
-### Block G · Support & settings — 8 routes, 2,553 LOC
+### Block G · Support & settings — 🟡 5 of 8
 
-- [ ] `/consultancy` (**1,066**) · `/consultancy/bookings` (210)
+- [x] `/consultancy` (**1,066**) · `/consultancy/bookings` (210)
 - [ ] `/interview-prep` (259)
-- [ ] `/notifications` (405) · `/notifications/settings` (247)
-- [ ] `/settings` (131) · `/preferences` (203)
-- [ ] `/legal/privacy` · `/legal/terms` — also serve the Phase 5 SEO surface
+- [ ] `/notifications` (405) — the sidebar bell still points at this dead route
+- [x] `/notifications/settings` (247)
+- [x] `/settings` (131) · [ ] `/preferences` (203)
+- [x] `/legal/privacy` · `/legal/terms` — public, static, Phase 5 SEO surface
+
+**Consultancy is two steps, and the split is load-bearing**
+
+Step 1 collects topic + date + time + requirement and calls `createOrder`, which
+**reserves the slot** and creates the Razorpay order. Step 2 shows what was
+reserved and is the only place checkout opens.
+
+That is not decoration. The hold lasts `SLOT_HOLD_TTL_MS` — 15 minutes,
+deliberately the same constant as an abandoned subscription checkout — so
+reviewing and walking away just gets swept. And a cancelled or failed payment
+**stays on step 2 against the same reservation**, so retrying does not mean
+re-entering everything or grabbing a second slot.
+
+Four cases that look like edge cases and are not, all mirrored from
+`useConsultancy`:
+- `PAYMENT_ALREADY_MADE` from createOrder is a **success** — a previous attempt
+  went through; the user is sent to My Bookings.
+- `SLOT_NOT_AVAILABLE` clears the chosen time and **reloads that date's slots**,
+  because the stale list is what caused it.
+- A checkout error is not proof the payment failed. `wasSlotBooked` re-reads the
+  latest booking, and a booking only exists once payment is confirmed (backend
+  `activateBooking`), so its presence settles it.
+- A `verify()` failure is not proof either — the webhook is authoritative.
+
+Verified live: fee `{amount: 500, currency: "USD"}`, availability returns 18
+open dates for the month, a date returns 13 half-hour slots. **The fee is in
+minor units** (500 → $5.00) like every other amount in this API, and the region
+resolves the currency — so the hardcoded `₹` that was removed from PlanCard would
+have been wrong here too.
+
+Slots carry **no `id`** — a slot only becomes a real row once booked, which is
+why `startTime` is both the key and the value the hook wants.
+
+**`formatTime12h` is deliberately not Date/Intl.** The value is a wall-clock slot
+time with no date and no zone; wrapping it in a Date invents both and then shifts
+it for anyone whose offset disagrees. A 09:00 slot must read 9:00 AM everywhere.
+The app defines this function twice, once per screen — it lives in `lib/time.js`
+here instead of a third and fourth copy.
+
+**Settings is a menu and stays one.** Four rows that navigate elsewhere: Wallet,
+Notification Settings, Privacy Policy, Terms. No state, no fetch, no save — the
+app's own comment says to add real settings here as they appear, and inventing
+web-only switches that write nowhere would be worse than an honest short list.
+
+**Notification settings toggles something real.** `pushNotificationsEnabled` is
+selected explicitly by `notifyEligibleUsersForJob` when it fans out a new job, so
+turning it off here silences the phone even though this build sends no push
+itself. The app navigates back on save; there is no back stack on the web, so it
+confirms with a toast and stays on the form.
+
+**Legal pages are PUBLIC and static.** A legal document only a signed-in user can
+read is not published; app stores and payment providers follow those links
+without a session; and they are the Phase 5 SEO surface, which needs them
+crawlable with no client JS. Both prerender at build time.
+
+Their text was **extracted** from the app's PrivacyPolicyScreen /
+TermsConditionsScreen into `constants/legal.content.js` (11 + 13 sections) rather
+than retyped — a hand-copy of two legal documents is precisely where a silent
+divergence appears. The app's own warning travels with it: this is placeholder
+copy, not reviewed by counsel, and must be replaced in **both** places.
+
+**Two more RN FormData uploads fixed** — the same root cause as documents:
+`resume.service.js` and `personalInformation.service.js` (profile photo) both
+appended `{ uri, name, type }`, which a browser stringifies to `"[object
+Object]"`. That was every remaining file upload in the mirror; a grep for
+`formData.append('file'` now returns three lines and all three are browser-shaped.
+
+3 icons added (`shield-alt`, `file-contract`, `clock`) — **75** now.
 
 ### Not ported
 

@@ -82,7 +82,10 @@ export const personalInformationService = {
 
     const formData = new FormData();
     // Backend expects the field named 'file' (profileUpload.single('file')).
-    formData.append('file', { uri, name: filename, type: mime });
+    // WEB: a browser cannot post RN's { uri, name, type } — it stringifies to
+    // "[object Object]". When `uri` is already a File/Blob it is sent as-is;
+    // the derived name/mime above still describe it correctly.
+    formData.append('file', uri, filename);
 
     // Sent as separate scalar fields rather than a JSON blob: multipart text
     // parts are strings either way, and four named numbers are far easier to
