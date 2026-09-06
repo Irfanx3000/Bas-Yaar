@@ -290,49 +290,55 @@ export default function JobDetailsPage({ params }) {
 
   return (
     <div className="mx-auto max-w-6xl px-[15px] pb-8 lg:px-6">
-      {/* Hero. Jobs carry no photo field, so this is the app's header gradient. */}
-      <div className="bg-gradient-header relative flex h-40 items-end justify-between gap-2 overflow-hidden rounded-xl p-4 sm:h-52">
-        <button
-          type="button"
-          onClick={() => router.back()}
-          aria-label="Go back"
-          className="glass absolute top-4 left-4 flex size-10 items-center justify-center rounded-round text-heading shadow-float"
-        >
-          <Icon name="chevron-left" size={14} />
-        </button>
+      {/* ONE card: image band and details in the same container.
+          Previously the details card was pulled up over the hero with `-mt-8`,
+          which read as two competing boxes and clipped the status badge in the
+          seam between them — the badge sat at the bottom of the hero, exactly
+          where the overlapping card landed. Stacking them inside a single
+          `overflow-hidden` card removes the overlap rather than tuning it, and
+          the badge has room of its own. Same shape as JobCard, which is what
+          the user just came from. */}
+      <Card radius="lg" padding="none" elevation="md" className="overflow-hidden">
+        {/* Jobs carry no photo field, so this is the app's header gradient. */}
+        <div className="bg-gradient-header relative flex h-36 items-end p-4 sm:h-44">
+          <button
+            type="button"
+            onClick={() => router.back()}
+            aria-label="Go back"
+            className="glass absolute top-4 left-4 flex size-10 items-center justify-center rounded-round text-heading shadow-float"
+          >
+            <Icon name="chevron-left" size={14} />
+          </button>
 
-        <div className="flex flex-wrap gap-[5px]">
-          {isAppliedMode ? (
-            isRejected ? (
-              <StatusBadge status="rejected" />
-            ) : (
-              statusUi.tags.map((tag) => <StatusBadge key={tag} status={tag} label={tag} />)
-            )
-          ) : job.isFeatured ? (
-            <StatusBadge status="featured" />
-          ) : null}
+          <div className="flex flex-wrap gap-[5px]">
+            {isAppliedMode ? (
+              isRejected ? (
+                <StatusBadge status="rejected" />
+              ) : (
+                statusUi.tags.map((tag) => <StatusBadge key={tag} status={tag} label={tag} />)
+              )
+            ) : job.isFeatured ? (
+              <StatusBadge status="featured" />
+            ) : null}
+          </div>
         </div>
-      </div>
 
-      <Card
-        radius="lg"
-        elevation="md"
-        className="relative mx-2 -mt-8 flex flex-wrap items-start justify-between gap-3"
-      >
-        <div className="min-w-0">
-          <h1 className="text-h3 font-extrabold text-heading">{job.title}</h1>
-          {job.salary ? (
-            <p className="mt-1 text-lg font-bold text-primary">
-              {job.salary} <span className="text-sm font-medium text-hint">{job.salaryUnit}</span>
+        <div className="flex flex-wrap items-start justify-between gap-3 border-t border-line-soft p-4">
+          <div className="min-w-0">
+            <h1 className="text-h3 font-extrabold text-heading">{job.title}</h1>
+            {job.salary ? (
+              <p className="mt-1 text-lg font-bold text-primary">
+                {job.salary} <span className="text-sm font-medium text-hint">{job.salaryUnit}</span>
+              </p>
+            ) : null}
+          </div>
+          {job.location ? (
+            <p className="flex shrink-0 items-center gap-1 text-md text-body">
+              <Icon name="map-marker-alt" size={13} />
+              {job.location}
             </p>
           ) : null}
         </div>
-        {job.location ? (
-          <p className="flex shrink-0 items-center gap-1 text-md text-body">
-            <Icon name="map-marker-alt" size={13} />
-            {job.location}
-          </p>
-        ) : null}
       </Card>
 
       <div className="mt-4 lg:grid lg:grid-cols-[1fr_22rem] lg:items-start lg:gap-6">
