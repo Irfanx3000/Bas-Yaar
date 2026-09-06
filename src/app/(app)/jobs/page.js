@@ -16,6 +16,7 @@
 import { Suspense, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { useJobsData } from "@/hooks/useJobsData";
+import { jobHref } from "@/lib/jobUrl";
 import {
   Button,
   Chip,
