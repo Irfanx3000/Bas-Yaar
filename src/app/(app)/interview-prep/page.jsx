@@ -52,7 +52,7 @@ export default function InterviewPrepPage() {
         />
         <div className="text-center px-10 sm:px-12">
           <h1 className="text-h3 sm:text-h2 font-extrabold text-heading leading-tight">Interview Prep</h1>
-          <p className="text-body text-sm mt-2">What to expect once you're shortlisted for a job.</p>
+          <p className="text-body text-sm mt-2">What to expect once you&apos;re shortlisted for a job.</p>
         </div>
       </div>
 

@@ -85,13 +85,29 @@ export function AuthGuard({ children }) {
   useEffect(() => {
     if (state !== "anonymous" || isPublic) return;
 
-    // BYPASS: Disable redirect to login
-    // const next = encodeURIComponent(pathname);
-    // router.replace(`/login?next=${next}`);
+    const next = encodeURIComponent(pathname);
+    router.replace(`/login?next=${next}`);
   }, [state, isPublic, pathname, router]);
 
-  // BYPASS: Always render children
-  return children;
+  // Auth screens render for everyone, including while the token check runs.
+  if (isPublic) return children;
+
+  if (state === "authenticated") return children;
+
+  /* checking OR anonymous-and-redirecting. Deliberately a neutral placeholder
+     rather than a spinner: it is on screen for one tick in the normal case, and
+     a spinner that flashes is worse than a blank panel.
+
+     ⚠️ If you need to work on a protected screen without signing in, do NOT
+     comment this out — a bypass committed here disables protection for everyone,
+     which is exactly what happened once already. Sign in instead, or set the
+     token directly in devtools:
+       localStorage.setItem('@crewapply:access_token', '<token>')  */
+  return (
+    <div className="flex min-h-dvh items-center justify-center px-[15px]">
+      <p className="sr-only">Checking your session…</p>
+    </div>
+  );
 }
 
 export default AuthGuard;
