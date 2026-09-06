@@ -738,12 +738,65 @@ that is usually one image. Add drag when there is a real carousel to drag.
 - [ ] **PDF viewing lands here** — deletes `pdf/pdfCache/pdfDownload` services (265 LOC)
       and the `blob-util` stub, replaced by `<iframe>` + `URL.createObjectURL`
 
-### Block F · Money — 5 routes, 1,510 LOC
+### Block F · Money — 🟡 3 of 5
 
-- [ ] `/subscription` (318) · `/subscription/plan` (294, Razorpay web checkout)
-      · `/subscription/success` (176)
+- [x] `/subscription` — wired to the backend, `MOCKUP_TIERS` deleted
+- [x] `/subscription/plan` — Razorpay web checkout, all three payment fallbacks
+- [x] `/subscription/success`
 - [ ] `/wallet` (295)
 - [ ] `/refer` — ReferEarn (427)
+
+**What the merged subscription PR actually shipped, and the four bugs in it**
+
+The screen rendered, so it looked done. It was not wired to anything usable:
+
+1. `MOCKUP_TIERS[plan.tier]` and the sort's `order[a.tier]` were keyed
+   `Start`/`Premium`/`Elite`; the API sends **lowercase**. Every lookup missed →
+   perks always `[]`, sort never ran. Deleted `MOCKUP_TIERS` outright: the API's
+   own `features` are byte-identical, so the constant was pure drift risk.
+2. It read `plan.price` / `plan.originalPrice`. `toCardPlan` produces
+   `launchPrice` / `thenPrice` / `launchLabel` / `thenLabel`. Nothing rendered.
+3. A hardcoded `₹` in `PlanCard` — the mapper already formats with the plan's own
+   currency, so this would print `₹KWD 20.000` the day a Gulf plan is added.
+4. "Save up to 30%" was hardcoded. The API says **20**. The page was advertising a
+   discount that does not exist.
+
+**`priceBreakdown` is an ARRAY, not an object**
+
+`[{label,amount,kind}]` — charge rows plus one `kind:"total"` — and every amount
+is in **minor units**. The first pass read it as `breakdown.baseLabel` /
+`.payableValue`, so no lines rendered and the total fell through to the raw
+`20000` where `₹200.00` belonged. On a checkout page. Rows are now rendered as
+the server names them (a credit is a negative amount) rather than reconstructed
+from fields that do not exist.
+
+`formatMoney` asks `Intl` for the currency's minor units instead of the app's
+hardcoded `/100`. Identical for INR; correct for KWD (3 places) and JPY (0),
+which the hardcoded divisor gets 10x and 100x wrong.
+
+**Three payment paths that look like edge cases and are not** — mirrored from
+`usePlanSummary`:
+
+- `summary.activated` → credit/wallet already covered it. **Skip Razorpay.**
+  Opening a checkout for ₹0 fails.
+- Checkout **error** ≠ payment failed. The webhook may have captured it — re-check
+  `/me` before showing bad news.
+- `verify()` failure ≠ payment failed either. The webhook is authoritative; verify
+  is only the fast path. Re-check `/me`, and only then say "almost there".
+
+Cancelling is silent and stays put — the order is still valid.
+
+**`showAlert` was a silent no-op on the web.** Every copied hook and
+`api/client.js` calls it; nothing had ever called `setAlertHost`. `AlertHost` is
+now mounted in the app layout — so payment failures are visible instead of
+swallowed.
+
+**The summary crosses pages through an external store, not an effect.**
+`createOrder` returns server-computed values that cannot be rebuilt from a URL,
+and calling it again would open a **second order for one purchase**.
+`useSyncExternalStore` over `sessionStorage` avoids the setState-in-effect that
+flashed "choose a plan" for one frame at a paying user. `getSnapshot` caches the
+raw string — returning a fresh `JSON.parse` each call renders forever.
 
 ### Block G · Support & settings — 8 routes, 2,553 LOC
 

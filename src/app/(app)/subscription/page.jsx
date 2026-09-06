@@ -1,5 +1,27 @@
 "use client";
 
+/* Subscription & Plans — wired to the backend and mirroring the app.
+ *
+ * ── What was broken, and why it looked like "no working" ────────────────────
+ * The merged version keyed two lookups on a CAPITALISED tier:
+ *     MOCKUP_TIERS[plan.tier]   with keys Start / Premium / Elite
+ *     order[a.tier]             same
+ * but `tier` from the API is lowercase — 'start', 'premium', 'elite'. So every
+ * lookup missed: perks were always `[]` and the sort always returned 99, i.e.
+ * no sort. It also read `plan.price` / `plan.originalPrice`, which the mapper
+ * does not produce.
+ *
+ * MOCKUP_TIERS is gone entirely. `toCardPlan` already maps the API's own
+ * `features`, and those are byte-identical to the hardcoded perks — so the
+ * constant was pure drift risk: the moment an admin edits a plan's features,
+ * the web would keep showing the old list.
+ *
+ * ── The real card shape, from subscription.service.js ────────────────────────
+ *   { id, tier, billingCycle, name, subtitle, theme,
+ *     launchPrice, launchLabel, thenPrice, thenLabel,
+ *     buttonLabel, features, amount, currency, intervalDays }
+ */
+
 import { useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { useSubscription } from "@/hooks/useSubscription";
@@ -7,124 +29,98 @@ import { SubscriptionHeader } from "@/components/subscription/SubscriptionHeader
 import { BillingSwitcher } from "@/components/subscription/BillingSwitcher";
 import { PlanCard } from "@/components/subscription/PlanCard";
 import { SubscriptionFooter } from "@/components/subscription/SubscriptionFooter";
-import { LoadingState, ErrorState } from "@/components/ui/Feedback";
+import { ErrorState, LoadingState } from "@/components/ui";
+import { writePlanSummary } from "@/lib/planSummary";
 
-const MOCKUP_TIERS = {
-  Start: {
-    perks: [
-      "Apply to 10 jobs / month",
-      "Access to basic cruise jobs",
-      "Job alerts (App)",
-      "Standard application support"
-    ]
-  },
-  Premium: {
-    perks: [
-      "Apply to 20 jobs/month",
-      "Access to premium cruise jobs",
-      "Job alerts (Email + App)",
-      "Priority application support"
-    ],
-    isPopular: true
-  },
-  Elite: {
-    perks: [
-      "Unlimited job applications",
-      "Job alerts (Email + App)",
-      "Priority support (WhatsApp)",
-      "Early access to new jobs"
-    ],
-    isElite: true
-  }
-};
+/* Lowercase, because that is what the API sends. */
+const TIER_ORDER = { start: 1, premium: 2, elite: 3 };
 
 export default function SubscriptionPage() {
   const router = useRouter();
-  
-  const navigationAdapter = useMemo(() => ({
-    navigate: (route, params) => {
-      // Pass summary to the next screen via sessionStorage
-      if (params?.summary) {
-        sessionStorage.setItem('planSummary', JSON.stringify(params.summary));
-      }
-      router.push('/subscription/plan');
-    }
-  }), [router]);
+
+  /* The copied hook calls navigation.navigate(ROUTES.PLAN_SUMMARY, { summary }).
+     The summary is a server-computed object — prices, prorated credit, wallet
+     credit, the classified scenario — so it cannot be rebuilt from a URL, and
+     re-creating the order on the next page would issue a second order for the
+     same purchase. sessionStorage carries it across the one hop, and
+     /subscription/plan falls back to creating an order itself if someone lands
+     there directly with nothing stashed. */
+  const navigationAdapter = useMemo(
+    () => ({
+      navigate: (_route, params) => {
+        if (params?.summary) writePlanSummary(params.summary);
+        router.push("/subscription/plan");
+      },
+      replace: (_route, params) => {
+        if (params?.summary) writePlanSummary(params.summary);
+        router.replace("/subscription/plan");
+      },
+    }),
+    [router],
+  );
 
   const {
     billingCycle,
     plans,
+    yearlyDiscountPercent,
     isLoading,
     loadError,
     subscribing,
+    activeTier,
+    subscription,
     handleToggleBilling,
     handleSelectPlan,
-    reloadPlans
+    reloadPlans,
   } = useSubscription(navigationAdapter);
 
-  // If loading without stale data
-  if (isLoading && plans.length === 0) {
+  const displayPlans = useMemo(
+    () => [...plans].sort((a, b) => (TIER_ORDER[a.tier] ?? 99) - (TIER_ORDER[b.tier] ?? 99)),
+    [plans],
+  );
+
+  const body = () => {
+    if (isLoading && plans.length === 0) return <LoadingState rows={3} />;
+    if (loadError && plans.length === 0) return <ErrorState message={loadError} onRetry={reloadPlans} />;
+
     return (
-      <div className="max-w-6xl mx-auto py-12 px-[15px]">
-        <SubscriptionHeader />
-        <LoadingState text="Loading plans..." className="mt-12" />
+      /* auto-fit rather than lg:grid-cols-3: three plans today, but the count
+         comes from the API and a fourth tier would silently break a fixed 3. */
+      <div className="grid grid-cols-[repeat(auto-fit,minmax(min(100%,17rem),1fr))] items-stretch gap-4">
+        {displayPlans.map((plan) => (
+          <PlanCard
+            key={plan.id}
+            plan={plan}
+            /* Only the literal same plan — same tier AND same cycle — counts as
+               current. A different cycle of the same tier is a real switch, and
+               the summary screen prices it with prorated credit. */
+            isCurrent={activeTier === plan.tier && subscription?.billingCycle === plan.billingCycle}
+            subscribing={subscribing === plan.id}
+            disabled={!!subscribing}
+            onSelect={() => handleSelectPlan(plan.id)}
+          />
+        ))}
       </div>
     );
-  }
-
-  // If errored without stale data
-  if (loadError && plans.length === 0) {
-    return (
-      <div className="max-w-6xl mx-auto py-12 px-[15px]">
-        <SubscriptionHeader />
-        <ErrorState 
-          message={loadError} 
-          onRetry={reloadPlans} 
-          className="mt-12"
-        />
-      </div>
-    );
-  }
-
-  // For the display, if API returned plans, use them. 
-  // We sort them to ensure Start -> Premium -> Elite.
-  const displayPlans = [...plans].sort((a, b) => {
-    const order = { Start: 1, Premium: 2, Elite: 3 };
-    return (order[a.tier] || 99) - (order[b.tier] || 99);
-  });
+  };
 
   return (
-    <div className="relative min-h-[calc(100vh-60px)]">
-      {/* Desktop Background Image */}
-      <div 
-        className="hidden md:block absolute inset-0 z-0 bg-no-repeat bg-cover bg-top"
+    <div className="relative isolate min-h-dvh">
+      <div
+        aria-hidden="true"
+        className="absolute inset-x-0 top-0 -z-10 hidden h-96 bg-cover bg-top bg-no-repeat md:block"
         style={{ backgroundImage: "url('/subscription-bg.png')" }}
       />
-      
-      {/* Main Content */}
-      <div className="relative z-10 max-w-6xl mx-auto py-10 px-4 md:px-8">
-        <SubscriptionHeader />
-        
-        <BillingSwitcher cycle={billingCycle} onChange={handleToggleBilling} />
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-6 my-10 items-stretch">
-          {displayPlans.map(plan => {
-            const mockup = MOCKUP_TIERS[plan.tier] || { perks: [] };
-            return (
-              <PlanCard
-                key={plan.id}
-                tier={plan.tier}
-                price={plan.price}
-                originalPrice={plan.originalPrice}
-                perks={mockup.perks}
-                isPopular={mockup.isPopular}
-                isElite={mockup.isElite}
-                onSelect={() => handleSelectPlan(plan.id)}
-                subscribing={subscribing === plan.id}
-              />
-            );
-          })}
-        </div>
+      <div className="mx-auto max-w-6xl px-[15px] pb-8 lg:px-6">
+        <SubscriptionHeader />
+
+        <BillingSwitcher
+          cycle={billingCycle}
+          onChange={handleToggleBilling}
+          discountPercent={yearlyDiscountPercent}
+        />
+
+        <div className="my-6">{body()}</div>
 
         <SubscriptionFooter />
       </div>

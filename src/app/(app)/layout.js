@@ -22,6 +22,7 @@ import { usePathname, useRouter } from "next/navigation";
 
 import { AppShell } from "@/components/layout/AppShell";
 import { AuthGuard, isPublicPath } from "@/components/layout/AuthGuard";
+import { AlertHost } from "@/components/layout/AlertHost";
 import { useProfile } from "@/context/ProfileContext";
 import { ProfileProvider } from "@/context/ProfileContext";
 import { SubscriptionProvider } from "@/context/SubscriptionContext";
@@ -70,6 +71,10 @@ export default function AppLayout({ children }) {
                   Profile or CV asks. */}
               <CareerProfileProvider>
                 <AuthGuard>{bare ? children : <Chrome>{children}</Chrome>}</AuthGuard>
+                {/* Registers the global alert host. Without it every showAlert()
+                    in the copied hooks — and in api/client.js's interceptor —
+                    silently no-ops. */}
+                <AlertHost />
               </CareerProfileProvider>
             </AppliedJobsProvider>
           </SavedJobsProvider>

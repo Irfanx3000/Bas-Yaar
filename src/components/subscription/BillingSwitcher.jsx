@@ -1,25 +1,42 @@
 import { BILLING_CYCLES } from "@/constants/subscription.constants";
 
-export function BillingSwitcher({ cycle, onChange }) {
+/* Monthly / Yearly toggle.
+ *
+ * The saving chip read a hardcoded "Save up to 30%". The API returns
+ * `yearlyDiscountPercent` — currently 20 — so the page was advertising a
+ * discount that does not exist. It is now driven by that value and hidden
+ * entirely when the API sends none, because an empty promise is worse than no
+ * promise on a pricing page.
+ */
+export function BillingSwitcher({ cycle, onChange, discountPercent }) {
+  const tab = (value, label) => (
+    <button
+      type="button"
+      role="tab"
+      aria-selected={cycle === value}
+      onClick={() => onChange(value)}
+      className={`cursor-pointer rounded-pill px-6 py-2.5 text-sm font-bold transition-colors duration-[180ms] ease-standard ${
+        cycle === value ? "bg-primary text-on-primary shadow-sm" : "text-body hover:text-heading"
+      }`}
+    >
+      {label}
+    </button>
+  );
+
   return (
-    <div className="flex items-center justify-center gap-4 my-8">
-      <div className="flex items-center bg-primary-light rounded-pill p-1">
-        <button
-          onClick={() => onChange(BILLING_CYCLES.MONTHLY)}
-          className={`px-6 py-2.5 rounded-pill font-bold text-sm transition-colors ${cycle === BILLING_CYCLES.MONTHLY ? 'bg-primary text-on-primary shadow-sm' : 'text-body hover:text-heading'}`}
-        >
-          Monthly
-        </button>
-        <button
-          onClick={() => onChange(BILLING_CYCLES.YEARLY)}
-          className={`px-6 py-2.5 rounded-pill font-bold text-sm transition-colors ${cycle === BILLING_CYCLES.YEARLY ? 'bg-primary text-on-primary shadow-sm' : 'text-body hover:text-heading'}`}
-        >
-          Yearly
-        </button>
+    <div className="my-8 flex flex-wrap items-center justify-center gap-3">
+      <div role="tablist" aria-label="Billing cycle" className="flex items-center rounded-pill bg-primary-light p-1">
+        {tab(BILLING_CYCLES.MONTHLY, "Monthly")}
+        {tab(BILLING_CYCLES.YEARLY, "Yearly")}
       </div>
-      <span className="inline-flex items-center rounded-pill px-4 py-1.5 text-xs font-bold bg-success-light text-success-text uppercase tracking-tight">
-        Save up to 30%
-      </span>
+
+      {discountPercent ? (
+        <span className="inline-flex items-center rounded-pill bg-success-light px-4 py-1.5 text-xs font-bold tracking-tight text-success-text uppercase">
+          Save {discountPercent}% yearly
+        </span>
+      ) : null}
     </div>
   );
 }
+
+export default BillingSwitcher;
