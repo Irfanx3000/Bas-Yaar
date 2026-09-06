@@ -1,24 +1,21 @@
-import Link from "next/link";
+import { redirect } from "next/navigation";
 
-/* Placeholder. The real landing page is Phase 4, alongside the rest of the
-   public, indexable surface. This exists so the route group resolves and the
-   theme work has somewhere to be checked from. */
-export default function HomePage() {
-  return (
-    <main className="mx-auto flex min-h-dvh max-w-prose flex-col justify-center px-[15px] py-8">
-      <p className="text-sm font-semibold tracking-wide text-primary">
-        Phase 1 · scaffold and theme
-      </p>
-      <h1 className="mt-2 text-h1 font-extrabold text-heading">CrewApply</h1>
-      <p className="mt-3 text-lg text-body">
-        The design tokens are ported from the mobile app. Nothing else is built yet.
-      </p>
-      <Link
-        href="/theme"
-        className="bg-gradient-primary press mt-5 inline-flex w-fit items-center rounded-pill px-6 py-3 text-md font-bold text-on-primary shadow-md"
-      >
-        Open the theme reference
-      </Link>
-    </main>
-  );
+/* The site root.
+ *
+ * Until Phase 4 builds the real public landing page, `/` hands straight off to
+ * the app rather than showing anything of its own. AuthGuard then does the
+ * deciding it already does everywhere else: a signed-in visitor lands on their
+ * dashboard, anyone else is sent to /login with ?next= so signing in returns
+ * them here.
+ *
+ * What was here before was a Phase 1 placeholder — "the design tokens are
+ * ported… nothing else is built yet" — whose only button opened /theme. Fine
+ * while the domain was not live; it is the first thing a real visitor reads now.
+ *
+ * 307, not 308: this is temporary and should stop being a redirect the moment
+ * there is a landing page. A permanent redirect is cached by browsers and by
+ * Google, and undoing one is slow. `redirect()` defaults to 307 here.
+ */
+export default function RootPage() {
+  redirect("/dashboard");
 }

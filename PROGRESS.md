@@ -1318,3 +1318,27 @@ and `/legal/privacy` at 200, and the client bundle contains
 The SSH connection itself. This environment has `ssh` but no password-capable
 client, and installing one was blocked, so nothing was run on the server — every
 step is in `deploy/DEPLOY.md` to run directly.
+
+---
+
+## Developer-only surfaces removed
+
+`/theme` (405 LOC) and `/kit` (249) are gone. They existed to review tokens and
+components during Phase 1–2 and have no business on a public domain.
+
+Removing them exposed a bigger one: **`/` was still the Phase 1 placeholder** —
+"the design tokens are ported… nothing else is built yet" — and its only button
+linked to `/theme`. That was the first thing a visitor to crewapply.com would
+have read. `/` now redirects to `/dashboard`, and AuthGuard does the deciding it
+already does everywhere else: signed in → dashboard, otherwise → `/login?next=`.
+
+**307, not 308.** This is temporary and should stop being a redirect the moment
+Phase 4 builds the real landing page. A permanent redirect gets cached by
+browsers and by Google, and undoing one is slow.
+
+Verified after the change: `/` → 307 to `/dashboard`, `/theme` → 404, `/kit` →
+404, neither appears in the route list.
+
+**The two review gates that used those routes are now unreachable** — `/theme` at
+375px and `/kit` were both still unticked. Nothing depended on them being routes;
+if either is ever wanted again, they are in git history.
