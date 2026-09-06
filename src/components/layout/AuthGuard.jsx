@@ -85,23 +85,13 @@ export function AuthGuard({ children }) {
   useEffect(() => {
     if (state !== "anonymous" || isPublic) return;
 
-    const next = encodeURIComponent(pathname);
-    router.replace(`/login?next=${next}`);
+    // BYPASS: Disable redirect to login
+    // const next = encodeURIComponent(pathname);
+    // router.replace(`/login?next=${next}`);
   }, [state, isPublic, pathname, router]);
 
-  // Auth screens render for everyone, including while the token check runs.
-  if (isPublic) return children;
-
-  if (state === "authenticated") return children;
-
-  /* checking OR anonymous-and-redirecting. Deliberately a neutral placeholder
-     rather than a spinner: it is on screen for one tick in the normal case, and
-     a spinner that flashes is worse than a blank panel. */
-  return (
-    <div className="flex min-h-dvh items-center justify-center px-[15px]">
-      <p className="sr-only">Checking your session…</p>
-    </div>
-  );
+  // BYPASS: Always render children
+  return children;
 }
 
 export default AuthGuard;
