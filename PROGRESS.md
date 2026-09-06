@@ -648,9 +648,38 @@ JS + verbatim-copied hooks means the build can only prove that names resolve, no
 that they mean anything. Reading the hook's `return` and the service's mapper
 before writing JSX is not optional on this project.
 
-### Block D · Applications — 1 screen, 139 LOC
+### Block D · Applications — ✅ BUILT (screenshot received)
 
-- [ ] `/applications` — ApplicationTabs, ApplicationCard, ApplicationsList
+- [x] `/applications` — heading + "Your CV" action, status tabs with counts,
+      card grid, pagination, Need Help, admin banner, Personal Consultancy.
+      Composition and order are the app's.
+- [x] **`PromoBanner`** — the admin-managed banner, now live. `GET /banners`
+      returns `{ id, imageUrl, linkUrl }`; images are served from
+      **api.crewapply.com** (already in `remotePatterns`), verified end-to-end
+      through the optimizer at 59 KB → 51 KB.
+
+**Mirrored, and each would have been wrong by default:**
+- **Withdraw is not offered on every card.** The withdrawable set is derived
+  from the *Active tab's own statuses* (applied · under_review · interview), so
+  a selected or rejected application shows no withdraw action. Deriving it from
+  the tab rather than repeating a list is the app's own single-source-of-truth
+  comment, copied for the same reason.
+- **A banner fetch failure is SILENT.** The app comments "Silent — the default
+  slide below covers this". A promo strip is not worth an error message on a
+  screen someone opened to check their applications.
+- **A banner with no `linkUrl` is not clickable.** The admin decides that per
+  banner, so it must not pretend to be a button.
+- `useApplicationsData` exposes **`setCurrentPage` / `setActiveTab`**, not
+  `handlePageChange` — the same naming split already noted for `useSavedJobs`.
+
+**Deliberately simpler than the app:** the app measures every remote image to
+get its true aspect ratio, because React Native cannot size a remote image
+otherwise. The browser does that natively, so the round trip and the
+`aspectRatios` state it needs are dropped — `next/image` with a fixed ratio and
+`object-cover` gives the same result with none of the machinery.
+
+`ponytail:` no swipe gestures on the carousel — autoplay plus dots, for a strip
+that is usually one image. Add drag when there is a real carousel to drag.
 
 ### Block E · Profile & CV — 🟡 1 of 7 (screenshot received)
 
