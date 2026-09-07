@@ -154,7 +154,11 @@ function JobsBrowser() {
       <form
         onSubmit={(e) => {
           e.preventDefault();
-          handleSearch(query);
+          /* useJobsData's handleSearch destructures { keyword, location } —
+             unlike useSavedJobs/useJobAlerts, which take a bare string. Passing
+             the string here made both fields undefined, so every search sent an
+             empty term and silently reset the list. */
+          handleSearch({ keyword: query });
         }}
         className="mt-3 flex gap-2"
       >

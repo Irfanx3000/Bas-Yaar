@@ -168,7 +168,14 @@ export function AppShell({ children, user }) {
       }`}
     >
       {/* Desktop sidebar. Hidden on mobile, where the bottom bar takes over. */}
-      <aside className={`scrollbar-thin sticky top-0 hidden h-dvh flex-col overflow-y-auto border-r border-line-soft bg-surface py-4 lg:flex ${collapsed ? "px-2" : "px-4"}`}>
+      {/* `self-start` is what makes `sticky` actually stick. The aside is a GRID
+          ITEM, and a grid item defaults to align-self:stretch — so it was being
+          sized to the full grid area (the whole page) and a sticky box that
+          already fills its containing block has no travel room, leaving it to
+          scroll away with the page and expose the canvas gradient behind it.
+          The header sticks correctly because it sits INSIDE a grid item rather
+          than being one. */}
+      <aside className={`scrollbar-thin sticky top-0 hidden h-dvh self-start flex-col overflow-y-auto border-r border-line-soft bg-surface py-4 lg:flex ${collapsed ? "px-2" : "px-4"}`}>
         <div className={`mb-6 flex items-center ${collapsed ? "flex-col gap-2" : "justify-between gap-2 px-3"}`}>
           <Link href="/dashboard" className="flex min-w-0 items-center gap-2" aria-label="CrewApply home">
             <Image src="/logo.png" alt="" width={32} height={32} className="size-8 shrink-0 object-contain" priority />
@@ -218,7 +225,12 @@ export function AppShell({ children, user }) {
              rate has no sense of arrival. Travel is 12px rather than 8 for the
              same reason — below about 10px a slide is invisible and only the
              opacity registers, which is what reads as "instant". */
-          className={`sticky top-0 z-30 flex items-center justify-between gap-3 px-[15px] py-3 transition-[opacity,transform] will-change-[opacity,transform] lg:px-6 ${
+          /* bg-surface, not glass: the header was transparent, so page content
+             scrolled visibly under the search field and avatar. The sidebar is
+             already bg-surface with a line-soft edge, so matching it here makes
+             the two read as one continuous white chrome around the canvas
+             rather than two unrelated strips. */
+          className={`sticky top-0 z-30 flex items-center justify-between gap-3 border-b border-line-soft bg-surface px-[15px] py-3 transition-[opacity,transform] will-change-[opacity,transform] lg:px-6 ${
             hidden
               ? "pointer-events-none -translate-y-3 opacity-0 duration-[180ms] ease-accelerate"
               : "translate-y-0 opacity-100 duration-[280ms] ease-decelerate"

@@ -67,7 +67,14 @@ export function Modal({ open, onClose, title, children, footer, size = "md" }) {
 
          `overscroll-contain` stops a scroll that reaches the body's end from
          chaining to the page behind the backdrop. */
-      className={`m-0 mt-auto flex max-h-[90dvh] w-full max-w-none flex-col overflow-hidden rounded-t-xl
+      /* `hidden open:flex`, NOT a bare `flex`. The browser hides a closed
+         <dialog> with a UA rule (`dialog:not([open]) { display: none }`), but an
+         author-level `display: flex` outranks it — so every always-mounted
+         Modal rendered inline at the bottom of its page as a stray white panel
+         with a close button (Documents' upload sheet, Wallet's Transaction
+         Type). The `open:` variant only paints it when showModal() has actually
+         set the attribute. */
+      className={`m-0 mt-auto hidden max-h-[90dvh] w-full max-w-none flex-col overflow-hidden rounded-t-xl open:flex
                   bg-surface p-0 shadow-lg backdrop:bg-black/40 sm:m-auto sm:max-h-[85dvh] sm:rounded-xl ${width}`}
     >
       <div className="flex shrink-0 items-start justify-between gap-3 px-4 pt-4">
