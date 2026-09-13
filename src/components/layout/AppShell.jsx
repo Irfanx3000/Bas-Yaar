@@ -8,7 +8,9 @@ import { Icon } from "@/components/ui";
 import { TopSearch } from "./TopSearch";
 import { useScrollIdle } from "./useScrollIdle";
 import { useSubscriptionStatus } from "@/context/SubscriptionContext";
+import { useNotifications } from "@/context/NotificationContext";
 import { Avatar } from "@/components/ui/Display";
+
 
 /* The signed-in chrome, and the plan's headline responsive translation:
  *
@@ -24,7 +26,8 @@ import { Avatar } from "@/components/ui/Display";
 
 /* Four primary destinations, matching the app's TAB_META exactly and in order. */
 const PRIMARY = [
-  { href: "/dashboard", label: "Home", icon: "route" },
+  { href: "/dashboard", label: "Home", icon: "home" },
+
   { href: "/profile", label: "Profile", icon: "user" },
   { href: "/applications", label: "My Applications", icon: "file-alt" },
   { href: "/jobs", label: "Jobs", icon: "briefcase" },
@@ -149,6 +152,8 @@ export function AppShell({ children, user }) {
      helper is in scope here, and destructuring a boolean called `isActive`
      shadowed it — every NavLink then called a boolean and the page crashed. */
   const { isActive: hasPlan } = useSubscriptionStatus() ?? {};
+  const { unreadCount } = useNotifications() ?? {};
+
 
   /* Shown unless we positively know there IS a plan — deliberately NOT gated on
      the context's `loading`.
@@ -252,9 +257,9 @@ export function AppShell({ children, user }) {
             {showSubscribeCta ? (
               <Link
                 href="/subscription"
-                className="bg-gradient-secondary press hidden items-center gap-2 rounded-md px-4 py-2 text-sm font-bold text-on-secondary shadow-sm transition-opacity duration-[280ms] ease-decelerate sm:flex"
+                className="bg-gradient-secondary press hidden items-center gap-1.5 rounded-lg px-4 py-2 text-sm font-extrabold text-on-secondary shadow-sm transition-transform hover:scale-[1.02] sm:flex"
               >
-                <Icon name="lock" size={12} />
+                <Icon name="crown" size={14} className="text-yellow-200" />
                 Subscribe
               </Link>
             ) : null}
@@ -262,15 +267,21 @@ export function AppShell({ children, user }) {
             <Link
               href="/notifications"
               aria-label="Notifications"
-              className="glass flex size-10 items-center justify-center rounded-round text-primary shadow-float"
+              className="glass relative flex size-10 items-center justify-center rounded-full text-primary shadow-float transition-transform hover:scale-105"
             >
               <Icon name="bell" size={16} />
+              {unreadCount > 0 ? (
+                <span className="absolute -top-1 -right-1 flex h-4.5 min-w-4.5 items-center justify-center rounded-full bg-danger px-1 text-[10px] font-black leading-none text-white shadow-xs animate-pulse">
+                  {unreadCount > 99 ? "99+" : unreadCount}
+                </span>
+              ) : null}
             </Link>
             <Link href="/profile" aria-label="Your profile">
               <Avatar name={user?.name} src={user?.avatarUrl} size="md" />
             </Link>
           </div>
         </header>
+
 
         {/* pb-24 on mobile reserves room for the floating bar so the last card is
             never trapped underneath it. */}

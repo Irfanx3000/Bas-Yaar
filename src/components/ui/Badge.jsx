@@ -20,9 +20,11 @@ const STATUS = {
   under_review: ["bg-warning-light", "text-warning-text", "Under Review"],
   awaiting_confirmation: ["bg-warning-light", "text-warning-text", "Under Review"],
   rejected: ["bg-danger-light", "text-danger-text", "Rejected"],
-  declined: ["bg-danger-light", "text-danger-text", "Rejected"],
-  closed: ["bg-danger-light", "text-danger-text", "Rejected"],
+  declined: ["bg-danger-light", "text-danger-text", "Declined"],
+  closed: ["bg-slate-100", "text-slate-600", "Closed"],
+  withdrawn: ["bg-slate-100", "text-slate-600", "Withdrawn"],
 };
+
 
 /* APPLIED is the one badge whose colours are not in the palette — the app
  * hardcodes #EAF0F9/#2F80ED in StatusBadge.jsx. Copied verbatim rather than

@@ -250,19 +250,22 @@ export function PersonalInfoModal({ onClose, onSaved }) {
               hint="Contact support to change your email"
             />
 
-            <div>
-              <div className="flex items-end gap-2">
+            <div className="mb-3">
+              <label className="mb-[5px] block text-sm font-medium text-body">
+                {label("phone")}
+                <span className="ml-[2px] text-danger" aria-hidden="true">*</span>
+              </label>
+              <div className="flex items-start gap-2">
                 {/* The locked dial code, shown beside the field rather than
                     inside it — `phone` is the local number only. */}
                 {formValues.phoneDialCode ? (
-                  <span className="flex h-12 shrink-0 items-center gap-1.5 rounded-md border border-line-input bg-canvas-top px-3 text-md font-semibold text-primary">
+                  <span className="flex min-h-[50px] shrink-0 items-center justify-center gap-1.5 rounded-[12px] border border-line-input bg-canvas-top px-3.5 text-md font-bold text-primary shadow-xs">
                     {formValues.phoneFlag ? <span aria-hidden="true">{formValues.phoneFlag}</span> : null}+
                     {formValues.phoneDialCode}
                   </span>
                 ) : null}
                 <Input
-                  containerClassName="flex-1"
-                  label={label("phone")}
+                  containerClassName="flex-1 mb-0"
                   placeholder={placeholder("phone")}
                   required
                   inputMode="numeric"
@@ -274,6 +277,7 @@ export function PersonalInfoModal({ onClose, onSaved }) {
                 />
               </div>
             </div>
+
 
             <Input
               label={label("altPhone")}

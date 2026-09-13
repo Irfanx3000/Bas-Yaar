@@ -112,12 +112,22 @@ export default function ProfilePage() {
   const education = career?.education ?? [];
   const skills = career?.skills ?? [];
   const maritime = profile?.maritimeProfile ?? {};
+  const completionPct = completion?.percentage ?? 0;
+
+  // Derive missing profile fields for below-100% prompt
+  const missingItems = [];
+  if (!profile?.avatarUrl) missingItems.push({ label: "Profile photo", href: null, action: () => setEditingPersonal(true) });
+  if (!profile?.rank) missingItems.push({ label: "Rank / Position", href: null, action: () => setEditingPersonal(true) });
+  if (!profile?.phone) missingItems.push({ label: "Phone number", href: null, action: () => setEditingPersonal(true) });
+  if (!profile?.location) missingItems.push({ label: "Location", href: null, action: () => setEditingPersonal(true) });
+  if (education.length === 0) missingItems.push({ label: "Education", href: "/cv/education", action: null });
+  if (skills.length === 0) missingItems.push({ label: "Skills", href: "/cv/skills", action: null });
 
   return (
     <div className="mx-auto max-w-5xl px-[15px] pb-8 lg:px-6">
       <header className="pt-2 pb-4">
         <h1 className="text-h2 font-extrabold text-heading">Personal Overview</h1>
-        <p className="mt-[2px] text-md text-body">Manage your profile details.</p>
+        <p className="mt-[2px] text-md text-body">Manage your profile details and career status.</p>
       </header>
 
       <div className="lg:grid lg:grid-cols-2 lg:items-start lg:gap-4">
@@ -125,7 +135,13 @@ export default function ProfilePage() {
           {/* Identity */}
           <Card radius="lg">
             <div className="flex items-start gap-4">
-              <Avatar name={profile?.name} src={profile?.avatarUrl} size="xl" />
+              <Avatar
+                name={profile?.name}
+                src={profile?.avatarUrl}
+                size="xl"
+                showEditOverlay
+                onEditClick={() => setEditingPersonal(true)}
+              />
 
               <div className="min-w-0 flex-1">
                 <h2 className="truncate text-h3 font-extrabold text-heading">
@@ -138,7 +154,7 @@ export default function ProfilePage() {
                 )}
                 {profile?.id ? (
                   <p className="mt-[2px] text-sm text-hint">
-                    ID: {String(profile.id).slice(-8).toUpperCase()}
+                    Seafarer ID: {String(profile.id).slice(-8).toUpperCase()}
                   </p>
                 ) : null}
 
@@ -148,22 +164,52 @@ export default function ProfilePage() {
                 </div>
               </div>
 
-              {/* Was a Link to /profile/personal, which does not exist — so
-                  both Edit affordances navigated nowhere. The app has no such
-                  route either: PersonalInformationScreen is mounted inside
-                  PersonalInfoEditModal, taking onClose/onSaveSuccess. */}
               <button
                 type="button"
                 onClick={() => setEditingPersonal(true)}
-                aria-label="Edit profile"
-                className="shrink-0 cursor-pointer rounded-round p-2 text-hint hover:bg-primary-light hover:text-primary"
+                className="flex shrink-0 cursor-pointer items-center gap-1 rounded-lg border border-line-soft bg-canvas px-2.5 py-1 text-xs font-bold text-primary transition-colors hover:border-primary hover:bg-primary-light"
               >
-                <Icon name="pencil-alt" size={14} />
+                <Icon name="pencil-alt" size={11} />
+                Edit
               </button>
             </div>
 
             {completion?.percentage != null ? (
-              <ProgressBar className="mt-4" value={completion.percentage} label="Profile strength" />
+              <div className="mt-4 border-t border-line-soft pt-3">
+                <ProgressBar value={completion.percentage} label="Profile strength" />
+                {completionPct < 100 && missingItems.length > 0 ? (
+                  <div className="mt-3 rounded-xl border border-warning/30 bg-warning-light/40 p-3">
+                    <div className="flex items-center gap-1.5 text-xs font-extrabold uppercase tracking-wider text-warning-text">
+                      <Icon name="exclamation-circle" size={13} />
+                      Complete missing fields (+{100 - completionPct}%)
+                    </div>
+                    <div className="mt-2 flex flex-wrap items-center gap-1.5">
+                      {missingItems.slice(0, 4).map((item) =>
+                        item.href ? (
+                          <Link
+                            key={item.label}
+                            href={item.href}
+                            className="inline-flex items-center gap-1 rounded-md border border-warning/40 bg-surface px-2.5 py-1 text-xs font-bold text-heading transition-colors hover:border-primary hover:text-primary"
+                          >
+                            <Icon name="plus" size={9} />
+                            {item.label}
+                          </Link>
+                        ) : (
+                          <button
+                            key={item.label}
+                            type="button"
+                            onClick={item.action}
+                            className="inline-flex items-center gap-1 rounded-md border border-warning/40 bg-surface px-2.5 py-1 text-xs font-bold text-heading transition-colors hover:border-primary hover:text-primary"
+                          >
+                            <Icon name="plus" size={9} />
+                            {item.label}
+                          </button>
+                        )
+                      )}
+                    </div>
+                  </div>
+                ) : null}
+              </div>
             ) : null}
           </Card>
 
@@ -176,8 +222,9 @@ export default function ProfilePage() {
                 <button
                   type="button"
                   onClick={() => setEditingPersonal(true)}
-                  className="cursor-pointer text-sm font-semibold text-primary hover:underline"
+                  className="flex items-center gap-1 cursor-pointer rounded-lg border border-line-soft bg-canvas px-2.5 py-1 text-xs font-bold text-primary transition-colors hover:border-primary hover:bg-primary-light"
                 >
+                  <Icon name="pencil-alt" size={11} />
                   Edit
                 </button>
               }
@@ -191,16 +238,18 @@ export default function ProfilePage() {
         </div>
 
         <div className="mt-4 space-y-4 lg:mt-0">
-          {/* Education — lives on the career profile, not the user profile */}
+          {/* Education */}
           <Card radius="lg">
             <CardHeading
               icon="education"
               title="Education"
               action={
-                <Link href="/cv/education" className="text-sm font-semibold text-primary hover:underline">
-                  {education.length
-                    ? `${education.length} Record${education.length === 1 ? "" : "s"}`
-                    : "Add"}
+                <Link
+                  href="/cv/education"
+                  className="flex items-center gap-1 rounded-lg border border-line-soft bg-canvas px-2.5 py-1 text-xs font-bold text-primary transition-colors hover:border-primary hover:bg-primary-light"
+                >
+                  <Icon name="pencil-alt" size={11} />
+                  {education.length ? "Edit" : "Add"}
                 </Link>
               }
             />
@@ -255,7 +304,11 @@ export default function ProfilePage() {
               icon="cog"
               title="Preferences"
               action={
-                <Link href="/preferences" className="text-sm font-semibold text-primary hover:underline">
+                <Link
+                  href="/preferences"
+                  className="flex items-center gap-1 rounded-lg border border-line-soft bg-canvas px-2.5 py-1 text-xs font-bold text-primary transition-colors hover:border-primary hover:bg-primary-light"
+                >
+                  <Icon name="pencil-alt" size={11} />
                   Edit
                 </Link>
               }
@@ -288,6 +341,7 @@ export default function ProfilePage() {
           </Card>
         </div>
       </div>
+
 
       {/* Mounted only while open, so opening it is the reset — the hook loads
           fresh values on mount and staged photo changes cannot survive a

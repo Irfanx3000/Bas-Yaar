@@ -34,29 +34,39 @@ import { CATEGORIES } from "@/constants/categories.constants";
    behind it is navy. */
 export function HomeHero({ userName, tagline, action }) {
   return (
-    <section className="relative isolate h-[260px] overflow-hidden rounded-xl bg-header sm:h-[300px] lg:h-[320px]">
+    <section className="relative isolate h-[260px] overflow-hidden rounded-xl bg-header sm:h-[300px] lg:h-[320px] shadow-sm">
       <Image
         src="/hero-home.png"
-        alt=""
+        alt="CrewApply Cruise Careers"
         fill
         priority
         sizes="(min-width: 1024px) 69rem, 100vw"
-        className="-z-10 object-cover"
+        className="-z-10 object-cover opacity-90"
         style={{ objectPosition: "50% 30%" }}
       />
-      <div className="absolute inset-0 -z-10 bg-gradient-to-r from-header from-30% via-header/92 via-60% to-transparent" />
+      {/* Solid navy panel on the left (from-45%) to completely block out baked-in image text */}
+      <div className="absolute inset-0 -z-10 bg-gradient-to-r from-header from-45% via-header/90 via-65% to-transparent" />
 
-      <div className="flex h-full max-w-lg flex-col justify-center px-[15px] sm:px-6">
-        <p className="text-lg font-bold text-white">
+
+      {/* Decorative ship wheel watermark — low opacity (10%), non-overlapping */}
+      <div className="absolute top-1/2 right-8 -translate-y-1/2 opacity-10 pointer-events-none select-none text-white hidden md:block">
+        <svg className="size-44" viewBox="0 0 512 512" fill="currentColor">
+          <path d="M256 0C114.6 0 0 114.6 0 256s114.6 256 256 256 256-114.6 256-256S397.4 0 256 0zm0 464c-114.7 0-208-93.3-208-208S141.3 48 256 48s208 93.3 208 208-93.3 208-208 208zm0-352c-79.4 0-144 64.6-144 144s64.6 144 144 144 144-64.6 144-144-64.6-144-144-144zm0 240c-52.9 0-96-43.1-96-96s43.1-96 96-96 96 43.1 96 96-43.1 96-96 96z"/>
+        </svg>
+      </div>
+
+      <div className="flex h-full max-w-lg flex-col justify-center px-[15px] sm:px-8">
+        <p className="text-lg font-bold text-white/90">
           Welcome Back <span aria-hidden="true">&#128075;</span>
         </p>
-        <p className="text-h1 font-extrabold text-white">{userName || "there"}</p>
-        <p className="mt-1 text-md text-white/80">{tagline || "Explore global cruise careers"}</p>
+        <p className="text-h1 font-extrabold text-white tracking-tight">{userName || "there"}</p>
+        <p className="mt-1 text-md font-medium text-white/85">{tagline || "Explore global cruise careers"}</p>
         {action ? <div className="mt-4">{action}</div> : null}
       </div>
     </section>
   );
 }
+
 
 /* ── Section header with a "View All" affordance ───────────────────────────── */
 export function SectionRow({ title, href, children }) {

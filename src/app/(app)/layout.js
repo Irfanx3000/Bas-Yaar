@@ -34,6 +34,8 @@ import { ConnectivityProvider } from "@/context/ConnectivityContext";
 import { SavedJobsProvider } from "@/context/SavedJobsContext";
 import { AppliedJobsProvider } from "@/context/AppliedJobsContext";
 
+import { NotificationProvider } from "@/context/NotificationContext";
+
 /* Which routes render bare (no sidebar, no top bar) is exactly the same
    question as which routes an anonymous user may reach, so there is ONE list —
    in AuthGuard — rather than two that can drift apart. A route added to one and
@@ -65,26 +67,29 @@ export default function AppLayout({ children }) {
     <ConnectivityProvider>
       <ProfileProvider>
         <SubscriptionProvider>
-          <SavedJobsProvider>
-            <AppliedJobsProvider>
-              {/* CareerProfileProvider fetches at most once per session and only
-                  when a screen calls load(), so mounting it costs nothing until
-                  Profile or CV asks. */}
-              <CareerProfileProvider>
-                <AuthGuard>{bare ? children : <Chrome>{children}</Chrome>}</AuthGuard>
-                {/* Registers the global alert host. Without it every showAlert()
-                    in the copied hooks — and in api/client.js's interceptor —
-                    silently no-ops. */}
-                <AlertHost />
-                <ToastHost />
-              </CareerProfileProvider>
-            </AppliedJobsProvider>
-          </SavedJobsProvider>
+          <NotificationProvider>
+            <SavedJobsProvider>
+              <AppliedJobsProvider>
+                {/* CareerProfileProvider fetches at most once per session and only
+                    when a screen calls load(), so mounting it costs nothing until
+                    Profile or CV asks. */}
+                <CareerProfileProvider>
+                  <AuthGuard>{bare ? children : <Chrome>{children}</Chrome>}</AuthGuard>
+                  {/* Registers the global alert host. Without it every showAlert()
+                      in the copied hooks — and in api/client.js's interceptor —
+                      silently no-ops. */}
+                  <AlertHost />
+                  <ToastHost />
+                </CareerProfileProvider>
+              </AppliedJobsProvider>
+            </SavedJobsProvider>
+          </NotificationProvider>
         </SubscriptionProvider>
       </ProfileProvider>
     </ConnectivityProvider>
   );
 }
+
 
 /* Split out so it can read ProfileContext, which is mounted above it. */
 function Chrome({ children }) {

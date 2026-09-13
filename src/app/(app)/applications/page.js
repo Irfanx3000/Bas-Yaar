@@ -144,39 +144,68 @@ export default function ApplicationsPage() {
         {/* The app stacks these three below the list. On desktop they become a
             rail, so the list is not pushed off the fold by support and promo
             content the user did not come for. */}
-        <aside className="mt-6 space-y-3 lg:mt-0">
-          <Card radius="lg" className="text-center">
-            <Icon name="help-circle" size={26} className="mx-auto text-primary" />
-            <p className="mt-2 text-lg font-bold text-heading">Need Help?</p>
-            <p className="mt-1 text-sm text-body">
-              Get in touch and we&apos;ll help you with your applications.
-            </p>
-            <Link
-              href="/settings"
-              className="press mt-3 block rounded-md border-[1.5px] border-primary py-2 text-center text-md font-semibold text-primary"
-            >
-              Contact Support
-            </Link>
-          </Card>
+        <aside className="mt-6 lg:mt-0">
+          <Card radius="lg" padding="none" className="overflow-hidden border border-line-soft shadow-sm">
+            <div className="flex items-center gap-2 border-b border-line-soft bg-primary-light/60 px-5 py-3">
+              <Icon name="cog" size={14} className="text-primary" />
+              <h2 className="text-xs font-extrabold tracking-wider uppercase text-primary">
+                Support & Advisory Services
+              </h2>
+            </div>
 
-          {/* Admin-managed. Renders nothing when there are no banners or the
-              fetch fails — see the note in the component. */}
-          <PromoBanner />
+            <div className="space-y-5 p-5">
+              {/* Need Help Section */}
+              <div className="flex items-start gap-3">
+                <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-primary-light text-primary">
+                  <Icon name="help-circle" size={20} />
+                </span>
+                <div className="min-w-0 flex-1">
+                  <h3 className="text-md font-bold text-heading">Need Assistance?</h3>
+                  <p className="mt-0.5 text-xs leading-relaxed text-body">
+                    Get in touch with our marine career advisors for help with your applications.
+                  </p>
+                  <Link
+                    href="/settings"
+                    className="press mt-2.5 inline-flex items-center gap-1.5 rounded-lg border border-primary/30 bg-primary-light/50 px-3 py-1.5 text-xs font-bold text-primary transition-colors hover:bg-primary hover:text-white"
+                  >
+                    Contact Support
+                    <Icon name="arrow-right" size={10} />
+                  </Link>
+                </div>
+              </div>
 
-          <Card radius="lg" className="border-line-mint text-center">
-            <Icon name="user-circle" size={24} className="mx-auto text-primary" />
-            <p className="mt-2 text-lg font-bold text-heading">Personal Consultancy</p>
-            <p className="mt-1 text-sm text-body">
-              Get expert guidance for your marine career in a live 1-on-1 meeting.
-            </p>
-            <Link
-              href="/consultancy"
-              className="bg-gradient-primary press mt-3 block rounded-md py-3 text-center text-md font-bold text-on-primary shadow-sm"
-            >
-              Book a Live Meeting
-            </Link>
+              {/* Promo Banner Integration */}
+              <PromoBanner />
+
+              {/* Personal Consultancy Section */}
+              <div className="border-t border-line-soft pt-4">
+                <div className="flex items-start gap-3">
+                  <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-secondary-tint text-warning-text">
+                    <Icon name="user-circle" size={20} />
+                  </span>
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-center justify-between">
+                      <h3 className="text-md font-bold text-heading">1-on-1 Consultancy</h3>
+                      <span className="rounded-full bg-secondary-tint px-2 py-0.5 text-[10px] font-extrabold uppercase text-warning-text">
+                        Expert
+                      </span>
+                    </div>
+                    <p className="mt-0.5 text-xs leading-relaxed text-body">
+                      Get expert guidance for your marine career in a live meeting.
+                    </p>
+                    <Link
+                      href="/consultancy"
+                      className="bg-gradient-primary press mt-2.5 block w-full rounded-lg py-2 text-center text-xs font-extrabold text-on-primary shadow-xs"
+                    >
+                      Book Live Meeting
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            </div>
           </Card>
         </aside>
+
       </div>
     </div>
   );
