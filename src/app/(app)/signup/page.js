@@ -38,6 +38,7 @@ import { useJobTaxonomyOptions } from "@/hooks/useJobTaxonomyOptions";
 import { getRankOptions, DESIGNATIONS } from "@/constants/maritime.constants";
 import { getErrorMessage } from "@/i18n/getErrorMessage";
 import { COUNTRY_OPTIONS, getStateOptions } from "@/utils/geo.utils";
+import { getPhoneLengthRange } from "@/constants/phoneLength.constants";
 import { Button, Card, DatePicker, Icon, InlineAlert, Input, Select } from "@/components/ui";
 
 const TOTAL_STEPS = 5;
@@ -57,10 +58,28 @@ const countryByCode = (code) => COUNTRY_OPTIONS.find((c) => c.value === code);
 
 /* Local date parts, never toISOString() — that returns UTC, so "today" flips a
    day either side of midnight depending on the timezone. */
-const todayISO = () => {
+const yearsAgoISO = (years) => {
   const d = new Date();
+  d.setFullYear(d.getFullYear() - years);
   const pad = (n) => String(n).padStart(2, "0");
   return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+};
+const todayISO = () => yearsAgoISO(0);
+
+/* The app refuses an under-18 date of birth on step 1 (TellUsAboutYourself).
+   The web only learned it from register() on step 3 — after the user had
+   filled in two more screens. ISO dates compare correctly as strings. */
+const MIN_AGE = 18;
+const isOldEnough = (dob) => !!dob && dob <= yearsAgoISO(MIN_AGE);
+
+/* The number AFTER the dial code, as the app's StayConnectedScreen takes it:
+   digits only, capped at the country's national length. A pasted "+91 98…"
+   would otherwise keep its 91 and push the real last digits off the end, so a
+   leading dial code is dropped when the digits run longer than a local number. */
+const toLocalPhone = (raw, dial, max) => {
+  let digits = String(raw).replace(/\D/g, "");
+  if (dial && digits.length > max && digits.startsWith(dial)) digits = digits.slice(dial.length);
+  return digits.slice(0, max);
 };
 
 export default function SignupPage() {
@@ -136,15 +155,17 @@ export default function SignupPage() {
     [form.department],
   );
   const dial = countryByCode(form.countryCode)?.dialCode ?? "";
+  const phoneRange = getPhoneLengthRange(form.countryCode || "IN");
 
   /* Per-step gating. The Next button is disabled rather than validating on
      click: the user can see what is missing from the asterisks, and a button
      that looks pressable but refuses is worse than one that plainly is not. */
   const canContinue = {
-    1: form.name.trim().length >= 2 && form.dateOfBirth && form.gender,
+    1: form.name.trim().length >= 2 && isOldEnough(form.dateOfBirth) && form.gender,
     2: !!form.nationality && !!form.countryCode,
     3:
-      form.phone.replace(/\D/g, "").length >= 7 &&
+      form.phone.length >= phoneRange.min &&
+      form.phone.length <= phoneRange.max &&
       form.email.includes("@") &&
       form.password.length >= 8 &&
       form.password === form.confirmPassword,
@@ -317,7 +338,7 @@ export default function SignupPage() {
               citiesLoading={citiesLoading}
             />
           ) : null}
-          {step === 3 ? <StepThree form={form} set={set} dial={dial} /> : null}
+          {step === 3 ? <StepThree form={form} set={set} dial={dial} phoneRange={phoneRange} /> : null}
           {step === 4 ? (
             <StepFour
               form={form}
@@ -434,6 +455,14 @@ function StepOne({ form, set }) {
         yearsForward={0}
         value={form.dateOfBirth}
         onChange={set("dateOfBirth")}
+        /* Said here, the moment the date is chosen — the app's
+           auth.tellUs.ageRequirementBody copy — rather than by register() two
+           screens later. */
+        error={
+          form.dateOfBirth && !isOldEnough(form.dateOfBirth)
+            ? "You must be at least 18 years old to register."
+            : undefined
+        }
       />
 
       <fieldset className="mb-3">
@@ -531,22 +560,42 @@ function StepTwo({ form, set, stateOptions, cityOptions, citiesLoading }) {
   );
 }
 
-function StepThree({ form, set, dial }) {
+function StepThree({ form, set, dial, phoneRange }) {
+  /* One toggle PER field. A single shared toggle revealed both passwords at
+     once — the confirm field included — when the user only asked to check one. */
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
+  const [phoneTouched, setPhoneTouched] = useState(false);
   const mismatch =
     form.confirmPassword.length > 0 && form.password !== form.confirmPassword;
+
+  const { min, max } = phoneRange;
+  const lengthText = min === max ? `${min}-digit` : `${min}–${max} digit`;
+  /* Error only once the field has been left, so it does not shout while the
+     number is still being typed. Too long is impossible — input is capped. */
+  const phoneError =
+    phoneTouched && form.phone.length < min
+      ? form.phone.length === 0
+        ? "Enter your mobile number."
+        : `Enter a valid ${lengthText} mobile number.`
+      : undefined;
 
   return (
     <>
       <StepHeading title="Let's Stay Connected" subtitle="We'll use these to verify your account." />
 
-      <div className="mb-3">
+      <div>
         <label htmlFor="phone" className="mb-[5px] block text-sm font-medium text-body">
           Mobile Number
           <span className="ml-[2px] text-danger" aria-hidden="true">*</span>
         </label>
-        <div className="flex gap-2">
-          <span className="flex min-h-[50px] shrink-0 items-center rounded-[12px] border border-line-input bg-canvas px-3 text-md font-semibold text-body">
+        {/* items-start, not the default stretch: stretch sized the dial box to the
+            Input's whole container — its 12px bottom margin, and any hint or
+            error under it — which is why "+91" stood taller than the field.
+            Both boxes are a fixed 50px now, and the Input's own mb-3 spaces the
+            row (no "mb-0" override, which Tailwind's class order silently lost). */}
+        <div className="flex items-start gap-2">
+          <span className="flex h-[50px] shrink-0 items-center gap-1.5 rounded-[12px] border border-line-input bg-canvas px-3 text-md font-semibold text-body">
             {countryByCode(form.countryCode)?.flag} {dial ? `+${dial}` : "+—"}
           </span>
           <Input
@@ -554,10 +603,16 @@ function StepThree({ form, set, dial }) {
             type="tel"
             required
             inputMode="numeric"
-            containerClassName="mb-0 flex-1"
+            autoComplete="tel-national"
+            /* No maxLength: the browser would cut a pasted "+91 98765 43210" to
+               ten characters before toLocalPhone could drop the +91. */
+            containerClassName="min-w-0 flex-1"
             value={form.phone}
-            onChange={set("phone")}
+            onChange={(e) => set("phone")(toLocalPhone(e.target.value, dial, max))}
+            onBlur={() => setPhoneTouched(true)}
             placeholder="Enter your phone number"
+            hint={phoneError ? undefined : `${lengthText} number, without the country code.`}
+            error={phoneError}
           />
         </div>
       </div>
@@ -580,24 +635,22 @@ function StepThree({ form, set, dial }) {
         minLength={8}
         autoComplete="new-password"
         iconRight={showPassword ? "eye-slash" : "eye"}
+        onIconRightClick={() => setShowPassword((v) => !v)}
+        iconRightLabel={showPassword ? "Hide password" : "Show password"}
         value={form.password}
         onChange={set("password")}
         placeholder="Set Password"
         hint="At least 8 characters."
       />
-      <button
-        type="button"
-        onClick={() => setShowPassword((v) => !v)}
-        className="-mt-2 mb-3 cursor-pointer text-sm font-semibold text-primary hover:underline"
-      >
-        {showPassword ? "Hide" : "Show"} password
-      </button>
 
       <Input
         label="Confirm Password"
-        type={showPassword ? "text" : "password"}
+        type={showConfirm ? "text" : "password"}
         required
         autoComplete="new-password"
+        iconRight={showConfirm ? "eye-slash" : "eye"}
+        onIconRightClick={() => setShowConfirm((v) => !v)}
+        iconRightLabel={showConfirm ? "Hide password" : "Show password"}
         value={form.confirmPassword}
         onChange={set("confirmPassword")}
         placeholder="Re-enter Password"
