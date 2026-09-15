@@ -52,11 +52,15 @@ const WEEKDAYS = Array.from({ length: 7 }, (_, i) =>
 /* Six full weeks, always — a fixed 42-cell grid means the popup never changes
    height between months, which would otherwise make it jump as you navigate. */
 function buildGrid(year, month) {
-  const first = new Date(year, month, 1);
-  const offset = (first.getDay() + 6) % 7; // Monday-first
-  const start = new Date(year, month, 1 - offset);
+  const offset = (new Date(year, month, 1).getDay() + 6) % 7; // Monday-first
 
-  return Array.from({ length: 42 }, (_, i) => new Date(year, month, start.getDate() + i));
+  /* Day numbers relative to the 1st of THIS month: 1 - offset lands on the
+     leading days of the previous month, and Date rolls any overflow into the
+     next. This used to add `start.getDate()` — the day-of-month of the
+     previous month's Monday (e.g. 29) — back onto THIS month, so June's grid
+     began on 29 June: every date sat under the wrong weekday, and clicking
+     "13" in June saved 13 July. */
+  return Array.from({ length: 42 }, (_, i) => new Date(year, month, 1 - offset + i));
 }
 
 export function DatePicker({
