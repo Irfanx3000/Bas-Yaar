@@ -39,6 +39,7 @@ hourglass-half id-card image info-circle lightbulb link location-arrow lock magi
 map-marker-alt mars paper-plane pencil-alt phone-alt plus route search share-alt shield-alt
 ship shopping-bag sign-out-alt sliders-h sync-alt tag times times-circle trash-alt upload
 user user-circle user-friends venus wallet whatsapp
+comment-dots crown star home
 `.split(/\s+/).filter(Boolean);
 
 /* App-side name → FontAwesome name, for the few the app borrows from

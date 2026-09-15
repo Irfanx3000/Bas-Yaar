@@ -33,8 +33,9 @@
  *    inside this component.
  */
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Icon, Modal } from "@/components/ui";
+import { framableUrl } from "@/lib/framableUrl";
 import { DOC_STATUS } from "@/constants/documents.constants";
 import { getErrorMessage } from "@/i18n/getErrorMessage";
 import { showAlert } from "@/utils/alertRef";
@@ -68,6 +69,11 @@ export function DocumentActionsModal({ open, doc, onClose, onUpload, uploading, 
   const inputRef = useRef(null);
   const [preview, setPreview] = useState(null); // { url, isPdf, name }
   const [previewLoading, setPreviewLoading] = useState(false);
+  const previewUrl = preview?.url;
+  // A PDF preview is a blob: URL (see framableUrl) — release it when it goes.
+  useEffect(() => () => {
+    if (previewUrl?.startsWith("blob:")) URL.revokeObjectURL(previewUrl);
+  }, [previewUrl]);
   const [pendingCert, setPendingCert] = useState(null); // { docTypeKey, file }
   const [submittingCert, setSubmittingCert] = useState(false);
 
@@ -163,12 +169,15 @@ export function DocumentActionsModal({ open, doc, onClose, onUpload, uploading, 
   const handleView = async () => {
     setPreviewLoading(true);
     try {
-      /* A short-lived (5 min), single-document token in the query string.
+      /* A short-lived (5 min), document-scoped token in the query string.
          Documents are passports and medical certificates — the server stopped
          serving them as static files, and neither <img> nor <iframe> can send
-         an Authorization header. */
-      const url = await onView(doc.documentId);
-      setPreview({ url, isPdf: doc.mimeType === "application/pdf", name: doc.name });
+         an Authorization header. An <img> may load the URL directly; an
+         <iframe> may not (the API forbids being framed), so PDFs go via a blob. */
+      const isPdf = doc.mimeType === "application/pdf";
+      const viewUrl = await onView(doc.documentId);
+      const url = isPdf ? await framableUrl(viewUrl) : viewUrl;
+      setPreview({ url, isPdf, name: doc.name });
     } catch (err) {
       showAlert({
         type: "error",
@@ -271,7 +280,7 @@ export function DocumentActionsModal({ open, doc, onClose, onUpload, uploading, 
           <img
             src={preview.url}
             alt={preview.name}
-            /* Not next/image: the URL carries a single-use view token and
+            /* Not next/image: the URL carries a view token that
                expires in 5 minutes, so there is nothing worth optimising or
                caching at the edge — and the optimizer would need the host
                allow-listed for a URL that is dead by the time it is fetched. */

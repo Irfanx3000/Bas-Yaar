@@ -102,6 +102,7 @@ export function FooterSection() {
               <p className="text-xs text-body mb-3 hidden lg:block">Available on the</p>
               
               <div className="flex flex-row sm:flex-col lg:flex-col gap-3 justify-center lg:justify-start w-full">
+                {/* HIDDEN — App Store badge, until the iOS app is published. Uncomment to restore.
                 <a href="#" className="flex-1 sm:flex-none flex items-center justify-center lg:justify-start gap-2 bg-heading text-white px-3 sm:px-4 py-2 sm:py-2.5 rounded-xl hover:bg-heading/90 transition-colors w-full lg:max-w-[160px]">
                   <Icon name="apple" size={20} className="shrink-0" />
                   <div className="flex flex-col items-start text-left">
@@ -109,6 +110,7 @@ export function FooterSection() {
                     <span className="text-xs sm:text-sm font-semibold leading-none">App Store</span>
                   </div>
                 </a>
+                */}
                 <a href="#" className="flex-1 sm:flex-none flex items-center justify-center lg:justify-start gap-2 bg-heading text-white px-3 sm:px-4 py-2 sm:py-2.5 rounded-xl hover:bg-heading/90 transition-colors w-full lg:max-w-[160px]">
                   <Icon name="google-play" size={18} className="shrink-0" />
                   <div className="flex flex-col items-start text-left">
