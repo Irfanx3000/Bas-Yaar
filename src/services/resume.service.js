@@ -13,11 +13,13 @@ export const resumeService = {
     return data.data.document;
   },
 
-  // asset: { uri, name, type } — same shape DocumentUploadModal.jsx's file
-  // picker already produces.
+  // WEB: `asset` is the File the user picked. React Native's FormData takes
+  // { uri, name, type }; a browser stringifies that object to "[object Object]"
+  // and multer receives no file. Same divergence, same reason, as
+  // documents.service.js — see the long note there.
   async uploadResume(asset) {
     const formData = new FormData();
-    formData.append('file', { uri: asset.uri, name: asset.name, type: asset.type });
+    formData.append('file', asset, asset.name);
 
     const { data } = await apiClient.post(ENDPOINTS.USER.RESUME, formData, {
       headers: { 'Content-Type': 'multipart/form-data' },

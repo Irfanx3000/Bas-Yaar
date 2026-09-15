@@ -18,6 +18,7 @@
 import { Suspense, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
+import { jobHref } from "@/lib/jobUrl";
 import { useSearchResults } from "@/hooks/useSearchResults";
 import {
   Button,
@@ -89,7 +90,7 @@ function SearchResults() {
             </p>
             <div className="space-y-2">
               {results.map((row) => (
-                <Link key={row.id} href={`/jobs/${row.id}`} className="block">
+                <Link key={row.id} href={jobHref({ id: row.id, title: row.title })} className="block">
                   <Card className="flex items-center gap-3 hover:border-primary">
                     <span className="flex size-10 shrink-0 items-center justify-center rounded-md bg-primary-light text-primary">
                       <Icon name="briefcase" size={16} />
@@ -120,7 +121,7 @@ function SearchResults() {
                 <h2 className="mt-6 text-xl font-bold text-heading">You might like these</h2>
                 <div className="grid-cards mt-3">
                   {suggestedJobs.map((job) => (
-                    <JobCard key={job.id} job={job} href={`/jobs/${job.id}`} />
+                    <JobCard key={job.id} job={job} href={jobHref(job)} />
                   ))}
                 </div>
               </>

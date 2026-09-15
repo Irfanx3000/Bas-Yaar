@@ -37,6 +37,7 @@ export const APPLICATION_TABS = [
     id: 'closed',
     labelKey: 'applications.tabs.closed',
     statuses: [APPLICATION_STATUS.REJECTED],
-    badgeColor: '#EC0509',
+    badgeColor: '#64748B',
   },
+
 ];

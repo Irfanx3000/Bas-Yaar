@@ -49,15 +49,30 @@ export const PERSONAL_INFO_CONSTANTS = {
     FILE_TYPE_ERROR: 'Invalid file type. Only JPG and PNG are supported',
   },
 
+  // ⚠️ These values must survive a ROUND TRIP through the service, which
+  // lowercases on read (`u.gender?.toLowerCase()`) and capitalises the first
+  // letter on write. So the value has to be the server's own enum, lowercased,
+  // or the option matches nothing coming back and is rejected going out.
+  //
+  // 'other' was 'Other' after capitalisation, and user.validation.js requires
+  // 'Others' — verified against the live API, which answers "Gender must be
+  // Male, Female, or Others." So picking Other could never be saved. The label
+  // stays "Other"; only the wire value changed. The APP HAS THIS BUG TOO.
   GENDER_OPTIONS: [
     { label: 'Male', value: 'male', labelKey: 'profile.personalInfo.options.gender.male' },
     { label: 'Female', value: 'female', labelKey: 'profile.personalInfo.options.gender.female' },
-    { label: 'Other', value: 'other', labelKey: 'profile.personalInfo.options.gender.other' },
+    { label: 'Other', value: 'others', labelKey: 'profile.personalInfo.options.gender.other' },
   ],
 
+  // The backend accepts Single/Married/Divorced/Widowed and the copy deck has
+  // all four; only this list was short, so a divorced or widowed user could not
+  // say so — and if the server already held one of them, the dropdown rendered
+  // its placeholder instead of the stored value. Also true in the app.
   MARITAL_STATUS_OPTIONS: [
     { label: 'Single', value: 'single', labelKey: 'profile.personalInfo.options.maritalStatus.single' },
     { label: 'Married', value: 'married', labelKey: 'profile.personalInfo.options.maritalStatus.married' },
+    { label: 'Divorced', value: 'divorced', labelKey: 'profile.personalInfo.options.maritalStatus.divorced' },
+    { label: 'Widowed', value: 'widowed', labelKey: 'profile.personalInfo.options.maritalStatus.widowed' },
   ],
 
   NATIONALITIES: [

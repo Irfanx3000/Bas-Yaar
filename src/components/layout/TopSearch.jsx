@@ -4,6 +4,7 @@ import { useEffect, useId, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Icon } from "@/components/ui";
 import { searchService } from "@/services/search.service";
+import { jobHref } from "@/lib/jobUrl";
 import { dropClass, useDropPlacement } from "@/components/ui/useDropPlacement";
 
 /* Global search in the top bar, modelled on the admin panel's TopNavbar search.
@@ -102,7 +103,11 @@ export function TopSearch() {
   const go = (entityType, row) => {
     if (row.navigable === false) return;
     setOpen(false);
-    router.push(entityType === "jobs" ? `/jobs/${row.id}` : `/search?q=${encodeURIComponent(term.trim())}`);
+    router.push(
+      entityType === "jobs"
+        ? jobHref({ id: row.id, title: row.title })
+        : `/search?q=${encodeURIComponent(term.trim())}`,
+    );
   };
 
   const total = groups.reduce((sum, g) => sum + (g.count ?? g.results?.length ?? 0), 0);

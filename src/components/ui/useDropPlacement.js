@@ -24,21 +24,36 @@ import { useCallback, useEffect, useState } from "react";
  * The measurement is triggered from the OPEN handler, and re-run only from
  * scroll/resize listeners. Nothing calls setState synchronously inside an effect
  * body, which is the pattern React Compiler flags.
+ *
+ * ── Why the panel is FIXED, not absolute ────────────────────────────────────
+ * An absolutely-positioned panel is clipped by any ancestor that scrolls. That
+ * used to be nothing, so it did not matter. It matters now: Modal caps its
+ * height and scrolls its body, so a Select or DatePicker inside Personal Info or
+ * the CV entry form would open a list that got cut off at the container's edge —
+ * with no way to reach the options below the cut.
+ *
+ * Viewport coordinates dodge that entirely: `position: fixed` escapes every
+ * ancestor's overflow. The cost is that the panel no longer moves with its
+ * trigger for free, which is why the same scroll/resize listeners that decide
+ * the flip also refresh the rect — capture:true so ancestor scrolling counts,
+ * including the modal body's own.
  */
 export function useDropPlacement(triggerRef, open, estimatedHeight = 320) {
   const [placement, setPlacement] = useState("bottom");
+  const [rect, setRect] = useState(null);
 
   const measure = useCallback(() => {
     const el = triggerRef.current;
     if (!el) return;
 
-    const rect = el.getBoundingClientRect();
-    const spaceBelow = window.innerHeight - rect.bottom;
-    const spaceAbove = rect.top;
+    const r = el.getBoundingClientRect();
+    const spaceBelow = window.innerHeight - r.bottom;
+    const spaceAbove = r.top;
 
     /* Only flip when below genuinely cannot fit AND above is roomier. Flipping
        to a space that is also too small just moves the clipping. */
     setPlacement(spaceBelow < estimatedHeight && spaceAbove > spaceBelow ? "top" : "bottom");
+    setRect({ top: r.top, bottom: r.bottom, left: r.left, width: r.width });
   }, [triggerRef, estimatedHeight]);
 
   useEffect(() => {
@@ -54,12 +69,36 @@ export function useDropPlacement(triggerRef, open, estimatedHeight = 320) {
     };
   }, [open, measure]);
 
-  return { placement, measure };
+  return { placement, measure, rect };
 }
 
 /* Tailwind cannot build a class name from a variable, so both placements are
-   written out in full. */
+   written out in full. Kept for anything still anchoring to its own trigger. */
 export const dropClass = (placement) =>
   placement === "top" ? "bottom-[calc(100%+0.5rem)]" : "top-[calc(100%+0.5rem)]";
+
+/* Inline style for a viewport-anchored panel. Values come from
+   getBoundingClientRect, so they are already viewport-relative and go straight
+   into a fixed element.
+
+   `left` is clamped to an 8px gutter so a panel wider than its trigger — the
+   DatePicker's 19rem calendar under a half-width field — cannot hang off the
+   right edge of a phone. Returns null before the first measurement, which is
+   the caller's cue to render nothing yet. */
+export const dropStyle = (placement, rect, { gap = 8, width } = {}) => {
+  if (!rect) return null;
+
+  const panelWidth = width ?? rect.width;
+  const maxLeft = Math.max(gap, window.innerWidth - panelWidth - gap);
+
+  return {
+    position: "fixed",
+    left: Math.min(Math.max(gap, rect.left), maxLeft),
+    width: width ? undefined : rect.width,
+    ...(placement === "top"
+      ? { bottom: window.innerHeight - rect.top + gap }
+      : { top: rect.bottom + gap }),
+  };
+};
 
 export default useDropPlacement;

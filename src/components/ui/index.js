@@ -14,3 +14,5 @@ export { Modal, ConfirmationModal } from "./Modal";
 export { Tabs, Pagination } from "./Navigation";
 export { JobCard } from "./JobCard";
 export { ApplicationCard } from "./ApplicationCard";
+export { CardMediaHeader } from "./CardMediaHeader";
+export { PromoBanner } from "./PromoBanner";

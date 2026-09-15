@@ -32,6 +32,9 @@ yarn-error.log*
 
 # env files (can opt-in for committing if needed)
 .env*
+# ...opted in: .env.production holds only NEXT_PUBLIC_ values, which are
+# compiled into the browser bundle anyway. See the file's own header.
+!.env.production
 
 # vercel
 .vercel

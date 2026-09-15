@@ -2,7 +2,7 @@
 
 import { useEffect, useId, useMemo, useRef, useState } from "react";
 import { Icon } from "./Icon";
-import { dropClass, useDropPlacement } from "./useDropPlacement";
+import { dropStyle, useDropPlacement } from "./useDropPlacement";
 
 /* A custom listbox, styled to match Input exactly.
  *
@@ -62,7 +62,7 @@ export function Select({
   const typeahead = useRef({ text: "", timer: null });
 
   /* max-h-64 (256px) plus the 5px padding on the panel. */
-  const { placement, measure } = useDropPlacement(triggerRef, open, 266);
+  const { placement, measure, rect } = useDropPlacement(triggerRef, open, 266);
 
   const selected = selectedIndex >= 0 ? items[selectedIndex] : null;
 
@@ -212,7 +212,9 @@ export function Select({
             role="listbox"
             aria-labelledby={selectId}
             tabIndex={-1}
-            className={`scrollbar-thin absolute z-50 max-h-64 w-full overflow-y-auto overscroll-contain rounded-md border border-line-soft bg-surface p-[5px] shadow-lg ${dropClass(placement)}`}
+            /* Fixed, so a modal's scrolling body cannot clip the list. */
+            style={dropStyle(placement, rect) ?? { display: "none" }}
+            className="scrollbar-thin z-50 max-h-64 overflow-y-auto overscroll-contain rounded-md border border-line-soft bg-surface p-[5px] shadow-lg"
           >
             {items.length === 0 ? (
               <li className="px-3 py-2 text-md text-hint">No options</li>

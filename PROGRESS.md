@@ -578,11 +578,42 @@ already arrive pre-formatted as `dateText`, so only the CV timestamp needs it.
       into a live result count — better than the "View 47" button it was written
       for. Below `lg` it collapses to a `<details>` disclosure rather than a modal:
       same content, no focus-trap machinery to maintain.
-- [x] `/jobs/[id]` — hero, title card, eligibility banner, Overview/Requirements
-      tabs, required-documents grid, subscribe gate, refer card. Apply wired to
-      `applicationService.apply`. Desktop moves the actions into a **sticky right
-      rail** so the CTA never needs scrolling and the description keeps a readable
-      measure.
+- [x] `/jobs/[slug]` — **rebuilt as a full mirror of the app's JobDetailsScreen.**
+      Readable URLs: `/jobs/second-engineer-bulk-carrier-<id>` — slug AND id, the
+      shape LinkedIn and Stack Overflow use. A pure `/jobs/deck-officer` would
+      need a unique slug column and a lookup endpoint, i.e. backend work.
+      **Backward compatible by construction**: the id is parsed as the trailing
+      24 hex chars, so the app's existing `crewapply.com/jobs/<id>` share links
+      (ReferJobModal) still resolve with no redirect table. Slug leads because
+      WhatsApp truncates URLs from the END, and WhatsApp sharing is a first-class
+      feature here.
+
+      Mirrored exactly, and each of these would have been got wrong by design:
+      - **The green/red banner is about DOCUMENTS ONLY** (`isEligible =
+        hasRequiredDocuments`), not overall eligibility. "You're eligible" above a
+        Subscribe card is deliberate — documents own the banner, subscription owns
+        the unlock card.
+      - **Blocker precedence is load-bearing:** tier → noSubscription → tier →
+        limit. Tier is checked *before* "no subscription" when the job needs more
+        than base tier, or a new user on a Premium job buys the cheapest plan and
+        is still blocked. That reasoning is the app's own comment.
+      - **`eligible` is never recomputed client-side.** Hiding Apply is UX; the
+        backend re-checks at apply time.
+      - **Applied is a MODE**: eligibility is not even fetched, documents relabel
+        to "Submitted", missing flags suppressed, refer hidden on rejection, docs
+        status line hidden on rejection, action bar collapses to one button.
+      - Usage pill with three severities (critical / warning ≤30% / normal),
+        hidden for unlimited plans and when there is no subscription.
+
+      **Solved differently on web:** the app gets `application` from route params;
+      a URL has none and there is no `GET /applications?jobId=`. So
+      `AppliedJobsContext.isApplied(jobId)` gates a list fetch — the common case
+      costs nothing and no endpoint was invented.
+
+      🔴 **Copy keys I guessed wrong:** `rejectedBannerTitle`/`Subtitle` do not
+      exist (rejection uses `notSelectedTitle`/`Subtitle`), and `allDocsPresent`
+      is actually `haveAllDocs`. Both would have rendered the raw key on screen.
+      All 23 `t()` keys are now verified against `translation.json`.
 - [x] `/saved` — client-side filter + pagination via `useSavedJobs`
 - [x] `/search` — universal search. Results are **lightweight rows**
       (`{id, title, subtitle, navigable}`), not job objects, so they render as
@@ -617,11 +648,40 @@ JS + verbatim-copied hooks means the build can only prove that names resolve, no
 that they mean anything. Reading the hook's `return` and the service's mapper
 before writing JSX is not optional on this project.
 
-### Block D · Applications — 1 screen, 139 LOC
+### Block D · Applications — ✅ BUILT (screenshot received)
 
-- [ ] `/applications` — ApplicationTabs, ApplicationCard, ApplicationsList
+- [x] `/applications` — heading + "Your CV" action, status tabs with counts,
+      card grid, pagination, Need Help, admin banner, Personal Consultancy.
+      Composition and order are the app's.
+- [x] **`PromoBanner`** — the admin-managed banner, now live. `GET /banners`
+      returns `{ id, imageUrl, linkUrl }`; images are served from
+      **api.crewapply.com** (already in `remotePatterns`), verified end-to-end
+      through the optimizer at 59 KB → 51 KB.
 
-### Block E · Profile & CV — 🟡 1 of 7 (screenshot received)
+**Mirrored, and each would have been wrong by default:**
+- **Withdraw is not offered on every card.** The withdrawable set is derived
+  from the *Active tab's own statuses* (applied · under_review · interview), so
+  a selected or rejected application shows no withdraw action. Deriving it from
+  the tab rather than repeating a list is the app's own single-source-of-truth
+  comment, copied for the same reason.
+- **A banner fetch failure is SILENT.** The app comments "Silent — the default
+  slide below covers this". A promo strip is not worth an error message on a
+  screen someone opened to check their applications.
+- **A banner with no `linkUrl` is not clickable.** The admin decides that per
+  banner, so it must not pretend to be a button.
+- `useApplicationsData` exposes **`setCurrentPage` / `setActiveTab`**, not
+  `handlePageChange` — the same naming split already noted for `useSavedJobs`.
+
+**Deliberately simpler than the app:** the app measures every remote image to
+get its true aspect ratio, because React Native cannot size a remote image
+otherwise. The browser does that natively, so the round trip and the
+`aspectRatios` state it needs are dropped — `next/image` with a fixed ratio and
+`object-cover` gives the same result with none of the machinery.
+
+`ponytail:` no swipe gestures on the carousel — autoplay plus dots, for a strip
+that is usually one image. Add drag when there is a real carousel to drag.
+
+### Block E · Profile & CV — 🟡 3 of 7 (screenshot received)
 
 - [x] `/profile` — **reads from TWO sources**, because the app screen shows things
       that live apart:
@@ -638,30 +698,451 @@ before writing JSX is not optional on this project.
 - [x] `education` icon added via `scripts/extract-icons.mjs`, aliased onto
       FontAwesome's `graduation-cap` — **63 icons** now
 
-- [ ] `/profile/personal` — PersonalInformationScreen (231)
-- [ ] `/profile/personal` — PersonalInformationScreen (231)
+- [x] **Edit profile** — PersonalInformationScreen (231) as a MODAL, not a route
 - [ ] `/profile/maritime` — MaritimeProfileEditScreen (345)
-- [ ] `/cv` — CareerProfileScreen (422). CompletionRing, section cards
+
+**Both Edit buttons on /profile navigated nowhere.** They linked to
+`/profile/personal`, which has never existed here — and has no counterpart in
+the app either: `PersonalInformationScreen` takes `onClose` / `onSaveSuccess`
+and is mounted inside `PersonalInfoEditModal` → `AppBottomSheet`. So a modal is
+the mirror, not a web shortcut, and it reuses the CV `EntryModal` shell.
+
+**Two mismatches that made saving fail, both present in the app**
+
+Verified against the live API, not inferred:
+
+1. **Gender "Other" could never be saved.** `GENDER_OPTIONS` had `value: 'other'`;
+   the service capitalises the first letter, and `user.validation.js` requires
+   `Others`. `PATCH /user/profile {"gender":"Other"}` answers *"Gender must be
+   Male, Female, or Others."* The value is now `'others'` — the label is still
+   "Other". It also broke the READ path: the service lowercases the stored value
+   to `'others'`, which matched no option, so the dropdown showed its
+   placeholder for anyone already set that way.
+2. **Marital status was missing two options.** The backend accepts
+   Single/Married/Divorced/Widowed and the copy deck has all four; only the
+   constant was short. A divorced or widowed user could not say so, and a stored
+   value rendered as the placeholder.
+
+Every one of the seven values now round-trips to an enum the server accepts.
+**Both bugs are in the app's own constants file** and want the same fix there.
+
+**Three field shapes that would have been easy to get wrong**
+
+- `dob` is `"DD-MM-YYYY"` in BOTH directions — the service formats it that way
+  on read and posts it verbatim as `dateOfBirth`. Confirmed the backend accepts
+  it (`02-05-1990` → stored `1990-05-02`). DatePicker speaks `YYYY-MM-DD`, so it
+  converts at that boundary and nowhere else, by splitting on the separator —
+  `new Date("1990-05-02")` is UTC midnight and lands a day early west of
+  Greenwich.
+- `phone` holds only the LOCAL number. The dial code was split off at load and
+  is re-attached on save, so it is shown locked beside the field; typing a
+  country code there would double it.
+- Email and nationality are read-only, as in the app — the hook does not even
+  re-validate them, because there is nothing for the user to fix.
+
+**Photo changes are staged.** Picking or removing touches nothing on the server;
+`handleSave` applies whichever is pending first, so cancelling leaves the stored
+photo intact. The preview has to be a local object URL — revoked when it changes
+and on unmount, via a cleanup keyed on the value rather than a manual revoke at
+each call site. `uploadProfilePhoto` also stopped deriving a name and mime from a
+filesystem path: a File carries both, and `uri.split('/')` would have thrown on
+one. Verified with a real `PATCH /user/profile-photo` — note PATCH, not POST.
+
+The app's LocationField adds GPS and suggestions; this is a plain text field.
+`currentLocation` is free text on the backend, and a geolocation prompt on a form
+someone opened to type their city is the worse trade.
+- [x] `/cv` — the career profile is ONE resolved document, and it holds **two
+      kinds of section**, which decides what is editable:
+      **NATIVE** (experience · education · skills · languages · references) are
+      stored on it and edited via `addEntry` / `updateEntry` / `removeEntry`.
+      **AGGREGATED** (personal · contact · maritime · certificates ·
+      travelDocuments) are assembled live from the user profile and the
+      documents store — **read-only here**, because editing Personal Details
+      from this screen would write to the wrong place. Each links out to the
+      screen that owns it.
+- [x] **`EntryModal`** — add/edit for all four native sections in ONE
+      parameterised component, which is the app's own choice and its own
+      reasoning: the container logic is identical per section, only the fields
+      differ. A dialog rather than a route is the shell decision the web gets to
+      make; the app pushes a screen because a phone has nowhere else to put a
+      form.
+
+      Constraints copied, not invented — all from `careerProfile.model.js` and
+      the app's `buildPayload()`:
+      - field caps mirror the schema maxlengths, and **`name` cannot be one
+        number**: skills caps at 100, languages at 50
+      - `NO_HTML` is the backend's own `textSanitizer` rule, applied client-side
+        so a bad paste is caught before a round trip
+      - empty optional strings become **null**, not `""` — the schema defaults null
+      - `endDate` is null whenever `isCurrent`, whatever the field holds
+      - `responsibilities` is a newline-split **array**, trimmed, blanks dropped,
+        max 15 lines × 300 chars
+      - languages default to proficiency **Conversational**
+
+      Form state is seeded lazily and reset by a **`key`** on the component
+      rather than an effect syncing props into state — React's own answer to
+      "reset when a prop changes", and it avoids the cascading render.
 - [ ] `/cv/[section]` — CareerProfileEntryEditorScreen (432)
 - [ ] `/cv/resume` — ResumeEditorScreen (447) + TemplateThumbnailPreview (342)
-- [ ] `/documents` — DocumentsScreen (276) + 6 components
-- [ ] **PDF viewing lands here** — deletes `pdf/pdfCache/pdfDownload` services (265 LOC)
-      and the `blob-util` stub, replaced by `<iframe>` + `URL.createObjectURL`
+- [x] `/documents` — DocumentsScreen + its 6 components, in **3 files**. Verified
+      end-to-end against the live API, not just rendered.
+- [x] **PDF viewing landed here as planned** — a browser renders a PDF URL
+      natively, so `<iframe>` replaces the whole `pdf` / `pdfCache` /
+      `pdfDownload` chain (265 LOC) and `react-native-pdf`. No `URL.createObjectURL`
+      either: the view URL carries its own token, so it can be used directly.
 
-### Block F · Money — 5 routes, 1,510 LOC
+**The upload actually works — proven, not assumed**
 
-- [ ] `/subscription` (318) · `/subscription/plan` (294, Razorpay web checkout)
-      · `/subscription/success` (176)
-- [ ] `/wallet` (295)
-- [ ] `/refer` — ReferEarn (427)
+Against `localhost:5000` with the seeded account: multipart POST returns a real
+document, the view token serves the file, the same URL without a token is 401,
+certificate metadata round-trips, a PDF into an image-only type is refused, and
+both test documents were deleted afterwards.
 
-### Block G · Support & settings — 8 routes, 2,553 LOC
+Two things that only showed up by running it:
+- **The server converts uploaded images to WebP.** `originalName` stays
+  `passport.png` while `mimeType` becomes `image/webp`. The preview branches on
+  `mimeType === 'application/pdf'`, so this is harmless — but branching on the
+  file extension would have been wrong.
+- **`grouped[docType.key]`** is keyed on `doc.category`, which is the document
+  TYPE key. `item.id` is that key; `item.documentId` is the uploaded file's
+  `_id` and is null until something is uploaded. Not interchangeable.
 
-- [ ] `/consultancy` (**1,066**) · `/consultancy/bookings` (210)
+**The one line in the mirror that cannot match the app**
+
+`documents.service.js` appended `{ uri, name, type }` — React Native's FormData
+file shape. A browser stringifies that to `"[object Object]"` and multer sees no
+file at all. The web appends the `File` itself. Everything else in the file is
+untouched, and the explicit `multipart/form-data` header is deliberately left
+alone: axios 1.x unsets it for FormData in a browser so the boundary is added
+correctly. Setting it by hand *without* a boundary is the classic break here.
+
+**Three rows collapse to one**
+
+The app offers Take Photo / Choose from Gallery / Choose File because RN needs a
+different native module for each. The browser has one file input, and its picker
+already offers the camera as a source on Android and iOS — so it is one row,
+with `accept` carrying the type's own rule (`pdf` → `application/pdf`, `image` →
+jpeg/png/webp, `both` → either). The server enforces the same rule again, and
+returns "Invalid file type." when it is violated.
+
+**What is mirrored exactly, because each one prevents a real loss**
+
+- Size is checked against **this type's** `maxSizeMB` before sending. multer's
+  ceiling is a flat 20 MB for every type; the strict per-type check happens
+  server-side only *after* the file has already been uploaded to temp.
+- Replacing asks first and names the **new** file — a misclick otherwise
+  overwrites a passport with the wrong scan and the old one is gone.
+- `certificate` / `stcw` collect metadata **before** upload, once per pick, on
+  every path. Without it a generated resume's Certificates section has the raw
+  category name and blank issuer/expiry columns.
+- Delete asks first, naming the document.
+
+**Status is not a three-state yet.** `documents.service.js` derives it as
+`existing ? Uploaded : Not Uploaded`, with its own comment saying there is no
+admin-verification workflow. The Pending tab renders anyway, at 0, because it is
+in the app and in the design — not because it was forgotten.
+
+**Search refetches per keystroke.** The hook's effect refires on `searchQuery`
+and `getDocuments()` hits the network again, even though the filtering is
+client-side. That is the app's behaviour, left alone on purpose: document types
+are cached in their service and stale responses are dropped by request id, so
+the cost is chatter, not correctness.
+
+Two web-only fixes with no app counterpart:
+- `confirmReplace` sets `dismissible: false`. A native alert always resolves; a
+  web dialog can be dismissed with Escape or a backdrop click, which would leave
+  that promise pending forever.
+- The file input is cleared before use. Picking the **same** file twice fires no
+  change event otherwise, so a failed upload could not be retried with it.
+
+3 icons added to `scripts/extract-icons.mjs` — `certificate`, `id-card`, `globe`
+— **68 icons** now. These come from the admin's DocumentType rows rather than
+from app source, which is why the original harvest missed them.
+
+### Block F · Money — 🟡 3 of 5
+
+- [x] `/subscription` — wired to the backend, `MOCKUP_TIERS` deleted
+- [x] `/subscription/plan` — Razorpay web checkout, all three payment fallbacks
+- [x] `/subscription/success`
+- [x] `/wallet` — the missing half of the mid-subscription flow
+- [~] `/refer` — ReferEarn (427). **HIDDEN, not built.** Refer & earn is not
+      being shown to users, so both entry points are commented out: the sidebar
+      row in `AppShell.jsx` and the referral card in the job-details rail. There
+      were exactly two, and both pointed at `/refer`, which does not exist — so
+      they were dead links as well as unwanted.
+
+      **Only the entry points are hidden; referrals still work.** A new user can
+      still enter someone's code on signup (`referralCode`), and a paid referral
+      still credits the wallet as `referral_reward` — which the Wallet screen
+      already labels. Removing those would break the feature rather than hide it.
+
+      The job-details card keeps its own condition inside the comment: the app
+      hides it on a rejected application, `(!isAppliedMode || !isRejected)`, and
+      that rule is the sort of thing that gets lost on the way back.
+
+      To restore: uncomment both, then build `/refer`. Verified the label appears
+      in no executable chunk — only in source maps, which are not served
+      (`productionBrowserSourceMaps` defaults to false).
+
+**Why the wallet is not a side feature**
+
+Switching plans mid-term does not refund to a card. `subscription.service.js`
+computes a prorated credit for the unused part of the current plan and puts it
+on the summary as **"Unused Subscription Credit" — a NEGATIVE row** in
+`priceBreakdown` (which is why /subscription/plan renders a negative amount as a
+credit rather than looking for a field named for one). When that credit exceeds
+the new plan's entire price, the leftover has no bill to come off, so
+`activate()` deposits it here as `plan_switch_credit`, and the next purchase
+auto-applies it as `walletApplied`.
+
+Summary → wallet → next summary. Without this screen the middle step was
+invisible: money left the visible flow and came back as a discount with nothing
+to check it against. The deposit is fire-and-forget on the backend
+("non-fatal"), so it can lag the subscription by a moment — reloading on mount
+is what makes it appear.
+
+`amount` is **signed paise**; `formatCurrency` divides by 100. Types are keyed on
+the model's snake_case enum, and getting that wrong fails silently — the row just
+prints the raw type string. `stats.totalDebited` is labelled "Total Spent"; the
+field and the label do not share a name.
+
+### Job alerts & saved jobs — audited against the app and the backend
+
+- [x] **`/saved` remove was dead.** `handleRemoveJob` takes a job **ID** and does
+      `allJobs.find((j) => j.id === jobId)`; `JobCard` already passes `job.id`.
+      The page wrapped it as `() => handleRemoveJob(job)`, so `find()` compared an
+      id to an object, never matched, and removing a saved job did nothing at
+      all. The app passes the handler directly. Now it does too.
+- [x] **`/alerts` was telling users the wrong thing.** It said "jobs matching the
+      preferences on your profile" and linked to /preferences. Preferences are
+      never read: `listJobAlertsForUser` takes the user's tier, expands it to
+      every tier at or below it, and returns published jobs whose `minimumTier`
+      is in that set. The app's own copy — "Jobs matching your subscription
+      plan" — is now used verbatim.
+- [x] **`/alerts` rendered two competing states.** The endpoint returns
+      `{ jobs: [], total: 0 }` outright for anyone without an active
+      subscription, so the page showed the upsell card AND fell through to "no
+      matching jobs yet… update preferences" — two explanations at once, and a
+      button that fixes neither. The app branches noSubscription → empty → list
+      as one chain; so does this now, with search and pagination hidden while
+      there is nothing they could act on.
+
+**The notification is broader than the feed, and that is deliberate.**
+`notifyEligibleUsersForJob` fans out on `$or` of TWO match reasons: an active
+qualifying tier, **or** the job's category being in the user's
+`preferredCategories` regardless of plan. So an unsubscribed user with a matching
+category can be notified about a job this feed will not show them. That
+asymmetry belongs to the backend — the feed is "jobs regarding my plan" by
+design — and the no-plan card now explains the rule rather than pretending the
+list is merely empty.
+
+### Toasts — save/unsave feedback
+
+- [x] `utils/toastRef.js` + `components/layout/ToastHost.jsx`, the same host-ref
+      pattern as `alertRef`, kept separate on purpose: an alert is a modal that
+      demands an answer, a toast is a confirmation you may ignore. Bookmarking is
+      the second kind.
+- [x] Raised from **`SavedJobsContext.toggleSaved`**, not from the call sites.
+      Every save and unsave in the product routes through that one function —
+      JobCard's bookmark on /jobs, /alerts, /dashboard and /saved, plus the Job
+      Details button — so five copies would only drift apart.
+- [x] It also fixes a **silent failure**: the optimistic update reverts and
+      rethrows, but every caller swallows it with `.catch(() => {})`, so a failed
+      save just made the bookmark quietly snap back with no explanation. There is
+      now an error toast on both directions.
+- 4 icons added (`user-friends`, `shopping-bag`, `sliders-h`, `exchange-alt`) —
+      **72** now. The extractor's `textwrap` pass split hyphenated names across
+      lines and silently tore `folder-open` and `info-circle` in half; it now
+      wraps with `break_on_hyphens=False`.
+
+**What the merged subscription PR actually shipped, and the four bugs in it**
+
+The screen rendered, so it looked done. It was not wired to anything usable:
+
+1. `MOCKUP_TIERS[plan.tier]` and the sort's `order[a.tier]` were keyed
+   `Start`/`Premium`/`Elite`; the API sends **lowercase**. Every lookup missed →
+   perks always `[]`, sort never ran. Deleted `MOCKUP_TIERS` outright: the API's
+   own `features` are byte-identical, so the constant was pure drift risk.
+2. It read `plan.price` / `plan.originalPrice`. `toCardPlan` produces
+   `launchPrice` / `thenPrice` / `launchLabel` / `thenLabel`. Nothing rendered.
+3. A hardcoded `₹` in `PlanCard` — the mapper already formats with the plan's own
+   currency, so this would print `₹KWD 20.000` the day a Gulf plan is added.
+4. "Save up to 30%" was hardcoded. The API says **20**. The page was advertising a
+   discount that does not exist.
+
+**`priceBreakdown` is an ARRAY, not an object**
+
+`[{label,amount,kind}]` — charge rows plus one `kind:"total"` — and every amount
+is in **minor units**. The first pass read it as `breakdown.baseLabel` /
+`.payableValue`, so no lines rendered and the total fell through to the raw
+`20000` where `₹200.00` belonged. On a checkout page. Rows are now rendered as
+the server names them (a credit is a negative amount) rather than reconstructed
+from fields that do not exist.
+
+`formatMoney` asks `Intl` for the currency's minor units instead of the app's
+hardcoded `/100`. Identical for INR; correct for KWD (3 places) and JPY (0),
+which the hardcoded divisor gets 10x and 100x wrong.
+
+**Three payment paths that look like edge cases and are not** — mirrored from
+`usePlanSummary`:
+
+- `summary.activated` → credit/wallet already covered it. **Skip Razorpay.**
+  Opening a checkout for ₹0 fails.
+- Checkout **error** ≠ payment failed. The webhook may have captured it — re-check
+  `/me` before showing bad news.
+- `verify()` failure ≠ payment failed either. The webhook is authoritative; verify
+  is only the fast path. Re-check `/me`, and only then say "almost there".
+
+Cancelling is silent and stays put — the order is still valid.
+
+**`showAlert` was a silent no-op on the web.** Every copied hook and
+`api/client.js` calls it; nothing had ever called `setAlertHost`. `AlertHost` is
+now mounted in the app layout — so payment failures are visible instead of
+swallowed.
+
+**The summary crosses pages through an external store, not an effect.**
+`createOrder` returns server-computed values that cannot be rebuilt from a URL,
+and calling it again would open a **second order for one purchase**.
+`useSyncExternalStore` over `sessionStorage` avoids the setState-in-effect that
+flashed "choose a plan" for one frame at a paying user. `getSnapshot` caches the
+raw string — returning a fresh `JSON.parse` each call renders forever.
+
+### Error dialogs & responsiveness — audited across the web
+
+**An alert could render with no message at all.** The screenshot was
+"Could not open document" with an empty body — a title, an icon, and nothing
+telling the user what went wrong. One call site (the consultancy resume preview)
+passed `message: ""`.
+
+Fixed at BOTH levels, because fixing only the caller leaves the next one free to
+repeat it:
+- that call site now uses `getErrorMessage(err)` like every other catch;
+- **`AlertHost` falls back to `errors.generic`** when the message is missing or
+  blank after trimming, so no caller can produce a wordless dialog again.
+
+An audit of all 41 `showAlert` call sites found no others: `getErrorMessage`
+always terminates at `errors.generic`, and the one mirror call that looked
+message-less (`api/client.js`) is passing a shorthand variable.
+
+**Modal had no height cap and no internal scroll.** It grew past the viewport and
+the browser's own max-height clipped it — taking the footer, and the Save button
+with it. The Personal Info form and a long Terms section both did this. It is now
+a flex column with a bounded height, a fixed header and footer, and one scroll
+container between them.
+
+- **`dvh`, not `vh`** — on mobile Safari and Chrome `vh` is the tallest the
+  viewport ever gets, so a `vh`-sized modal sits partly under the URL bar.
+- Footer buttons **stack below ~380px**, reversed so the primary action stays
+  nearest the thumb. "Cancel" + "Save Changes" side by side overflow a 320px
+  sheet.
+- `overscroll-contain`, so reaching the end of the body does not scroll the page
+  behind the backdrop.
+
+**That change would have clipped every dropdown inside a modal** — an absolutely
+positioned panel is cut off by any ancestor that scrolls, and Personal Info alone
+has two Selects and a DatePicker. So `useDropPlacement` now also returns the
+trigger's rect and `dropStyle()` places panels with **`position: fixed`**, which
+escapes ancestor overflow entirely. The same scroll/resize listeners that decide
+the flip refresh the rect (capture:true, so the modal body's own scrolling
+counts), and `left` is clamped to an 8px gutter so the 19rem calendar cannot hang
+off a phone's right edge under a half-width field. `measure()` runs in the same
+handler as `setOpen`, so both batch and there is no unpositioned first frame.
+
+**The toast covered the mobile bottom nav.** Both sat at `bottom-4`; the toast
+now clears the nav below `lg` and drops back down above it. It was also
+`max-w-sm` — 24rem, wider than a 320px screen minus the stack's padding — so it
+is capped at the available width, and its message wraps rather than overflowing.
+
+**Long unbreakable content.** `adminNote` on a booking is where the meeting URL
+lands, and a long link pushed the card wider than the screen; it and the
+requirement text now wrap. Wallet reference IDs and profile values already did.
+
+**The documents row was carrying four things on one line** — icon, three lines of
+text, the status block, a chevron — leaving the name about 90px at 320px. The
+status moves to its own row below `sm`, with the icon spanning both so the text
+still starts at the same left edge.
+
+The rest of the layout audit came back clean: one fixed pixel width in the whole
+app (`w-[2px]`, a divider), every multi-column grid already has a responsive
+base, `Tabs` already scrolls horizontally, and `AppShell` swaps the sidebar for a
+bottom nav below `lg` with `min-w-0` on main.
+
+### Block G · Support & settings — 🟡 5 of 8
+
+- [x] `/consultancy` (**1,066**) · `/consultancy/bookings` (210)
 - [ ] `/interview-prep` (259)
-- [ ] `/notifications` (405) · `/notifications/settings` (247)
-- [ ] `/settings` (131) · `/preferences` (203)
-- [ ] `/legal/privacy` · `/legal/terms` — also serve the Phase 5 SEO surface
+- [ ] `/notifications` (405) — the sidebar bell still points at this dead route
+- [x] `/notifications/settings` (247)
+- [x] `/settings` (131) · [ ] `/preferences` (203)
+- [x] `/legal/privacy` · `/legal/terms` — public, static, Phase 5 SEO surface
+
+**Consultancy is two steps, and the split is load-bearing**
+
+Step 1 collects topic + date + time + requirement and calls `createOrder`, which
+**reserves the slot** and creates the Razorpay order. Step 2 shows what was
+reserved and is the only place checkout opens.
+
+That is not decoration. The hold lasts `SLOT_HOLD_TTL_MS` — 15 minutes,
+deliberately the same constant as an abandoned subscription checkout — so
+reviewing and walking away just gets swept. And a cancelled or failed payment
+**stays on step 2 against the same reservation**, so retrying does not mean
+re-entering everything or grabbing a second slot.
+
+Four cases that look like edge cases and are not, all mirrored from
+`useConsultancy`:
+- `PAYMENT_ALREADY_MADE` from createOrder is a **success** — a previous attempt
+  went through; the user is sent to My Bookings.
+- `SLOT_NOT_AVAILABLE` clears the chosen time and **reloads that date's slots**,
+  because the stale list is what caused it.
+- A checkout error is not proof the payment failed. `wasSlotBooked` re-reads the
+  latest booking, and a booking only exists once payment is confirmed (backend
+  `activateBooking`), so its presence settles it.
+- A `verify()` failure is not proof either — the webhook is authoritative.
+
+Verified live: fee `{amount: 500, currency: "USD"}`, availability returns 18
+open dates for the month, a date returns 13 half-hour slots. **The fee is in
+minor units** (500 → $5.00) like every other amount in this API, and the region
+resolves the currency — so the hardcoded `₹` that was removed from PlanCard would
+have been wrong here too.
+
+Slots carry **no `id`** — a slot only becomes a real row once booked, which is
+why `startTime` is both the key and the value the hook wants.
+
+**`formatTime12h` is deliberately not Date/Intl.** The value is a wall-clock slot
+time with no date and no zone; wrapping it in a Date invents both and then shifts
+it for anyone whose offset disagrees. A 09:00 slot must read 9:00 AM everywhere.
+The app defines this function twice, once per screen — it lives in `lib/time.js`
+here instead of a third and fourth copy.
+
+**Settings is a menu and stays one.** Four rows that navigate elsewhere: Wallet,
+Notification Settings, Privacy Policy, Terms. No state, no fetch, no save — the
+app's own comment says to add real settings here as they appear, and inventing
+web-only switches that write nowhere would be worse than an honest short list.
+
+**Notification settings toggles something real.** `pushNotificationsEnabled` is
+selected explicitly by `notifyEligibleUsersForJob` when it fans out a new job, so
+turning it off here silences the phone even though this build sends no push
+itself. The app navigates back on save; there is no back stack on the web, so it
+confirms with a toast and stays on the form.
+
+**Legal pages are PUBLIC and static.** A legal document only a signed-in user can
+read is not published; app stores and payment providers follow those links
+without a session; and they are the Phase 5 SEO surface, which needs them
+crawlable with no client JS. Both prerender at build time.
+
+Their text was **extracted** from the app's PrivacyPolicyScreen /
+TermsConditionsScreen into `constants/legal.content.js` (11 + 13 sections) rather
+than retyped — a hand-copy of two legal documents is precisely where a silent
+divergence appears. The app's own warning travels with it: this is placeholder
+copy, not reviewed by counsel, and must be replaced in **both** places.
+
+**Two more RN FormData uploads fixed** — the same root cause as documents:
+`resume.service.js` and `personalInformation.service.js` (profile photo) both
+appended `{ uri, name, type }`, which a browser stringifies to `"[object
+Object]"`. That was every remaining file upload in the mirror; a grep for
+`formData.append('file'` now returns three lines and all three are browser-shaped.
+
+3 icons added (`shield-alt`, `file-contract`, `clock`) — **75** now.
 
 ### Not ported
 
@@ -770,3 +1251,94 @@ means a green build only proves names *resolve*, not that they *mean* anything.
   Crew audience is largely Filipino / Indian / Chinese / Arabic-speaking.
 - Mobile web will carry most traffic — the app's phone design is the mobile reference
   almost pixel-for-pixel. Desktop is the expansion.
+
+---
+
+## Phase 7 · Deployment — prepared, not yet cut over
+
+Everything the VPS needs is committed under `deploy/`. Two facts change the
+shape of this, both verified rather than assumed:
+
+**crewapply.com is not on the VPS. It is on Vercel.**
+
+```
+crewapply.com      -> 216.198.79.1   (Vercel — the demo site)
+api.crewapply.com  -> 200.141.6.212  (the VPS, already serving the API)
+```
+
+So the site cannot appear at the domain until the **DNS A record is repointed**,
+which happens in the DNS provider's panel and cannot be done over SSH. It is the
+last step deliberately: build and verify on the VPS first, then flip one record.
+Nothing needs deleting on Vercel — leaving the project intact makes rollback a
+one-record change.
+
+**The API will reject the new origin until `ALLOWED_ORIGINS` is updated.** The
+backend builds its CORS allow-list from that env var (`config/index.js`), and a
+preflight from `https://crewapply.com` currently returns **500** — tested live.
+Until it is added, the site loads and every API call fails. One env line plus
+`pm2 reload crewapply-api`; keep the existing entries or the Vercel demo breaks
+while DNS still points at it.
+
+### What is committed
+
+- `.env.production` — **un-ignored on purpose.** `NEXT_PUBLIC_*` is inlined into
+  the browser bundle at build time, so there is no secret in it, and committing
+  it removes the likeliest deployment failure: building on the server without it
+  and silently baking in the `localhost:5000` fallback.
+- `ecosystem.config.cjs` — pm2, named `crewapply-web` beside `crewapply-api`.
+  `.cjs` because pm2 `require()`s it. Points at Next's binary rather than
+  `npm start`, so pm2 supervises the server instead of a shell wrapper that
+  forks it — otherwise reload can orphan the real process.
+- `deploy/nginx/crewapply.com.conf` — proxy to `127.0.0.1:3000`, www → apex,
+  immutable caching on `/_next/static`, and `X-Forwarded-Proto` (without it Next
+  emits `http://` redirects behind the proxy and loops).
+- `deploy/deploy.sh` — the same one-liner shape as backend and admin.
+- `deploy/DEPLOY.md` — first deploy, cutover, rollback, symptom table.
+
+### Two traps the deploy script now fails on rather than shipping
+
+1. **`--omit=dev` breaks this build.** The backend can drop devDependencies
+   because it only runs; this has to build, and `tailwindcss`,
+   `@tailwindcss/postcss` and `babel-plugin-react-compiler` are all
+   devDependencies. The error points at PostCSS, not at the flag.
+2. **`.env.local` outranks `.env.production` in Next.** Proved it locally: with
+   `.env.local` present the production build baked in `localhost:5000` even
+   though `.env.production` was correct and sitting right there. Moved it aside
+   and the right URL appeared. The script refuses to build if `.env.local`
+   exists, and then **asserts the expected URL is actually in `.next/static`**
+   after building — a positive check, because this failure is invisible until a
+   visitor's browser makes every request to a machine that is not the server.
+
+Verified locally: production build succeeds, `next start` serves `/`, `/login`
+and `/legal/privacy` at 200, and the client bundle contains
+`https://api.crewapply.com/api/v1` and no `localhost:5000`.
+
+### Not done here
+
+The SSH connection itself. This environment has `ssh` but no password-capable
+client, and installing one was blocked, so nothing was run on the server — every
+step is in `deploy/DEPLOY.md` to run directly.
+
+---
+
+## Developer-only surfaces removed
+
+`/theme` (405 LOC) and `/kit` (249) are gone. They existed to review tokens and
+components during Phase 1–2 and have no business on a public domain.
+
+Removing them exposed a bigger one: **`/` was still the Phase 1 placeholder** —
+"the design tokens are ported… nothing else is built yet" — and its only button
+linked to `/theme`. That was the first thing a visitor to crewapply.com would
+have read. `/` now redirects to `/dashboard`, and AuthGuard does the deciding it
+already does everywhere else: signed in → dashboard, otherwise → `/login?next=`.
+
+**307, not 308.** This is temporary and should stop being a redirect the moment
+Phase 4 builds the real landing page. A permanent redirect gets cached by
+browsers and by Google, and undoing one is slow.
+
+Verified after the change: `/` → 307 to `/dashboard`, `/theme` → 404, `/kit` →
+404, neither appears in the route list.
+
+**The two review gates that used those routes are now unreachable** — `/theme` at
+375px and `/kit` were both still unticked. Nothing depended on them being routes;
+if either is ever wanted again, they are in git history.

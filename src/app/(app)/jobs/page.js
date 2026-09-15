@@ -16,6 +16,7 @@
 import { Suspense, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { useJobsData } from "@/hooks/useJobsData";
+import { jobHref } from "@/lib/jobUrl";
 import {
   Button,
   Chip,
@@ -153,7 +154,11 @@ function JobsBrowser() {
       <form
         onSubmit={(e) => {
           e.preventDefault();
-          handleSearch(query);
+          /* useJobsData's handleSearch destructures { keyword, location } —
+             unlike useSavedJobs/useJobAlerts, which take a bare string. Passing
+             the string here made both fields undefined, so every search sent an
+             empty term and silently reset the list. */
+          handleSearch({ keyword: query });
         }}
         className="mt-3 flex gap-2"
       >
@@ -208,7 +213,7 @@ function JobsBrowser() {
                 <JobCard
                   key={job.id}
                   job={job}
-                  href={`/jobs/${job.id}`}
+                  href={jobHref(job)}
                   saved={!!bookmarkedJobs?.[job.id]}
                   onToggleSave={toggleBookmark}
                 />

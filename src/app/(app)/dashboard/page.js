@@ -18,6 +18,7 @@
  */
 
 import Link from "next/link";
+import { jobHref } from "@/lib/jobUrl";
 import { useHomeData } from "@/hooks/useHomeData";
 import { ApplicationCard, Button, ErrorState, JobCard, LoadingState } from "@/components/ui";
 import { CategoryTiles, CVMeta, HomeHero, PromoCard, SectionRow } from "@/components/home/HomeSections";
@@ -62,7 +63,7 @@ export default function DashboardPage() {
               <JobCard
                 key={job.id}
                 job={job}
-                href={`/jobs/${job.id}`}
+                href={jobHref(job)}
                 saved={!!bookmarkedJobs?.[job.id]}
                 onToggleSave={toggleBookmark}
               />

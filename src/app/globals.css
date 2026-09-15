@@ -333,3 +333,18 @@ body {
   transition: transform var(--duration-fast) var(--ease-standard);
   &:active { transform: scale(var(--card-press-scale)); }
 }
+
+/* Toast entrance. Kept here rather than as a Tailwind utility because
+   @keyframes cannot live inside @theme, and ToastHost references it by name.
+   Wrapped in motion-safe at the call site, so it simply does not run for anyone
+   who has asked for reduced motion. */
+@keyframes toast-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

@@ -150,8 +150,6 @@ const goToAuthRoot = () => {
  * once, no matter how many requests fail at the same time.
  */
 const endSession = async () => {
-  // BYPASS: Do not end session or redirect
-  return;
   if (sessionEnded) return;
   sessionEnded = true;
   // Deregister BEFORE clearing tokens — needs the still-valid access token to

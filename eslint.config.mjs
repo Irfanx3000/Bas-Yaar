@@ -12,6 +12,29 @@ const eslintConfig = defineConfig([
     "next-env.d.ts",
   ]),
 
+  /* `no-undef` is not on by default in eslint-config-next, and its absence let a
+     real bug ship: a codemod added `jobHref(...)` to six files but the import to
+     only five, and `/jobs` threw "jobHref is not defined" at runtime. Nothing
+     caught it — not the build (an undefined identifier is valid JS until it
+     runs) and not a route check (the AuthGuard short-circuits before the page
+     body renders, so the route still answered 200).
+     This turns that whole class into a lint error. */
+  {
+    files: ["src/**/*.{js,jsx,mjs}"],
+    languageOptions: {
+      globals: {
+        window: "readonly", document: "readonly", navigator: "readonly",
+        localStorage: "readonly", sessionStorage: "readonly", console: "readonly",
+        fetch: "readonly", URL: "readonly", URLSearchParams: "readonly",
+        setTimeout: "readonly", clearTimeout: "readonly",
+        setInterval: "readonly", clearInterval: "readonly",
+        Intl: "readonly", process: "readonly", Buffer: "readonly",
+        Image: "readonly", Blob: "readonly", FormData: "readonly",
+      },
+    },
+    rules: { "no-undef": "error" },
+  },
+
   /* ── The mirrored data layer ──────────────────────────────────────────────
      These directories are a VERBATIM copy of CrewApply/src (see Phase 2 in
      PROGRESS.md). Their whole value is being an unedited mirror: when a service

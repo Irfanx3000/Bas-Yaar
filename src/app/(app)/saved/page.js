@@ -24,6 +24,7 @@ import {
   SectionTitle,
 } from "@/components/ui";
 import Link from "next/link";
+import { jobHref } from "@/lib/jobUrl";
 
 export default function SavedJobsPage() {
   const {
@@ -100,9 +101,14 @@ export default function SavedJobsPage() {
               <JobCard
                 key={job.id}
                 job={job}
-                href={`/jobs/${job.id}`}
+                href={jobHref(job)}
                 saved
-                onToggleSave={() => handleRemoveJob(job)}
+                /* handleRemoveJob takes the job ID — it does
+                   `allJobs.find((j) => j.id === jobId)` — and JobCard already
+                   passes `job.id`. Wrapping it to pass the whole object made
+                   that find() compare an id to an object, so it never matched
+                   and removing a saved job did nothing at all. */
+                onToggleSave={handleRemoveJob}
               />
             ))}
           </div>

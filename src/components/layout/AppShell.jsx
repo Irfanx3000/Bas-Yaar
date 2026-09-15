@@ -8,7 +8,9 @@ import { Icon } from "@/components/ui";
 import { TopSearch } from "./TopSearch";
 import { useScrollIdle } from "./useScrollIdle";
 import { useSubscriptionStatus } from "@/context/SubscriptionContext";
+import { useNotifications } from "@/context/NotificationContext";
 import { Avatar } from "@/components/ui/Display";
+
 
 /* The signed-in chrome, and the plan's headline responsive translation:
  *
@@ -24,7 +26,8 @@ import { Avatar } from "@/components/ui/Display";
 
 /* Four primary destinations, matching the app's TAB_META exactly and in order. */
 const PRIMARY = [
-  { href: "/dashboard", label: "Home", icon: "route" },
+  { href: "/dashboard", label: "Home", icon: "home" },
+
   { href: "/profile", label: "Profile", icon: "user" },
   { href: "/applications", label: "My Applications", icon: "file-alt" },
   { href: "/jobs", label: "Jobs", icon: "briefcase" },
@@ -39,7 +42,13 @@ const SECONDARY = [
   { href: "/interview-prep", label: "Interview Prep", icon: "lightbulb" },
   { href: "/subscription", label: "Subscription", icon: "tag" },
   { href: "/wallet", label: "Wallet", icon: "wallet" },
-  { href: "/refer", label: "Refer & earn", icon: "share-alt" },
+  /* HIDDEN — Refer & earn is not being shown to users yet.
+     To bring it back: uncomment this row and the referral card in
+     jobs/[slug]/page.js, then build /refer (ReferEarn, 427 LOC in the app).
+     Nothing else needs changing — the backend side already works: a new user
+     can still enter someone's code on signup, and a paid referral still credits
+     the wallet as `referral_reward`. Only the two entry points are hidden.
+  { href: "/refer", label: "Refer & earn", icon: "share-alt" }, */
   { href: "/consultancy", label: "Consultancy", icon: "user-circle" },
   { href: "/settings", label: "Settings", icon: "cog" },
 ];
@@ -143,6 +152,8 @@ export function AppShell({ children, user }) {
      helper is in scope here, and destructuring a boolean called `isActive`
      shadowed it — every NavLink then called a boolean and the page crashed. */
   const { isActive: hasPlan } = useSubscriptionStatus() ?? {};
+  const { unreadCount } = useNotifications() ?? {};
+
 
   /* Shown unless we positively know there IS a plan — deliberately NOT gated on
      the context's `loading`.
@@ -162,7 +173,14 @@ export function AppShell({ children, user }) {
       }`}
     >
       {/* Desktop sidebar. Hidden on mobile, where the bottom bar takes over. */}
-      <aside className={`scrollbar-thin sticky top-0 hidden h-dvh flex-col overflow-y-auto border-r border-line-soft bg-surface py-4 lg:flex ${collapsed ? "px-2" : "px-4"}`}>
+      {/* `self-start` is what makes `sticky` actually stick. The aside is a GRID
+          ITEM, and a grid item defaults to align-self:stretch — so it was being
+          sized to the full grid area (the whole page) and a sticky box that
+          already fills its containing block has no travel room, leaving it to
+          scroll away with the page and expose the canvas gradient behind it.
+          The header sticks correctly because it sits INSIDE a grid item rather
+          than being one. */}
+      <aside className={`scrollbar-thin sticky top-0 hidden h-dvh self-start flex-col overflow-y-auto border-r border-line-soft bg-surface py-4 lg:flex ${collapsed ? "px-2" : "px-4"}`}>
         <div className={`mb-6 flex items-center ${collapsed ? "flex-col gap-2" : "justify-between gap-2 px-3"}`}>
           <Link href="/dashboard" className="flex min-w-0 items-center gap-2" aria-label="CrewApply home">
             <Image src="/logo.png" alt="" width={32} height={32} className="size-8 shrink-0 object-contain" priority />
@@ -212,7 +230,12 @@ export function AppShell({ children, user }) {
              rate has no sense of arrival. Travel is 12px rather than 8 for the
              same reason — below about 10px a slide is invisible and only the
              opacity registers, which is what reads as "instant". */
-          className={`sticky top-0 z-30 flex items-center justify-between gap-3 px-[15px] py-3 transition-[opacity,transform] will-change-[opacity,transform] lg:px-6 ${
+          /* bg-surface, not glass: the header was transparent, so page content
+             scrolled visibly under the search field and avatar. The sidebar is
+             already bg-surface with a line-soft edge, so matching it here makes
+             the two read as one continuous white chrome around the canvas
+             rather than two unrelated strips. */
+          className={`sticky top-0 z-30 flex items-center justify-between gap-3 border-b border-line-soft bg-surface px-[15px] py-3 transition-[opacity,transform] will-change-[opacity,transform] lg:px-6 ${
             hidden
               ? "pointer-events-none -translate-y-3 opacity-0 duration-[180ms] ease-accelerate"
               : "translate-y-0 opacity-100 duration-[280ms] ease-decelerate"
@@ -234,9 +257,9 @@ export function AppShell({ children, user }) {
             {showSubscribeCta ? (
               <Link
                 href="/subscription"
-                className="bg-gradient-secondary press hidden items-center gap-2 rounded-md px-4 py-2 text-sm font-bold text-on-secondary shadow-sm transition-opacity duration-[280ms] ease-decelerate sm:flex"
+                className="bg-gradient-secondary press hidden items-center gap-1.5 rounded-lg px-4 py-2 text-sm font-extrabold text-on-secondary shadow-sm transition-transform hover:scale-[1.02] sm:flex"
               >
-                <Icon name="lock" size={12} />
+                <Icon name="crown" size={14} className="text-yellow-200" />
                 Subscribe
               </Link>
             ) : null}
@@ -244,15 +267,21 @@ export function AppShell({ children, user }) {
             <Link
               href="/notifications"
               aria-label="Notifications"
-              className="glass flex size-10 items-center justify-center rounded-round text-primary shadow-float"
+              className="glass relative flex size-10 items-center justify-center rounded-full text-primary shadow-float transition-transform hover:scale-105"
             >
               <Icon name="bell" size={16} />
+              {unreadCount > 0 ? (
+                <span className="absolute -top-1 -right-1 flex h-4.5 min-w-4.5 items-center justify-center rounded-full bg-danger px-1 text-[10px] font-black leading-none text-white shadow-xs animate-pulse">
+                  {unreadCount > 99 ? "99+" : unreadCount}
+                </span>
+              ) : null}
             </Link>
             <Link href="/profile" aria-label="Your profile">
               <Avatar name={user?.name} src={user?.avatarUrl} size="md" />
             </Link>
           </div>
         </header>
+
 
         {/* pb-24 on mobile reserves room for the floating bar so the last card is
             never trapped underneath it. */}
