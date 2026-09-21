@@ -166,7 +166,13 @@ export function TopSearch() {
       {open && term.trim() ? (
         <div
           id={listId}
-          className={`scrollbar-thin absolute left-0 z-50 flex max-h-[26rem] w-full flex-col overflow-y-auto rounded-md border border-line-soft bg-surface p-[5px] shadow-lg ${dropClass(placement)}`}
+          /* 26rem is the design cap, but it is only reachable when the viewport
+             has 26rem to give. A phone in landscape has about 360px of height
+             total, and this panel hangs off a STICKY header — so anything past
+             the viewport bottom scrolls away with the header and can never be
+             reached. min() lets CSS pick the smaller of the two without a
+             measurement or a media query. */
+          className={`scrollbar-thin absolute left-0 z-50 flex max-h-[min(26rem,calc(100dvh-6rem))] w-full flex-col overflow-y-auto rounded-md border border-line-soft bg-surface p-[5px] shadow-lg ${dropClass(placement)}`}
         >
           {tooShort ? (
             <p className="px-3 py-4 text-center text-sm text-hint">Keep typing — at least {MIN_CHARS} characters.</p>

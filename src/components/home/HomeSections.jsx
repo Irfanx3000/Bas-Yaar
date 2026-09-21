@@ -86,13 +86,13 @@ export function SectionRow({ title, href, children }) {
 }
 
 /* ── Categories ────────────────────────────────────────────────────────────
-   Five tiles. The app's own SVG icons are reused verbatim from its asset folder
+   Four tiles. The app's own SVG icons are reused verbatim from its asset folder
    so the glyphs match; "Others" has no file, so it falls back to a tag icon. */
-const CATEGORY_ICON = { deck: "deck", engine: "engine", hospitality: "hospitality", catering: "catering" };
+const CATEGORY_ICON = { deck: "deck", engine: "engine", hospitality: "hospitality" };
 
 export function CategoryTiles() {
   return (
-    <div className="grid grid-cols-3 gap-2 sm:grid-cols-5">
+    <div className="grid grid-cols-3 gap-2 sm:grid-cols-4">
       {CATEGORIES.map((cat) => {
         const file = CATEGORY_ICON[cat.icon?.key];
         return (

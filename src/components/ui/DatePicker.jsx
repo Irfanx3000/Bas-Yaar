@@ -201,7 +201,11 @@ export function DatePicker({
                so dropStyle can keep the 19rem calendar inside the viewport when
                the field itself is narrower. */
             style={dropStyle(placement, rect, { width: 304 }) ?? { display: "none" }}
-            className="z-50 w-[19rem] max-w-[calc(100vw-1rem)] rounded-md border border-line-soft bg-surface p-3 shadow-lg"
+            /* dropStyle always sets a maxHeight; without overflow-y-auto that
+               cap would clip the grid instead of scrolling it. Only bites on a
+               viewport too short for the whole calendar — a phone in landscape,
+               or an in-app browser with a fat toolbar. */
+            className="scrollbar-thin z-50 w-[19rem] max-w-[calc(100vw-1rem)] overflow-y-auto overscroll-contain rounded-md border border-line-soft bg-surface p-3 shadow-lg"
           >
             <div className="mb-2 flex items-center gap-1">
               <button
