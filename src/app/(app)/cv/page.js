@@ -26,7 +26,13 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useCareerProfile } from "@/context/CareerProfileContext";
 import { useProfile } from "@/context/ProfileContext";
+import { useResumeConfigurations } from "@/context/ResumeConfigurationsContext";
 import { EntryModal } from "@/components/cv/EntryModal";
+import { ResumePreviewModal } from "@/components/cv/ResumePreviewModal";
+import { PersonalInfoModal } from "@/components/profile/PersonalInfoModal";
+import { showAlert } from "@/utils/alertRef";
+import { getErrorMessage } from "@/i18n/getErrorMessage";
+import { t } from "@/i18n";
 import {
   Avatar,
   Button,
@@ -108,8 +114,67 @@ function EntryRow({ children, onEdit, onDelete }) {
   );
 }
 
+/* One row of "My Resumes" — the app's ResumeListItem. The button's job follows
+   the resume's state: Generate (never made), View (made and current), Update
+   (made, but the profile has changed since — the backend's isStale compares
+   content hashes, so a CV never quietly shows a certificate that was removed). */
+function ResumeRow({ resume, templateName, generating, onGenerate, onView, onDelete }) {
+  const lastGeneratedAt = resume.metadata?.lastGeneratedAt;
+  const hasGenerated = !!lastGeneratedAt && !!resume.metadata?.lastGeneratedDocumentId;
+  const isStale = hasGenerated && !!resume.isStale;
+  const needsRender = isStale || !hasGenerated;
+
+  return (
+    <li className="relative flex items-center gap-3 border-b border-line-soft py-3 last:border-0">
+      <span className="flex size-10 shrink-0 items-center justify-center rounded-round bg-primary-light text-primary">
+        <Icon name="file-alt" size={16} />
+      </span>
+      <div className="min-w-0 flex-1">
+        {/* The title link's hit area covers the row (after:inset-0), so the
+            whole row opens the editor, as a tap does in the app. */}
+        <Link
+          href={`/cv/resume?id=${resume._id}`}
+          className="block truncate text-md font-bold text-heading after:absolute after:inset-0 after:content-[''] hover:text-primary"
+        >
+          {resume.title}
+        </Link>
+        <p className="truncate text-sm text-body">{templateName || t("careerProfile.resumes.templateUnknown")}</p>
+        <p className="text-xs text-hint">
+          {lastGeneratedAt
+            ? t("careerProfile.resumes.lastGenerated", { date: dateLabel(lastGeneratedAt) })
+            : t("careerProfile.resumes.neverGenerated")}
+        </p>
+        {isStale ? (
+          <p className="mt-1 inline-flex items-center gap-1 text-xs font-semibold text-warning-text">
+            <Icon name="exclamation-circle" size={10} />
+            {t("careerProfile.resumes.outdated")}
+          </p>
+        ) : null}
+      </div>
+      {/* relative z-10 lifts the actions above the row-wide link. */}
+      <div className="relative z-10 flex shrink-0 items-center gap-1">
+        <Button size="sm" loading={needsRender && generating} onClick={needsRender ? onGenerate : onView}>
+          {t(isStale ? "careerProfile.resumes.regenerate" : hasGenerated ? "careerProfile.resumes.view" : "careerProfile.resumes.generate")}
+        </Button>
+        <button
+          type="button"
+          onClick={onDelete}
+          aria-label={t("common.delete")}
+          className="cursor-pointer rounded-round p-2 text-danger hover:bg-danger-light"
+        >
+          <Icon name="trash-alt" size={14} />
+        </button>
+      </div>
+    </li>
+  );
+}
+
 export default function CVPage() {
-  const { profile: user } = useProfile() ?? {};
+  const { profile: user, refresh: refreshProfile } = useProfile() ?? {};
+  const { resumes, templates, generateResume, deleteResume } = useResumeConfigurations();
+  const [generatingId, setGeneratingId] = useState(null);
+  const [preview, setPreview] = useState(null); // { documentId, title }
+  const [editingPersonal, setEditingPersonal] = useState(false);
   const {
     profile: cv,
     isLoading,
@@ -149,6 +214,51 @@ export default function CVPage() {
   const skills = cv?.skills ?? [];
   const languages = cv?.languages ?? [];
   const certificates = cv?.certificates ?? [];
+
+  const templateNameById = (id) => templates.find((tpl) => tpl._id === id)?.name;
+
+  /* Per-row, not the context's global isGenerating — otherwise every row's
+     button would spin while one resume renders. */
+  const handleGenerate = async (resume) => {
+    setGeneratingId(resume._id);
+    try {
+      const doc = await generateResume(resume._id);
+      setPreview({ documentId: doc._id, title: resume.title });
+    } catch (err) {
+      showAlert({
+        type: "error",
+        title: t("careerProfile.resumes.generateErrorTitle"),
+        message: getErrorMessage(err, t) || t("careerProfile.resumes.generateErrorBody"),
+      });
+    } finally {
+      setGeneratingId(null);
+    }
+  };
+
+  const handleDeleteResume = (resume) =>
+    showAlert({
+      type: "warning",
+      title: t("careerProfile.resumeEditor.deleteTitle"),
+      message: t("careerProfile.resumeEditor.deleteMessage", { title: resume.title }),
+      buttons: [
+        { text: t("common.cancel"), style: "cancel" },
+        {
+          text: t("common.delete"),
+          style: "destructive",
+          onPress: async () => {
+            try {
+              await deleteResume(resume._id);
+            } catch (err) {
+              showAlert({
+                type: "error",
+                title: t("careerProfile.editor.saveErrorTitle"),
+                message: getErrorMessage(err, t) || t("careerProfile.editor.saveErrorBody"),
+              });
+            }
+          },
+        },
+      ],
+    });
 
   const openAdd = (section) => () => setEditing({ section, entry: null });
   const openEdit = (section, entry) => () => setEditing({ section, entry });
@@ -216,9 +326,16 @@ export default function CVPage() {
               <StatusBadge status="selected" label="Available" />
             </div>
           </div>
-          <Link href="/profile/personal" aria-label="Edit details" className="shrink-0">
-            <Icon name="pencil-alt" size={14} className="text-hint hover:text-primary" />
-          </Link>
+          {/* Opens the same PersonalInfoModal Profile uses — this linked to
+              /profile/personal, a route that never existed. */}
+          <button
+            type="button"
+            onClick={() => setEditingPersonal(true)}
+            aria-label="Edit details"
+            className="shrink-0 cursor-pointer rounded-round p-1 text-hint hover:text-primary"
+          >
+            <Icon name="pencil-alt" size={14} />
+          </button>
         </div>
 
         <div className="mt-4 flex flex-wrap gap-2">
@@ -263,12 +380,13 @@ export default function CVPage() {
                   </div>
                 ))}
             </dl>
-            <Link
-              href="/profile/personal"
-              className="mt-3 block border-t border-line-soft pt-3 text-center text-md font-semibold text-primary hover:underline"
+            <button
+              type="button"
+              onClick={() => setEditingPersonal(true)}
+              className="mt-3 block w-full cursor-pointer border-t border-line-soft pt-3 text-center text-md font-semibold text-primary hover:underline"
             >
               Edit personal details
-            </Link>
+            </button>
           </SectionCard>
 
           <SectionCard
@@ -441,6 +559,69 @@ export default function CVPage() {
           ) : null}
         </div>
       </div>
+
+      {/* My Resumes — the app's CareerProfileScreen section. The profile above
+          is the content; these are the named, templated PDFs made from it. */}
+      <Card radius="lg" className="mt-4">
+        <div className="mb-1 flex items-center justify-between gap-3 border-b border-line-soft pb-3">
+          <div className="flex min-w-0 items-center gap-2">
+            <span className="flex size-8 shrink-0 items-center justify-center rounded-round bg-primary-light text-primary">
+              <Icon name="file-alt" size={14} />
+            </span>
+            <h2 className="truncate text-md font-bold text-heading">{t("careerProfile.resumes.title")}</h2>
+          </div>
+          {resumes.length ? (
+            <Link
+              href="/cv/resume"
+              className="inline-flex shrink-0 items-center gap-1.5 text-sm font-bold text-primary hover:underline"
+            >
+              <Icon name="plus" size={11} />
+              {t("careerProfile.resumes.new")}
+            </Link>
+          ) : null}
+        </div>
+
+        {resumes.length === 0 ? (
+          <div className="flex flex-col items-center gap-3 py-6 text-center">
+            <p className="text-md text-hint">{t("careerProfile.resumes.empty")}</p>
+            <Link href="/cv/resume">
+              <Button icon="plus">{t("careerProfile.resumes.createFirst")}</Button>
+            </Link>
+          </div>
+        ) : (
+          <ul>
+            {resumes.map((resume) => (
+              <ResumeRow
+                key={resume._id}
+                resume={resume}
+                templateName={templateNameById(resume.templateId)}
+                generating={generatingId === resume._id}
+                onGenerate={() => handleGenerate(resume)}
+                onView={() =>
+                  setPreview({ documentId: resume.metadata?.lastGeneratedDocumentId, title: resume.title })
+                }
+                onDelete={() => handleDeleteResume(resume)}
+              />
+            ))}
+          </ul>
+        )}
+      </Card>
+
+      <ResumePreviewModal
+        documentId={preview?.documentId}
+        title={preview?.title}
+        onClose={() => setPreview(null)}
+      />
+
+      {editingPersonal ? (
+        <PersonalInfoModal
+          onClose={() => setEditingPersonal(false)}
+          onSaved={() => {
+            refreshProfile?.();
+            reload?.();
+          }}
+        />
+      ) : null}
 
       {/* The key is what resets the form. Opening a different entry remounts
           EntryModal, so its lazy initial state is recomputed from that entry —

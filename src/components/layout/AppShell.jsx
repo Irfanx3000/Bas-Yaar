@@ -2,15 +2,15 @@
 
 import Link from "next/link";
 import { useState, useSyncExternalStore } from "react";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import Image from "next/image";
-import { Icon } from "@/components/ui";
+import { Icon, Modal } from "@/components/ui";
 import { TopSearch } from "./TopSearch";
 import { useScrollIdle } from "./useScrollIdle";
 import { useSubscriptionStatus } from "@/context/SubscriptionContext";
 import { useNotifications } from "@/context/NotificationContext";
 import { Avatar } from "@/components/ui/Display";
-
+import { authService } from "@/services/auth.service";
 
 /* The signed-in chrome, and the plan's headline responsive translation:
  *
@@ -40,7 +40,7 @@ const SECONDARY = [
   { href: "/saved", label: "Saved jobs", icon: "bookmark" },
   { href: "/alerts", label: "Job alerts", icon: "bell" },
   { href: "/interview-prep", label: "Interview Prep", icon: "lightbulb" },
-  { href: "/subscription", label: "Subscription", icon: "tag" },
+  { href: "/subscription", label: "Subscription", icon: "gem" },
   { href: "/wallet", label: "Wallet", icon: "wallet" },
   /* HIDDEN — Refer & earn is not being shown to users yet.
      To bring it back: uncomment this row and the referral card in
@@ -101,10 +101,11 @@ const writeSidebar = (collapsed) => {
   sidebarListeners.forEach((notify) => notify());
 };
 
-function NavLink({ item, active, collapsed }) {
+function NavLink({ item, active, collapsed, onClick }) {
   return (
     <Link
       href={item.href}
+      onClick={onClick}
       aria-current={active ? "page" : undefined}
       /* When collapsed the label is gone, so the accessible name has to come
          from somewhere — aria-label carries it, and title gives sighted users
@@ -121,9 +122,49 @@ function NavLink({ item, active, collapsed }) {
   );
 }
 
+/* The app's Sidebar ends with "Log Out": red label, red sign-out-alt on a pale
+   red badge, no confirmation step. Same row here, in both places a drawer's
+   contents live on the web. */
+function LogoutButton({ collapsed = false, pending, onLogout }) {
+  return (
+    <button
+      type="button"
+      onClick={onLogout}
+      disabled={pending}
+      aria-label={collapsed ? "Log Out" : undefined}
+      title={collapsed ? "Log Out" : undefined}
+      className={`flex w-full cursor-pointer items-center rounded-md py-2 text-md font-semibold text-danger transition-colors duration-[180ms] ease-standard hover:bg-danger/10 disabled:cursor-wait disabled:opacity-60 ${
+        collapsed ? "justify-center px-0" : "gap-3 px-3"
+      }`}
+    >
+      <span className="flex size-7 shrink-0 items-center justify-center rounded-md bg-danger/10">
+        <Icon name="sign-out-alt" size={14} />
+      </span>
+      {collapsed ? null : pending ? "Logging out..." : "Log Out"}
+    </button>
+  );
+}
+
 export function AppShell({ children, user }) {
   const pathname = usePathname() ?? "";
+  const router = useRouter();
   const scrolling = useScrollIdle();
+
+  /* Mobile has no sidebar, so the secondary links and Log Out live in a sheet
+     opened from the bottom bar's "More" tab. */
+  const [moreOpen, setMoreOpen] = useState(false);
+
+  /* Awaited, not fire-and-forget: logout()'s `finally` is what clears the tokens
+     and empties every cached resource, and landing on /login before that has run
+     would let a fast re-login race the teardown of the previous session. The
+     server revoke is best-effort — logout() clears locally even when it fails. */
+  const [loggingOut, setLoggingOut] = useState(false);
+  const logout = async () => {
+    setLoggingOut(true);
+    setMoreOpen(false);
+    await authService.logout().catch(() => {});
+    router.replace("/login");
+  };
 
   /* Collapsed sidebar preference, read through useSyncExternalStore.
      Previously this was useState + a setState inside useEffect, which is what
@@ -211,6 +252,13 @@ export function AppShell({ children, user }) {
             <NavLink key={item.href} item={item} active={isActive(pathname, item.href)} collapsed={collapsed} />
           ))}
         </nav>
+
+        {/* mt-auto pins it to the bottom of the rail when the links are short,
+            and it simply follows them when the viewport is. */}
+        <div className="mt-auto pt-4">
+          <hr className="mb-2 border-line-soft" />
+          <LogoutButton collapsed={collapsed} pending={loggingOut} onLogout={logout} />
+        </div>
       </aside>
 
       <div className="flex min-w-0 flex-col">
@@ -259,7 +307,10 @@ export function AppShell({ children, user }) {
                 href="/subscription"
                 className="bg-gradient-secondary press hidden items-center gap-1.5 rounded-lg px-4 py-2 text-sm font-extrabold text-on-secondary shadow-sm transition-transform hover:scale-[1.02] sm:flex"
               >
-                <Icon name="crown" size={14} className="text-yellow-200" />
+                {/* gem, as the app's Subscription entry draws it. The crown is the
+                    app's ELITE tier badge (SubscriptionStatusCard), so on a CTA
+                    shown to users with no plan it claimed a tier they don't have. */}
+                <Icon name="gem" size={14} />
                 Subscribe
               </Link>
             ) : null}
@@ -310,7 +361,43 @@ export function AppShell({ children, user }) {
             </Link>
           );
         })}
+
+        {/* The overflow the header comment promises. Without it every secondary
+            destination — Settings, Documents, Wallet, My CV — and Log Out were
+            unreachable below `lg`. Active when the current page is one of them. */}
+        <button
+          type="button"
+          onClick={() => setMoreOpen(true)}
+          aria-haspopup="dialog"
+          aria-expanded={moreOpen}
+          className={`flex flex-1 cursor-pointer flex-col items-center gap-[2px] rounded-md py-1 text-nav font-medium ${
+            SECONDARY.some((item) => isActive(pathname, item.href)) ? "text-primary" : "text-nav-inactive"
+          }`}
+        >
+          <Icon name="bars" size={18} />
+          <span className="truncate">More</span>
+        </button>
       </nav>
+
+      <Modal open={moreOpen} onClose={() => setMoreOpen(false)} title="More">
+        <nav aria-label="More" className="-mx-1 flex flex-col gap-1">
+          {/* The shell never unmounts across routes, so the sheet must close
+              itself on navigation or it would sit open over the new page. */}
+          {SECONDARY.map((item) => (
+            <NavLink
+              key={item.href}
+              item={item}
+              active={isActive(pathname, item.href)}
+              collapsed={false}
+              onClick={() => setMoreOpen(false)}
+            />
+          ))}
+        </nav>
+        <hr className="my-2 border-line-soft" />
+        <div className="-mx-1">
+          <LogoutButton pending={loggingOut} onLogout={logout} />
+        </div>
+      </Modal>
     </div>
   );
 }

@@ -18,7 +18,7 @@
  *   1  Tell Us About Yourself   name · DOB · gender
  *   2  Where are you located?   nationality · country · state · city
  *   3  Let's Stay Connected     phone · email · password       → register()
- *   4  Verify Your Number       6-digit OTP                    → session created
+ *   4  Verify Your Email        6-digit OTP, sent by email     → session created
  *   5  Your Maritime Profile    department · rank · designation · experience
  *      All Set                  explore jobs / complete profile
  *
@@ -27,16 +27,18 @@
  * step 5 are genuinely optional server-side, so they do not.
  */
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { authService } from "@/services/auth.service";
+import { geoService } from "@/services/geo.service";
 import { profileService } from "@/services/profile.service";
 import { useJobTaxonomyOptions } from "@/hooks/useJobTaxonomyOptions";
 import { getRankOptions, DESIGNATIONS } from "@/constants/maritime.constants";
 import { getErrorMessage } from "@/i18n/getErrorMessage";
 import { COUNTRY_OPTIONS, getStateOptions } from "@/utils/geo.utils";
+import { getPhoneLengthRange } from "@/constants/phoneLength.constants";
 import { Button, Card, DatePicker, Icon, InlineAlert, Input, Select } from "@/components/ui";
 
 const TOTAL_STEPS = 5;
@@ -56,10 +58,28 @@ const countryByCode = (code) => COUNTRY_OPTIONS.find((c) => c.value === code);
 
 /* Local date parts, never toISOString() — that returns UTC, so "today" flips a
    day either side of midnight depending on the timezone. */
-const todayISO = () => {
+const yearsAgoISO = (years) => {
   const d = new Date();
+  d.setFullYear(d.getFullYear() - years);
   const pad = (n) => String(n).padStart(2, "0");
   return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+};
+const todayISO = () => yearsAgoISO(0);
+
+/* The app refuses an under-18 date of birth on step 1 (TellUsAboutYourself).
+   The web only learned it from register() on step 3 — after the user had
+   filled in two more screens. ISO dates compare correctly as strings. */
+const MIN_AGE = 18;
+const isOldEnough = (dob) => !!dob && dob <= yearsAgoISO(MIN_AGE);
+
+/* The number AFTER the dial code, as the app's StayConnectedScreen takes it:
+   digits only, capped at the country's national length. A pasted "+91 98…"
+   would otherwise keep its 91 and push the real last digits off the end, so a
+   leading dial code is dropped when the digits run longer than a local number. */
+const toLocalPhone = (raw, dial, max) => {
+  let digits = String(raw).replace(/\D/g, "");
+  if (dial && digits.length > max && digits.startsWith(dial)) digits = digits.slice(dial.length);
+  return digits.slice(0, max);
 };
 
 export default function SignupPage() {
@@ -99,6 +119,7 @@ export default function SignupPage() {
       ...prev,
       [key]: value?.target ? value.target.value : value,
       ...(key === "countryCode" ? { stateCode: "", city: "" } : null),
+      ...(key === "stateCode" ? { city: "" } : null),
       ...(key === "department" ? { rank: "" } : null),
     }));
 
@@ -106,20 +127,45 @@ export default function SignupPage() {
     () => (form.countryCode ? getStateOptions(form.countryCode) : []),
     [form.countryCode],
   );
+  /* Cities come from the backend (GET /geo/cities), as in the app's LocationScreen —
+     the dataset is too large to bundle. Fetched when a state is chosen; `ignore`
+     drops a slow response for a state the user has already moved past. */
+  /* Loading is DERIVED (no result yet for the current key) rather than set
+     inside the effect, which the React Compiler lint flags as a cascading render.
+     The backend already returns { value, label } rows, keyed by city name. */
+  const cityKey = form.countryCode && form.stateCode ? `${form.countryCode}:${form.stateCode}` : "";
+  const [cities, setCities] = useState({ key: "", options: [] });
+  useEffect(() => {
+    if (!cityKey) return;
+    const [country, state] = cityKey.split(":");
+    let ignore = false;
+    geoService
+      .getCities(country, state)
+      .then((list) => !ignore && setCities({ key: cityKey, options: list || [] }))
+      .catch(() => !ignore && setCities({ key: cityKey, options: [] }));
+    return () => {
+      ignore = true;
+    };
+  }, [cityKey]);
+  const cityOptions = cities.key === cityKey ? cities.options : [];
+  const citiesLoading = !!cityKey && cities.key !== cityKey;
+
   const rankOptions = useMemo(
     () => (form.department ? getRankOptions(form.department) : []),
     [form.department],
   );
   const dial = countryByCode(form.countryCode)?.dialCode ?? "";
+  const phoneRange = getPhoneLengthRange(form.countryCode || "IN");
 
   /* Per-step gating. The Next button is disabled rather than validating on
      click: the user can see what is missing from the asterisks, and a button
      that looks pressable but refuses is worse than one that plainly is not. */
   const canContinue = {
-    1: form.name.trim().length >= 2 && form.dateOfBirth && form.gender,
+    1: form.name.trim().length >= 2 && isOldEnough(form.dateOfBirth) && form.gender,
     2: !!form.nationality && !!form.countryCode,
     3:
-      form.phone.replace(/\D/g, "").length >= 7 &&
+      form.phone.length >= phoneRange.min &&
+      form.phone.length <= phoneRange.max &&
       form.email.includes("@") &&
       form.password.length >= 8 &&
       form.password === form.confirmPassword,
@@ -182,6 +228,12 @@ export default function SignupPage() {
       await authService.verifyOTP(form.email.trim(), form.otp);
       setStep(5);
     } catch (err) {
+      // Same as the app's OTPVerificationScreen: an account that is already
+      // verified (a double submit, or a second tab) is a success, not an error.
+      if ((err?.data?.code || err?.code) === "ALREADY_VERIFIED") {
+        setStep(5);
+        return;
+      }
       setError(getErrorMessage(err));
       setForm((p) => ({ ...p, otp: "" }));
     } finally {
@@ -194,7 +246,7 @@ export default function SignupPage() {
     setNotice(null);
     try {
       await authService.sendOTP(form.email.trim());
-      setNotice("We've sent a new code.");
+      setNotice("A new verification code has been sent to your email.");
       startCooldown();
     } catch (err) {
       setError(getErrorMessage(err));
@@ -277,13 +329,20 @@ export default function SignupPage() {
 
         <form onSubmit={onSubmit}>
           {step === 1 ? <StepOne form={form} set={set} /> : null}
-          {step === 2 ? <StepTwo form={form} set={set} stateOptions={stateOptions} /> : null}
-          {step === 3 ? <StepThree form={form} set={set} dial={dial} /> : null}
+          {step === 2 ? (
+            <StepTwo
+              form={form}
+              set={set}
+              stateOptions={stateOptions}
+              cityOptions={cityOptions}
+              citiesLoading={citiesLoading}
+            />
+          ) : null}
+          {step === 3 ? <StepThree form={form} set={set} dial={dial} phoneRange={phoneRange} /> : null}
           {step === 4 ? (
             <StepFour
               form={form}
               set={set}
-              dial={dial}
               cooldown={cooldown}
               onResend={resendOtp}
               onEdit={() => setStep(3)}
@@ -309,15 +368,19 @@ export default function SignupPage() {
             </InlineAlert>
           ) : null}
 
-          <Button type="submit" fullWidth loading={busy} disabled={!canContinue}>
-            {step === 3
-              ? "Send Verification Code"
-              : step === 4
-                ? "Verify"
-                : step === 5
-                  ? "Next"
-                  : "Next"}
-            {step < 3 || step === 5 ? <Icon name="arrow-right" size={12} /> : null}
+          {/* The arrow goes through Button's `icon` prop, never as a child: Button
+              wraps children in a truncating <span>, and Tailwind's preflight makes
+              every <svg> display:block — so an <Icon> child broke onto its own
+              line under the label. As a sibling of that span it is a flex item. */}
+          <Button
+            type="submit"
+            fullWidth
+            loading={busy}
+            disabled={!canContinue}
+            icon={step === 3 || step === 4 ? undefined : "arrow-right"}
+            iconPosition="right"
+          >
+            {step === 3 ? "Send Verification Code" : step === 4 ? "Verify" : "Next"}
           </Button>
 
           {step === 5 ? (
@@ -392,6 +455,14 @@ function StepOne({ form, set }) {
         yearsForward={0}
         value={form.dateOfBirth}
         onChange={set("dateOfBirth")}
+        /* Said here, the moment the date is chosen — the app's
+           auth.tellUs.ageRequirementBody copy — rather than by register() two
+           screens later. */
+        error={
+          form.dateOfBirth && !isOldEnough(form.dateOfBirth)
+            ? "You must be at least 18 years old to register."
+            : undefined
+        }
       />
 
       <fieldset className="mb-3">
@@ -425,7 +496,16 @@ function StepOne({ form, set }) {
   );
 }
 
-function StepTwo({ form, set, stateOptions }) {
+/* Built once, not per render: ~250 countries, and a new array each render would
+   hand Select new `options` on every keystroke anywhere in the form. */
+const NATIONALITY_OPTIONS = COUNTRY_OPTIONS.map((c) => ({ value: c.label, label: `${c.flag}  ${c.label}` }));
+const COUNTRY_CODE_OPTIONS = COUNTRY_OPTIONS.map((c) => ({ value: c.value, label: `${c.flag}  ${c.label}` }));
+
+/* All four fields are searchable, as the app's LocationScreen opens each one in a
+   SearchablePickerSheet — scrolling a 250-country list to find yours is the thing
+   the search exists to avoid. Copy and gating mirror that screen: state waits for
+   a country, city waits for a state. */
+function StepTwo({ form, set, stateOptions, cityOptions, citiesLoading }) {
   return (
     <>
       <StepHeading title="Where are you located?" subtitle="This helps us match you to the right vacancies." />
@@ -433,8 +513,10 @@ function StepTwo({ form, set, stateOptions }) {
       <Select
         label="Nationality"
         required
+        searchable
+        searchPlaceholder="Search nationality..."
         placeholder="Select your nationality"
-        options={COUNTRY_OPTIONS.map((c) => ({ value: c.label, label: `${c.flag} ${c.label}` }))}
+        options={NATIONALITY_OPTIONS}
         value={form.nationality}
         onChange={set("nationality")}
       />
@@ -442,8 +524,10 @@ function StepTwo({ form, set, stateOptions }) {
       <Select
         label="Country"
         required
+        searchable
+        searchPlaceholder="Search country..."
         placeholder="Select your Country"
-        options={COUNTRY_OPTIONS.map((c) => ({ value: c.value, label: `${c.flag} ${c.label}` }))}
+        options={COUNTRY_CODE_OPTIONS}
         value={form.countryCode}
         onChange={set("countryCode")}
       />
@@ -452,39 +536,66 @@ function StepTwo({ form, set, stateOptions }) {
           subdivisions in the dataset — so neither carries an asterisk. */}
       <Select
         label="State / Province"
-        placeholder={form.countryCode ? "Select your state" : "Choose a country first"}
+        searchable
+        searchPlaceholder="Search state..."
+        placeholder={form.countryCode ? "Select your state" : "Select a country first"}
         options={stateOptions}
         value={form.stateCode}
         onChange={set("stateCode")}
         disabled={!stateOptions.length}
       />
 
-      <Input
+      <Select
         label="City"
+        searchable
+        searchPlaceholder="Search city..."
+        placeholder={form.stateCode ? (citiesLoading ? "Loading cities..." : "Select your city") : "Select a state first"}
+        options={cityOptions}
         value={form.city}
         onChange={set("city")}
-        placeholder="Select your city"
+        loading={citiesLoading}
+        disabled={!form.stateCode || citiesLoading}
       />
     </>
   );
 }
 
-function StepThree({ form, set, dial }) {
+function StepThree({ form, set, dial, phoneRange }) {
+  /* One toggle PER field. A single shared toggle revealed both passwords at
+     once — the confirm field included — when the user only asked to check one. */
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
+  const [phoneTouched, setPhoneTouched] = useState(false);
   const mismatch =
     form.confirmPassword.length > 0 && form.password !== form.confirmPassword;
+
+  const { min, max } = phoneRange;
+  const lengthText = min === max ? `${min}-digit` : `${min}–${max} digit`;
+  /* Error only once the field has been left, so it does not shout while the
+     number is still being typed. Too long is impossible — input is capped. */
+  const phoneError =
+    phoneTouched && form.phone.length < min
+      ? form.phone.length === 0
+        ? "Enter your mobile number."
+        : `Enter a valid ${lengthText} mobile number.`
+      : undefined;
 
   return (
     <>
       <StepHeading title="Let's Stay Connected" subtitle="We'll use these to verify your account." />
 
-      <div className="mb-3">
+      <div>
         <label htmlFor="phone" className="mb-[5px] block text-sm font-medium text-body">
           Mobile Number
           <span className="ml-[2px] text-danger" aria-hidden="true">*</span>
         </label>
-        <div className="flex gap-2">
-          <span className="flex min-h-[50px] shrink-0 items-center rounded-[12px] border border-line-input bg-canvas px-3 text-md font-semibold text-body">
+        {/* items-start, not the default stretch: stretch sized the dial box to the
+            Input's whole container — its 12px bottom margin, and any hint or
+            error under it — which is why "+91" stood taller than the field.
+            Both boxes are a fixed 50px now, and the Input's own mb-3 spaces the
+            row (no "mb-0" override, which Tailwind's class order silently lost). */}
+        <div className="flex items-start gap-2">
+          <span className="flex h-[50px] shrink-0 items-center gap-1.5 rounded-[12px] border border-line-input bg-canvas px-3 text-md font-semibold text-body">
             {countryByCode(form.countryCode)?.flag} {dial ? `+${dial}` : "+—"}
           </span>
           <Input
@@ -492,10 +603,16 @@ function StepThree({ form, set, dial }) {
             type="tel"
             required
             inputMode="numeric"
-            containerClassName="mb-0 flex-1"
+            autoComplete="tel-national"
+            /* No maxLength: the browser would cut a pasted "+91 98765 43210" to
+               ten characters before toLocalPhone could drop the +91. */
+            containerClassName="min-w-0 flex-1"
             value={form.phone}
-            onChange={set("phone")}
+            onChange={(e) => set("phone")(toLocalPhone(e.target.value, dial, max))}
+            onBlur={() => setPhoneTouched(true)}
             placeholder="Enter your phone number"
+            hint={phoneError ? undefined : `${lengthText} number, without the country code.`}
+            error={phoneError}
           />
         </div>
       </div>
@@ -518,24 +635,22 @@ function StepThree({ form, set, dial }) {
         minLength={8}
         autoComplete="new-password"
         iconRight={showPassword ? "eye-slash" : "eye"}
+        onIconRightClick={() => setShowPassword((v) => !v)}
+        iconRightLabel={showPassword ? "Hide password" : "Show password"}
         value={form.password}
         onChange={set("password")}
         placeholder="Set Password"
         hint="At least 8 characters."
       />
-      <button
-        type="button"
-        onClick={() => setShowPassword((v) => !v)}
-        className="-mt-2 mb-3 cursor-pointer text-sm font-semibold text-primary hover:underline"
-      >
-        {showPassword ? "Hide" : "Show"} password
-      </button>
 
       <Input
         label="Confirm Password"
-        type={showPassword ? "text" : "password"}
+        type={showConfirm ? "text" : "password"}
         required
         autoComplete="new-password"
+        iconRight={showConfirm ? "eye-slash" : "eye"}
+        onIconRightClick={() => setShowConfirm((v) => !v)}
+        iconRightLabel={showConfirm ? "Hide password" : "Show password"}
         value={form.confirmPassword}
         onChange={set("confirmPassword")}
         placeholder="Re-enter Password"
@@ -557,7 +672,7 @@ function StepThree({ form, set, dial }) {
    `one-time-code` sits on the first box so a browser can fill it, and a paste
    anywhere distributes across all six. Without that, six inputs would be a
    downgrade on the single field they replace. */
-function StepFour({ form, set, dial, cooldown, onResend, onEdit }) {
+function StepFour({ form, set, cooldown, onResend, onEdit }) {
   const digits = form.otp.padEnd(OTP_LENGTH, " ").split("").slice(0, OTP_LENGTH);
 
   const focusBox = (index) =>
@@ -573,19 +688,27 @@ function StepFour({ form, set, dial, cooldown, onResend, onEdit }) {
 
   return (
     <>
-      <StepHeading title="Verify Your Number" subtitle={`Enter the ${OTP_LENGTH} digit code we emailed you.`} />
+      {/* The code goes to EMAIL — register() and /auth/send-otp both call
+          sendOtpEmail, and /auth/verify-mobile takes { email, otp } ("mobile" is
+          a legacy name). This step showed the phone number, which told people to
+          watch their SMS for a message that never comes. Copy is the app's
+          auth.otp.* strings; Edit returns to step 3, where the email is typed. */}
+      <StepHeading title="Verify Your Email" subtitle={`Enter the ${OTP_LENGTH}-Digit Code`} />
 
-      <div className="mb-4 flex items-center justify-between gap-2 rounded-[12px] border border-line-input bg-canvas px-3 py-2">
-        <span className="truncate text-md text-heading">
-          {countryByCode(form.countryCode)?.flag} +{dial} {form.phone}
-        </span>
-        <button
-          type="button"
-          onClick={onEdit}
-          className="shrink-0 cursor-pointer text-sm font-semibold text-primary hover:underline"
-        >
-          Edit
-        </button>
+      <div className="mb-4">
+        <div className="mb-[5px] flex items-center justify-between gap-2">
+          <span className="text-sm font-medium text-body">Email Address</span>
+          <button
+            type="button"
+            onClick={onEdit}
+            className="shrink-0 cursor-pointer text-sm font-semibold text-primary hover:underline"
+          >
+            Edit
+          </button>
+        </div>
+        <p className="flex min-h-[50px] items-center rounded-[12px] border border-line-input bg-canvas-top px-4 text-md break-all text-heading">
+          {form.email.trim() || "—"}
+        </p>
       </div>
 
       <div className="mb-4 flex justify-between gap-2" onPaste={(e) => {

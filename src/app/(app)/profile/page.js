@@ -120,8 +120,8 @@ export default function ProfilePage() {
   if (!profile?.rank) missingItems.push({ label: "Rank / Position", href: null, action: () => setEditingPersonal(true) });
   if (!profile?.phone) missingItems.push({ label: "Phone number", href: null, action: () => setEditingPersonal(true) });
   if (!profile?.location) missingItems.push({ label: "Location", href: null, action: () => setEditingPersonal(true) });
-  if (education.length === 0) missingItems.push({ label: "Education", href: "/cv/education", action: null });
-  if (skills.length === 0) missingItems.push({ label: "Skills", href: "/cv/skills", action: null });
+  if (education.length === 0) missingItems.push({ label: "Education", href: "/cv", action: null });
+  if (skills.length === 0) missingItems.push({ label: "Skills", href: "/cv", action: null });
 
   return (
     <div className="mx-auto max-w-5xl px-[15px] pb-8 lg:px-6">
@@ -245,7 +245,7 @@ export default function ProfilePage() {
               title="Education"
               action={
                 <Link
-                  href="/cv/education"
+                  href="/cv"
                   className="flex items-center gap-1 rounded-lg border border-line-soft bg-canvas px-2.5 py-1 text-xs font-bold text-primary transition-colors hover:border-primary hover:bg-primary-light"
                 >
                   <Icon name="pencil-alt" size={11} />
@@ -262,7 +262,7 @@ export default function ProfilePage() {
                 title="No education added"
                 message="Add your qualifications so employers can verify them."
                 action={
-                  <Link href="/cv/education">
+                  <Link href="/cv">
                     <Button size="sm">Add education</Button>
                   </Link>
                 }
@@ -333,7 +333,7 @@ export default function ProfilePage() {
                   </Chip>
                 ))
               ) : (
-                <Link href="/cv/skills" className="text-md font-semibold text-primary hover:underline">
+                <Link href="/cv" className="text-md font-semibold text-primary hover:underline">
                   Add your skills
                 </Link>
               )}

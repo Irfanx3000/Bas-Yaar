@@ -25,9 +25,13 @@ export const APP_CONFIG = {
 
 // Turn a stored relative path ("uploads/profile/x.webp") into a loadable URL.
 // Absolute URLs (http/https) and local file URIs are returned unchanged.
+// `blob:` is the web's local file URI — URL.createObjectURL() for a just-picked
+// photo. Without it here, the preview became
+// "https://api.crewapply.com/blob:http://…", so a new profile photo stayed
+// invisible until Save uploaded it and the server URL came back.
 export const toMediaUrl = (pathOrUrl) => {
   if (!pathOrUrl) return null;
-  if (/^(https?:|file:|content:|data:)/.test(pathOrUrl)) return pathOrUrl;
+  if (/^(https?:|file:|content:|data:|blob:)/.test(pathOrUrl)) return pathOrUrl;
   const clean = String(pathOrUrl).replace(/^\/+/, "");
   return `${APP_CONFIG.MEDIA_BASE_URL}/${clean}`;
 };
