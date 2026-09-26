@@ -214,35 +214,46 @@ export function AppShell({ children, user }) {
         collapsed ? "lg:grid-cols-[4rem_1fr]" : "lg:grid-cols-[16rem_1fr]"
       }`}
     >
-      {/* Desktop sidebar. Hidden on mobile, where the bottom bar takes over. */}
-      {/* `self-start` is what makes `sticky` actually stick. The aside is a GRID
-          ITEM, and a grid item defaults to align-self:stretch — so it was being
-          sized to the full grid area (the whole page) and a sticky box that
-          already fills its containing block has no travel room, leaving it to
-          scroll away with the page and expose the canvas gradient behind it.
-          The header sticks correctly because it sits INSIDE a grid item rather
-          than being one. */}
-      <aside className={`scrollbar-thin sticky top-0 hidden h-dvh self-start flex-col overflow-y-auto border-r border-line-soft bg-surface py-4 lg:flex ${collapsed ? "px-2" : "px-4"}`}>
+      {/* Mobile Sidebar Backdrop */}
+      {moreOpen ? (
+        <div 
+          className="fixed inset-0 z-40 bg-black/50 lg:hidden transition-opacity duration-[280ms] ease-decelerate" 
+          onClick={() => setMoreOpen(false)} 
+          aria-hidden="true" 
+        />
+      ) : null}
+
+      <aside className={`scrollbar-thin h-dvh flex-col overflow-y-auto bg-surface py-4 flex transition-transform duration-[280ms] ease-decelerate fixed inset-y-0 left-0 z-50 w-64 border-r border-line-soft shadow-2xl ${moreOpen ? "translate-x-0" : "-translate-x-full"} lg:static lg:sticky lg:top-0 lg:z-auto lg:w-auto lg:translate-x-0 lg:shadow-none ${collapsed ? "lg:px-2" : "px-4"}`}>
         <div className={`mb-6 flex items-center ${collapsed ? "flex-col gap-2" : "justify-between gap-2 px-3"}`}>
-          <Link href="/dashboard" className="flex min-w-0 items-center gap-2" aria-label="CrewApply home">
+          <Link href="/dashboard" onClick={() => setMoreOpen(false)} className="flex min-w-0 items-center gap-2" aria-label="CrewApply home">
             <Image src="/logo.png" alt="" width={32} height={32} className="size-8 shrink-0 object-contain" priority />
-            {collapsed ? null : <span className="text-lg font-extrabold text-heading">CrewApply</span>}
+            <span className={`text-lg font-extrabold text-heading ${collapsed ? "lg:hidden" : ""}`}>CrewApply</span>
           </Link>
-          <button
-            type="button"
-            onClick={toggleSidebar}
-            aria-expanded={!collapsed}
-            aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
-            title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
-            className="shrink-0 cursor-pointer rounded-md p-2 text-hint transition-colors duration-[180ms] ease-standard hover:bg-primary-light hover:text-primary"
-          >
-            <Icon name={collapsed ? "chevron-right" : "chevron-left"} size={14} />
-          </button>
+          <div className="flex items-center gap-1">
+            <button
+              type="button"
+              onClick={toggleSidebar}
+              aria-expanded={!collapsed}
+              aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+              title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+              className="shrink-0 cursor-pointer rounded-md p-2 text-hint transition-colors duration-[180ms] ease-standard hover:bg-primary-light hover:text-primary max-lg:hidden"
+            >
+              <Icon name={collapsed ? "chevron-right" : "chevron-left"} size={14} />
+            </button>
+            <button
+              type="button"
+              onClick={() => setMoreOpen(false)}
+              aria-label="Close menu"
+              className="shrink-0 cursor-pointer rounded-md p-2 text-hint transition-colors duration-[180ms] ease-standard hover:bg-primary-light hover:text-primary lg:hidden"
+            >
+              <Icon name="times" size={18} />
+            </button>
+          </div>
         </div>
 
         <nav className="flex flex-col gap-1">
           {PRIMARY.map((item) => (
-            <NavLink key={item.href} item={item} active={isActive(pathname, item.href)} collapsed={collapsed} />
+            <NavLink key={item.href} item={item} active={isActive(pathname, item.href)} collapsed={collapsed} onClick={() => setMoreOpen(false)} />
           ))}
         </nav>
 
@@ -250,7 +261,7 @@ export function AppShell({ children, user }) {
 
         <nav className="flex flex-col gap-1">
           {SECONDARY.map((item) => (
-            <NavLink key={item.href} item={item} active={isActive(pathname, item.href)} collapsed={collapsed} />
+            <NavLink key={item.href} item={item} active={isActive(pathname, item.href)} collapsed={collapsed} onClick={() => setMoreOpen(false)} />
           ))}
         </nav>
 
@@ -377,25 +388,6 @@ export function AppShell({ children, user }) {
         </Link>
       </nav>
 
-      <Modal open={moreOpen} onClose={() => setMoreOpen(false)} title="More">
-        <nav aria-label="More" className="-mx-1 flex flex-col gap-1">
-          {/* The shell never unmounts across routes, so the sheet must close
-              itself on navigation or it would sit open over the new page. */}
-          {SECONDARY.map((item) => (
-            <NavLink
-              key={item.href}
-              item={item}
-              active={isActive(pathname, item.href)}
-              collapsed={false}
-              onClick={() => setMoreOpen(false)}
-            />
-          ))}
-        </nav>
-        <hr className="my-2 border-line-soft" />
-        <div className="-mx-1">
-          <LogoutButton pending={loggingOut} onLogout={logout} />
-        </div>
-      </Modal>
     </div>
   );
 }
