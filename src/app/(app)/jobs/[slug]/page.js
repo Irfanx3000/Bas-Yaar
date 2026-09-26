@@ -91,12 +91,8 @@ const APPLIED_BANNER = {
 };
 
 function DocumentTile({ name, missing }) {
-  return (
-    <div
-      className={`flex flex-col items-center gap-1 rounded-md border p-3 text-center ${
-        missing ? "border-danger/30 bg-danger-light" : "border-success/30 bg-success-light"
-      }`}
-    >
+  const content = (
+    <>
       <Icon
         name={missing ? "help-circle" : "file-alt"}
         size={20}
@@ -105,6 +101,24 @@ function DocumentTile({ name, missing }) {
       <span className="text-xs font-semibold text-heading capitalize">
         {String(name).replace(/[-_]/g, " ")}
       </span>
+    </>
+  );
+
+  const className = `flex flex-col items-center gap-1 rounded-md border p-3 text-center ${
+    missing ? "border-danger/30 bg-danger-light hover:bg-danger/20 transition-colors cursor-pointer" : "border-success/30 bg-success-light"
+  }`;
+
+  if (missing) {
+    return (
+      <Link href="/documents" className={className}>
+        {content}
+      </Link>
+    );
+  }
+
+  return (
+    <div className={className}>
+      {content}
     </div>
   );
 }

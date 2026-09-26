@@ -13,10 +13,12 @@
  * modal: same content, no focus-trap machinery to maintain.
  */
 
-import { Suspense, useState } from "react";
-import { useSearchParams } from "next/navigation";
+import { Suspense, useState, useId, useRef, useEffect } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
 import { useJobsData } from "@/hooks/useJobsData";
 import { jobHref } from "@/lib/jobUrl";
+import { searchService } from "@/services/search.service";
+import { dropClass, useDropPlacement } from "@/components/ui/useDropPlacement";
 import {
   Button,
   Chip,
@@ -82,6 +84,7 @@ export default function JobsPage() {
 
 function JobsBrowser() {
   const params = useSearchParams();
+  const router = useRouter();
   const {
     jobs,
     resultCount,
@@ -106,6 +109,49 @@ function JobsBrowser() {
   } = useJobsData(params.get("category") || undefined);
 
   const [query, setQuery] = useState(params.get("q") || "");
+  const [suggestions, setSuggestions] = useState([]);
+  const [suggestState, setSuggestState] = useState("idle");
+  const [openSuggest, setOpenSuggest] = useState(false);
+
+  const listId = useId();
+  const searchRootRef = useRef(null);
+  const searchFormRef = useRef(null);
+  const { placement } = useDropPlacement(searchFormRef, openSuggest, 416);
+
+  useEffect(() => {
+    const trimmed = query.trim();
+    if (trimmed.length < 2) {
+      setSuggestions([]);
+      setSuggestState("idle");
+      return;
+    }
+    let cancelled = false;
+    const timer = setTimeout(async () => {
+      try {
+        setSuggestState("loading");
+        const results = await searchService.search(trimmed);
+        if (cancelled) return;
+        const jobResults = results?.find(g => g.entityType === "jobs")?.results || [];
+        setSuggestions(jobResults);
+        setSuggestState("done");
+      } catch {
+        if (!cancelled) setSuggestState("error");
+      }
+    }, 300);
+    return () => {
+      cancelled = true;
+      clearTimeout(timer);
+    };
+  }, [query]);
+
+  useEffect(() => {
+    if (!openSuggest) return;
+    const onPointerDown = (e) => {
+      if (!searchRootRef.current?.contains(e.target)) setOpenSuggest(false);
+    };
+    document.addEventListener("pointerdown", onPointerDown);
+    return () => document.removeEventListener("pointerdown", onPointerDown);
+  }, [openSuggest]);
 
   /* The hook owns filter state; this only computes the next selection and hands
      it back through applyFilters, so nothing is duplicated locally. */
@@ -151,49 +197,105 @@ function JobsBrowser() {
         Jobs
       </SectionTitle>
 
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          /* useJobsData's handleSearch destructures { keyword, location } —
-             unlike useSavedJobs/useJobAlerts, which take a bare string. Passing
-             the string here made both fields undefined, so every search sent an
-             empty term and silently reset the list. */
-          handleSearch({ keyword: query });
-        }}
-        className="mt-3 flex gap-2"
-      >
-        <label className="flex min-h-[50px] flex-1 items-center gap-2 rounded-[12px] border border-line-input bg-surface px-4">
+      <div className="mt-3 relative w-full" ref={searchRootRef}>
+        <form
+          ref={searchFormRef}
+          onSubmit={(e) => {
+            e.preventDefault();
+            setOpenSuggest(false);
+            handleSearch({ keyword: query });
+          }}
+          className={`flex min-h-[50px] w-full items-center gap-2 rounded-[12px] border bg-surface px-4 transition-[color,box-shadow] duration-[180ms] ease-standard ${
+            openSuggest ? "border-primary ring-4 ring-primary/15" : "border-line-input"
+          }`}
+        >
           <Icon name="search" size={14} className="shrink-0 text-hint" />
           <input
+            type="text"
+            role="combobox"
+            aria-expanded={openSuggest}
+            aria-controls={openSuggest ? listId : undefined}
             value={query}
-            onChange={(e) => setQuery(e.target.value)}
+            onChange={(e) => {
+              setQuery(e.target.value);
+              setOpenSuggest(true);
+            }}
+            onFocus={() => setOpenSuggest(true)}
+            onKeyDown={(e) => e.key === "Escape" && setOpenSuggest(false)}
             placeholder="Search by job title, skills…"
             aria-label="Search jobs"
-            className="w-full bg-transparent text-md text-heading outline-none focus-visible:outline-none placeholder:text-hint"
+            className="w-full min-w-0 bg-transparent text-md text-heading outline-none focus-visible:outline-none placeholder:text-hint"
           />
-        </label>
-        <Button type="submit">Search</Button>
-      </form>
+          <Button type="submit">Search</Button>
+        </form>
 
-      {appliedFilterChips?.length ? (
-        <div className="mt-3 flex flex-wrap gap-[5px]">
-          {appliedFilterChips.map((chip) => (
+        {openSuggest && query.trim().length >= 2 ? (
+          <div
+            id={listId}
+            className={`scrollbar-thin absolute left-0 z-50 flex max-h-[26rem] w-full flex-col overflow-y-auto rounded-[12px] border border-line-soft bg-surface p-[5px] shadow-lg ${dropClass(placement)}`}
+          >
+            {suggestState === "loading" ? (
+              <p className="animate-pulse px-3 py-4 text-center text-sm text-hint">Searching…</p>
+            ) : suggestState === "error" ? (
+              <p className="px-3 py-4 text-center text-sm text-danger">Search failed. Try again.</p>
+            ) : suggestions.length === 0 ? (
+              <p className="px-3 py-4 text-center text-sm text-hint">No suggestions for “{query.trim()}”.</p>
+            ) : (
+              <>
+                {suggestions.map((row) => (
+                  <button
+                    key={`job-${row.id}`}
+                    type="button"
+                    onClick={() => {
+                      setOpenSuggest(false);
+                      router.push(jobHref({ id: row.id, title: row.title }));
+                    }}
+                    className="flex w-full cursor-pointer items-center gap-2 rounded-xs px-3 py-2 text-left hover:bg-primary-light"
+                  >
+                    <Icon name="briefcase" size={12} className="shrink-0 text-hint" />
+                    <span className="min-w-0 flex-1">
+                      <span className="block truncate text-md text-heading">{row.title}</span>
+                      {row.subtitle ? (
+                        <span className="block truncate text-sm text-body">{row.subtitle}</span>
+                      ) : null}
+                    </span>
+                  </button>
+                ))}
+              </>
+            )}
+          </div>
+        ) : null}
+      </div>
+
+      {(selectedDepartments?.length > 0 || selectedVesselTypes?.length > 0 || selectedCategories?.length > 0) ? (
+        <div className="mt-3 flex flex-wrap items-center gap-[5px]">
+          {appliedFilterChips?.map((chip) => (
             <Chip key={chip.value ?? chip} onRemove={() => removeFilter(chip)}>
               {chip.label ?? chip.value ?? chip}
             </Chip>
           ))}
+          <button
+            type="button"
+            onClick={() => applyFilters({ departments: [], vesselTypes: [], categories: [] })}
+            className="ml-2 cursor-pointer text-xs font-semibold text-primary hover:underline"
+          >
+            Clear all
+          </button>
         </div>
       ) : null}
 
       <div className="mt-4 lg:grid lg:grid-cols-[16rem_1fr] lg:gap-6">
-        {/* Persistent rail on desktop, disclosure on mobile — same markup. */}
         <aside className="mb-4 lg:mb-0">
-          <details open className="rounded-md border border-line-soft bg-surface p-4 lg:open:block">
-            <summary className="cursor-pointer list-none text-md font-bold text-heading lg:pointer-events-none">
+          <details className="rounded-md border border-line-soft bg-surface p-4 lg:hidden">
+            <summary className="cursor-pointer list-none text-md font-bold text-heading">
               Filters
             </summary>
             <div className="mt-3">{filters}</div>
           </details>
+          <div className="hidden rounded-md border border-line-soft bg-surface p-4 lg:block">
+            <h2 className="text-md font-bold text-heading">Filters</h2>
+            <div className="mt-3">{filters}</div>
+          </div>
         </aside>
 
         <div className="min-w-0">
