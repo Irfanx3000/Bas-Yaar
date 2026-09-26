@@ -124,8 +124,7 @@
   "categories": {
     "deck": "Deck",
     "engine": "Engine",
-    "hospitality": "Hospitality",
-    "catering": "Catering",
+    "hotel": "Hotel",
     "others": "Others"
   },
   "subscription": {
