@@ -303,7 +303,6 @@ function JobsBrowser() {
             </div>
           ) : null}
         </div>
-      </div>
 
       {(selectedDepartments?.length > 0 || selectedVesselTypes?.length > 0 || selectedCategories?.length > 0) ? (
         <div className="mt-3 flex flex-wrap items-center gap-[5px]">
