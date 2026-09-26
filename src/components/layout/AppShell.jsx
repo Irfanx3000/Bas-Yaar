@@ -11,6 +11,7 @@ import { useSubscriptionStatus } from "@/context/SubscriptionContext";
 import { useNotifications } from "@/context/NotificationContext";
 import { Avatar } from "@/components/ui/Display";
 import { authService } from "@/services/auth.service";
+import { toMediaUrl } from "@/constants/app.constants";
 
 /* The signed-in chrome, and the plan's headline responsive translation:
  *
@@ -283,54 +284,42 @@ export function AppShell({ children, user }) {
              already bg-surface with a line-soft edge, so matching it here makes
              the two read as one continuous white chrome around the canvas
              rather than two unrelated strips. */
-          className={`sticky top-0 z-30 flex items-center justify-between gap-3 border-b border-line-soft bg-surface px-[15px] py-3 transition-[opacity,transform] will-change-[opacity,transform] lg:px-6 ${
+          className={`sticky top-0 z-30 flex items-center gap-3 border-b border-line-soft bg-surface px-[15px] py-3 transition-[opacity,transform] will-change-[opacity,transform] lg:hidden ${
             hidden
               ? "pointer-events-none -translate-y-3 opacity-0 duration-[180ms] ease-accelerate"
               : "translate-y-0 opacity-100 duration-[280ms] ease-decelerate"
           }`}
         >
-          <Link href="/dashboard" className="shrink-0 lg:hidden" aria-label="CrewApply home">
-            <Image src="/logo.png" alt="" width={32} height={32} className="size-8 object-contain" priority />
-          </Link>
+          <button
+            type="button"
+            onClick={() => setMoreOpen(true)}
+            aria-haspopup="dialog"
+            aria-expanded={moreOpen}
+            className="shrink-0 flex items-center justify-center text-body hover:text-primary transition-colors"
+            aria-label="More options"
+          >
+            <Icon name="bars" size={20} />
+          </button>
 
           {/* Global search lives here, not in the page hero — it belongs to the
               app, not to one screen, and every route can reach it from the bar. */}
-          <TopSearch />
-
-          <div className="flex shrink-0 items-center gap-2">
-            {/* Subscription lives here rather than as a card in the page. It is a
-                property of the account, not of the Home screen, so it belongs in
-                the chrome where it is reachable from every route — and it stops
-                a full-width banner pushing the actual content down. */}
-            {showSubscribeCta ? (
-              <Link
-                href="/subscription"
-                className="bg-gradient-secondary press hidden items-center gap-1.5 rounded-lg px-4 py-2 text-sm font-extrabold text-on-secondary shadow-sm transition-transform hover:scale-[1.02] sm:flex"
-              >
-                {/* gem, as the app's Subscription entry draws it. The crown is the
-                    app's ELITE tier badge (SubscriptionStatusCard), so on a CTA
-                    shown to users with no plan it claimed a tier they don't have. */}
-                <Icon name="gem" size={14} />
-                Subscribe
-              </Link>
-            ) : null}
-
-            <Link
-              href="/notifications"
-              aria-label="Notifications"
-              className="glass relative flex size-10 items-center justify-center rounded-full text-primary shadow-float transition-transform hover:scale-105"
-            >
-              <Icon name="bell" size={16} />
-              {unreadCount > 0 ? (
-                <span className="absolute -top-1 -right-1 flex h-4.5 min-w-4.5 items-center justify-center rounded-full bg-danger px-1 text-[10px] font-black leading-none text-white shadow-xs animate-pulse">
-                  {unreadCount > 99 ? "99+" : unreadCount}
-                </span>
-              ) : null}
-            </Link>
-            <Link href="/profile" aria-label="Your profile">
-              <Avatar name={user?.name} src={user?.avatarUrl} size="md" />
-            </Link>
+          <div className="flex-1 min-w-0">
+            <TopSearch />
           </div>
+          
+          {/* Subscription lives here rather than as a card in the page. It is a
+              property of the account, not of the Home screen, so it belongs in
+              the chrome where it is reachable from every route — and it stops
+              a full-width banner pushing the actual content down. */}
+          {showSubscribeCta ? (
+            <Link
+              href="/subscription"
+              className="bg-gradient-secondary press hidden shrink-0 items-center gap-1.5 rounded-lg px-4 py-2 text-sm font-extrabold text-on-secondary shadow-sm transition-transform hover:scale-[1.02] sm:flex"
+            >
+              <Icon name="gem" size={14} />
+              Subscribe
+            </Link>
+          ) : null}
         </header>
 
 
@@ -347,6 +336,7 @@ export function AppShell({ children, user }) {
       >
         {PRIMARY.map((item) => {
           const active = isActive(pathname, item.href);
+          
           return (
             <Link
               key={item.href}
@@ -356,27 +346,35 @@ export function AppShell({ children, user }) {
                 active ? "text-primary" : "text-nav-inactive"
               }`}
             >
-              <Icon name={item.icon} size={18} />
+              {item.href === "/profile" && user?.avatarUrl ? (
+                <div className="size-[20px] shrink-0 overflow-hidden rounded-full border border-primary/20 bg-surface shadow-xs mb-[2px]">
+                  <Image src={toMediaUrl(user.avatarUrl)} alt="Profile" width={20} height={20} className="size-full object-cover" />
+                </div>
+              ) : (
+                <Icon name={item.icon} size={18} />
+              )}
               <span className="truncate">{item.label}</span>
             </Link>
           );
         })}
 
-        {/* The overflow the header comment promises. Without it every secondary
-            destination — Settings, Documents, Wallet, My CV — and Log Out were
-            unreachable below `lg`. Active when the current page is one of them. */}
-        <button
-          type="button"
-          onClick={() => setMoreOpen(true)}
-          aria-haspopup="dialog"
-          aria-expanded={moreOpen}
-          className={`flex flex-1 cursor-pointer flex-col items-center gap-[2px] rounded-md py-1 text-nav font-medium ${
-            SECONDARY.some((item) => isActive(pathname, item.href)) ? "text-primary" : "text-nav-inactive"
+        <Link
+          href="/notifications"
+          aria-label="Notifications"
+          className={`flex flex-1 flex-col items-center gap-[2px] rounded-md py-1 text-nav font-medium ${
+            isActive(pathname, "/notifications") ? "text-primary" : "text-nav-inactive"
           }`}
         >
-          <Icon name="bars" size={18} />
-          <span className="truncate">More</span>
-        </button>
+          <div className="relative flex h-[18px] items-center justify-center">
+            <Icon name="bell" size={18} />
+            {unreadCount > 0 ? (
+              <span className="absolute -top-1 -right-1 flex h-3 min-w-3 items-center justify-center rounded-full bg-danger px-[2px] text-[8px] font-black leading-none text-white shadow-xs animate-pulse">
+                {unreadCount > 99 ? "99+" : unreadCount}
+              </span>
+            ) : null}
+          </div>
+          <span className="truncate">Alerts</span>
+        </Link>
       </nav>
 
       <Modal open={moreOpen} onClose={() => setMoreOpen(false)} title="More">
