@@ -208,7 +208,7 @@ function JobsBrowser() {
           className="flex w-full items-center gap-2"
         >
           <div
-            className={`flex min-h-[50px] flex-1 items-center gap-2 rounded-[12px] border bg-surface px-4 transition-[color,box-shadow] duration-[180ms] ease-standard ${
+            className={`flex h-[50px] flex-1 items-center gap-2 rounded-[12px] border bg-surface px-4 transition-[color,box-shadow] duration-[180ms] ease-standard ${
               openSuggest ? "border-primary ring-4 ring-primary/15" : "border-line-input"
             }`}
           >
@@ -231,7 +231,7 @@ function JobsBrowser() {
             />
           </div>
 
-          <div className="lg:hidden relative z-40 shrink-0">
+          <div className="lg:hidden z-40 shrink-0">
             <details className="group">
               <summary
                 className="inline-flex h-[50px] w-[50px] cursor-pointer items-center justify-center rounded-[12px] border border-line-input bg-surface text-primary shadow-sm transition-[color,box-shadow] duration-[180ms] ease-standard hover:bg-surface-hover list-none [&::-webkit-details-marker]:hidden"
@@ -239,7 +239,7 @@ function JobsBrowser() {
               >
                 <Icon name="filter" size={20} />
               </summary>
-              <div className="absolute right-0 top-[60px] w-[85vw] max-w-[320px] rounded-[12px] border border-line-soft bg-surface p-4 shadow-lg">
+              <div className="absolute right-0 top-[60px] w-full max-w-[320px] rounded-[12px] border border-line-soft bg-surface p-4 shadow-lg z-50">
                 <div className="mb-3 flex items-center justify-between">
                   <h2 className="text-md font-bold text-heading">Filters</h2>
                   <button
