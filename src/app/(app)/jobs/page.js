@@ -197,78 +197,106 @@ function JobsBrowser() {
         Jobs
       </SectionTitle>
 
-      <div className="mt-3 relative w-full" ref={searchRootRef}>
-        <form
-          ref={searchFormRef}
-          onSubmit={(e) => {
-            e.preventDefault();
-            setOpenSuggest(false);
-            handleSearch({ keyword: query });
-          }}
-          className="flex w-full items-center gap-2"
-        >
-          <div
-            className={`flex min-h-[50px] flex-1 items-center gap-2 rounded-[12px] border bg-surface px-4 transition-[color,box-shadow] duration-[180ms] ease-standard ${
-              openSuggest ? "border-primary ring-4 ring-primary/15" : "border-line-input"
-            }`}
-          >
-            <Icon name="search" size={14} className="shrink-0 text-hint" />
-            <input
-              type="text"
-              role="combobox"
-              aria-expanded={openSuggest}
-              aria-controls={openSuggest ? listId : undefined}
-              value={query}
-              onChange={(e) => {
-                setQuery(e.target.value);
-                setOpenSuggest(true);
-              }}
-              onFocus={() => setOpenSuggest(true)}
-              onKeyDown={(e) => e.key === "Escape" && setOpenSuggest(false)}
-              placeholder="Search by job title, skills…"
-              aria-label="Search jobs"
-              className="w-full min-w-0 bg-transparent text-md text-heading outline-none focus-visible:outline-none placeholder:text-hint"
-            />
-          </div>
-          <Button type="submit">Search</Button>
-        </form>
+      <div className="mt-3 flex items-start gap-2">
+        <div className="lg:hidden relative z-40">
+          <details className="group">
+            <summary
+              className="inline-flex h-[50px] w-[50px] cursor-pointer items-center justify-center rounded-[12px] border border-line-input bg-surface text-primary shadow-sm transition-[color,box-shadow] duration-[180ms] ease-standard hover:bg-surface-hover list-none [&::-webkit-details-marker]:hidden"
+              aria-label="Filters"
+            >
+              <Icon name="filter" size={20} />
+            </summary>
+            <div className="absolute left-0 top-[60px] w-[85vw] max-w-[320px] rounded-[12px] border border-line-soft bg-surface p-4 shadow-lg">
+              <div className="mb-3 flex items-center justify-between">
+                <h2 className="text-md font-bold text-heading">Filters</h2>
+                <button
+                  type="button"
+                  className="text-xs font-semibold text-primary hover:underline cursor-pointer"
+                  onClick={(e) => {
+                    e.target.closest("details").removeAttribute("open");
+                  }}
+                >
+                  Close
+                </button>
+              </div>
+              {filters}
+            </div>
+          </details>
+        </div>
 
-        {openSuggest && query.trim().length >= 2 ? (
-          <div
-            id={listId}
-            className={`scrollbar-thin absolute left-0 z-50 flex max-h-[26rem] w-full flex-col overflow-y-auto rounded-[12px] border border-line-soft bg-surface p-[5px] shadow-lg ${dropClass(placement)}`}
+        <div className="relative w-full min-w-0 flex-1" ref={searchRootRef}>
+          <form
+            ref={searchFormRef}
+            onSubmit={(e) => {
+              e.preventDefault();
+              setOpenSuggest(false);
+              handleSearch({ keyword: query });
+            }}
+            className="flex w-full items-center gap-2"
           >
-            {suggestState === "loading" ? (
-              <p className="animate-pulse px-3 py-4 text-center text-sm text-hint">Searching…</p>
-            ) : suggestState === "error" ? (
-              <p className="px-3 py-4 text-center text-sm text-danger">Search failed. Try again.</p>
-            ) : suggestions.length === 0 ? (
-              <p className="px-3 py-4 text-center text-sm text-hint">No suggestions for “{query.trim()}”.</p>
-            ) : (
-              <>
-                {suggestions.map((row) => (
-                  <button
-                    key={`job-${row.id}`}
-                    type="button"
-                    onClick={() => {
-                      setOpenSuggest(false);
-                      router.push(jobHref({ id: row.id, title: row.title }));
-                    }}
-                    className="flex w-full cursor-pointer items-center gap-2 rounded-xs px-3 py-2 text-left hover:bg-primary-light"
-                  >
-                    <Icon name="briefcase" size={12} className="shrink-0 text-hint" />
-                    <span className="min-w-0 flex-1">
-                      <span className="block truncate text-md text-heading">{row.title}</span>
-                      {row.subtitle ? (
-                        <span className="block truncate text-sm text-body">{row.subtitle}</span>
-                      ) : null}
-                    </span>
-                  </button>
-                ))}
-              </>
-            )}
-          </div>
-        ) : null}
+            <div
+              className={`flex min-h-[50px] flex-1 items-center gap-2 rounded-[12px] border bg-surface px-4 transition-[color,box-shadow] duration-[180ms] ease-standard ${
+                openSuggest ? "border-primary ring-4 ring-primary/15" : "border-line-input"
+              }`}
+            >
+              <Icon name="search" size={14} className="shrink-0 text-hint" />
+              <input
+                type="text"
+                role="combobox"
+                aria-expanded={openSuggest}
+                aria-controls={openSuggest ? listId : undefined}
+                value={query}
+                onChange={(e) => {
+                  setQuery(e.target.value);
+                  setOpenSuggest(true);
+                }}
+                onFocus={() => setOpenSuggest(true)}
+                onKeyDown={(e) => e.key === "Escape" && setOpenSuggest(false)}
+                placeholder="Search by job title, skills…"
+                aria-label="Search jobs"
+                className="w-full min-w-0 bg-transparent text-md text-heading outline-none focus-visible:outline-none placeholder:text-hint"
+              />
+            </div>
+            <Button type="submit">Search</Button>
+          </form>
+
+          {openSuggest && query.trim().length >= 2 ? (
+            <div
+              id={listId}
+              className={`scrollbar-thin absolute left-0 z-50 flex max-h-[26rem] w-full flex-col overflow-y-auto rounded-[12px] border border-line-soft bg-surface p-[5px] shadow-lg ${dropClass(placement)}`}
+            >
+              {suggestState === "loading" ? (
+                <p className="animate-pulse px-3 py-4 text-center text-sm text-hint">Searching…</p>
+              ) : suggestState === "error" ? (
+                <p className="px-3 py-4 text-center text-sm text-danger">Search failed. Try again.</p>
+              ) : suggestions.length === 0 ? (
+                <p className="px-3 py-4 text-center text-sm text-hint">No suggestions for “{query.trim()}”.</p>
+              ) : (
+                <>
+                  {suggestions.map((row) => (
+                    <button
+                      key={`job-${row.id}`}
+                      type="button"
+                      onClick={() => {
+                        setOpenSuggest(false);
+                        router.push(jobHref({ id: row.id, title: row.title }));
+                      }}
+                      className="flex w-full cursor-pointer items-center gap-2 rounded-xs px-3 py-2 text-left hover:bg-primary-light"
+                    >
+                      <Icon name="briefcase" size={12} className="shrink-0 text-hint" />
+                      <span className="min-w-0 flex-1">
+                        <span className="block truncate text-md text-heading">{row.title}</span>
+                        {row.subtitle ? (
+                          <span className="block truncate text-sm text-body">{row.subtitle}</span>
+                        ) : null}
+                      </span>
+                    </button>
+                  ))}
+                </>
+              )}
+            </div>
+          ) : null}
+        </div>
       </div>
 
       {(selectedDepartments?.length > 0 || selectedVesselTypes?.length > 0 || selectedCategories?.length > 0) ? (
@@ -290,13 +318,6 @@ function JobsBrowser() {
 
       <div className="mt-4 lg:grid lg:grid-cols-[16rem_1fr] lg:gap-6">
         <aside className="mb-4 lg:mb-0">
-          <details className="group lg:hidden">
-            <summary className="inline-flex cursor-pointer items-center gap-2 rounded-md border border-line-soft bg-surface px-4 py-2 text-md font-bold text-heading shadow-sm hover:bg-surface-hover">
-              <Icon name="filter" size={14} />
-              Filters
-            </summary>
-            <div className="mt-3 rounded-md border border-line-soft bg-surface p-4">{filters}</div>
-          </details>
           <div className="hidden rounded-md border border-line-soft bg-surface p-4 lg:block">
             <h2 className="text-md font-bold text-heading">Filters</h2>
             <div className="mt-3">{filters}</div>
