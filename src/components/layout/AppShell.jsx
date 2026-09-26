@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState, useSyncExternalStore } from "react";
+import { useState, useSyncExternalStore, useEffect } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import Image from "next/image";
 import { Icon, Modal } from "@/components/ui";
@@ -167,6 +167,16 @@ export function AppShell({ children, user }) {
     router.replace("/login");
   };
 
+  /* Scroll lock when mobile sidebar is open */
+  useEffect(() => {
+    if (!moreOpen) return;
+    const previous = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = previous;
+    };
+  }, [moreOpen]);
+
   /* Collapsed sidebar preference, read through useSyncExternalStore.
      Previously this was useState + a setState inside useEffect, which is what
      React Compiler flags as a cascading render — and it also rendered once with
@@ -257,7 +267,7 @@ export function AppShell({ children, user }) {
           ))}
         </nav>
 
-        <hr className="my-4 border-line-soft" />
+        <div className="h-2" />
 
         <nav className="flex flex-col gap-1">
           {SECONDARY.map((item) => (
@@ -268,7 +278,6 @@ export function AppShell({ children, user }) {
         {/* mt-auto pins it to the bottom of the rail when the links are short,
             and it simply follows them when the viewport is. */}
         <div className="mt-auto pt-4">
-          <hr className="mb-2 border-line-soft" />
           <LogoutButton collapsed={collapsed} pending={loggingOut} onLogout={logout} />
         </div>
       </aside>
@@ -343,7 +352,7 @@ export function AppShell({ children, user }) {
           exactly as AppNavigator draws it. Mobile only. */}
       <nav
         aria-label="Primary"
-        className="glass fixed inset-x-4 bottom-4 z-40 flex items-center justify-around rounded-xxl px-2 py-2 shadow-float lg:hidden"
+        className="glass fixed inset-x-4 bottom-4 z-40 flex items-center justify-around rounded-xxl px-1 py-2.5 shadow-float lg:hidden min-h-[64px]"
       >
         {PRIMARY.map((item) => {
           const active = isActive(pathname, item.href);
@@ -353,18 +362,20 @@ export function AppShell({ children, user }) {
               key={item.href}
               href={item.href}
               aria-current={active ? "page" : undefined}
-              className={`flex flex-1 flex-col items-center gap-[2px] rounded-md py-1 text-nav font-medium ${
+              className={`flex flex-1 flex-col items-center justify-center gap-1 rounded-md text-nav font-medium ${
                 active ? "text-primary" : "text-nav-inactive"
               }`}
             >
-              {item.href === "/profile" && user?.avatarUrl ? (
-                <div className="size-[20px] shrink-0 overflow-hidden rounded-full border border-primary/20 bg-surface shadow-xs mb-[2px]">
-                  <Image src={toMediaUrl(user.avatarUrl)} alt="Profile" width={20} height={20} className="size-full object-cover" />
-                </div>
-              ) : (
-                <Icon name={item.icon} size={18} />
-              )}
-              <span className="truncate">{item.label}</span>
+              <div className="flex h-[26px] items-center justify-center">
+                {item.href === "/profile" && user?.avatarUrl ? (
+                  <div className="size-[28px] shrink-0 overflow-hidden rounded-full border-2 border-surface bg-surface shadow-xs">
+                    <Image src={toMediaUrl(user.avatarUrl)} alt="Profile" width={28} height={28} className="size-full object-cover" />
+                  </div>
+                ) : (
+                  <Icon name={item.icon} size={22} />
+                )}
+              </div>
+              <span className="truncate w-full text-center px-0.5">{item.label}</span>
             </Link>
           );
         })}
@@ -372,19 +383,19 @@ export function AppShell({ children, user }) {
         <Link
           href="/notifications"
           aria-label="Notifications"
-          className={`flex flex-1 flex-col items-center gap-[2px] rounded-md py-1 text-nav font-medium ${
+          className={`flex flex-1 flex-col items-center justify-center gap-1 rounded-md text-nav font-medium ${
             isActive(pathname, "/notifications") ? "text-primary" : "text-nav-inactive"
           }`}
         >
-          <div className="relative flex h-[18px] items-center justify-center">
-            <Icon name="bell" size={18} />
+          <div className="relative flex h-[26px] items-center justify-center">
+            <Icon name="bell" size={22} />
             {unreadCount > 0 ? (
-              <span className="absolute -top-1 -right-1 flex h-3 min-w-3 items-center justify-center rounded-full bg-danger px-[2px] text-[8px] font-black leading-none text-white shadow-xs animate-pulse">
+              <span className="absolute -top-1.5 -right-1.5 flex h-4 min-w-[16px] items-center justify-center rounded-full bg-danger px-[4px] text-[9px] font-black leading-none text-white shadow-xs animate-pulse">
                 {unreadCount > 99 ? "99+" : unreadCount}
               </span>
             ) : null}
           </div>
-          <span className="truncate">Alerts</span>
+          <span className="truncate w-full text-center px-0.5">Alerts</span>
         </Link>
       </nav>
 
