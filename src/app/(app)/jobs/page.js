@@ -205,27 +205,31 @@ function JobsBrowser() {
             setOpenSuggest(false);
             handleSearch({ keyword: query });
           }}
-          className={`flex min-h-[50px] w-full items-center gap-2 rounded-[12px] border bg-surface px-4 transition-[color,box-shadow] duration-[180ms] ease-standard ${
-            openSuggest ? "border-primary ring-4 ring-primary/15" : "border-line-input"
-          }`}
+          className="flex w-full items-center gap-2"
         >
-          <Icon name="search" size={14} className="shrink-0 text-hint" />
-          <input
-            type="text"
-            role="combobox"
-            aria-expanded={openSuggest}
-            aria-controls={openSuggest ? listId : undefined}
-            value={query}
-            onChange={(e) => {
-              setQuery(e.target.value);
-              setOpenSuggest(true);
-            }}
-            onFocus={() => setOpenSuggest(true)}
-            onKeyDown={(e) => e.key === "Escape" && setOpenSuggest(false)}
-            placeholder="Search by job title, skills…"
-            aria-label="Search jobs"
-            className="w-full min-w-0 bg-transparent text-md text-heading outline-none focus-visible:outline-none placeholder:text-hint"
-          />
+          <div
+            className={`flex min-h-[50px] flex-1 items-center gap-2 rounded-[12px] border bg-surface px-4 transition-[color,box-shadow] duration-[180ms] ease-standard ${
+              openSuggest ? "border-primary ring-4 ring-primary/15" : "border-line-input"
+            }`}
+          >
+            <Icon name="search" size={14} className="shrink-0 text-hint" />
+            <input
+              type="text"
+              role="combobox"
+              aria-expanded={openSuggest}
+              aria-controls={openSuggest ? listId : undefined}
+              value={query}
+              onChange={(e) => {
+                setQuery(e.target.value);
+                setOpenSuggest(true);
+              }}
+              onFocus={() => setOpenSuggest(true)}
+              onKeyDown={(e) => e.key === "Escape" && setOpenSuggest(false)}
+              placeholder="Search by job title, skills…"
+              aria-label="Search jobs"
+              className="w-full min-w-0 bg-transparent text-md text-heading outline-none focus-visible:outline-none placeholder:text-hint"
+            />
+          </div>
           <Button type="submit">Search</Button>
         </form>
 
@@ -286,11 +290,12 @@ function JobsBrowser() {
 
       <div className="mt-4 lg:grid lg:grid-cols-[16rem_1fr] lg:gap-6">
         <aside className="mb-4 lg:mb-0">
-          <details className="rounded-md border border-line-soft bg-surface p-4 lg:hidden">
-            <summary className="cursor-pointer list-none text-md font-bold text-heading">
+          <details className="group lg:hidden">
+            <summary className="inline-flex cursor-pointer items-center gap-2 rounded-md border border-line-soft bg-surface px-4 py-2 text-md font-bold text-heading shadow-sm hover:bg-surface-hover">
+              <Icon name="filter" size={14} />
               Filters
             </summary>
-            <div className="mt-3">{filters}</div>
+            <div className="mt-3 rounded-md border border-line-soft bg-surface p-4">{filters}</div>
           </details>
           <div className="hidden rounded-md border border-line-soft bg-surface p-4 lg:block">
             <h2 className="text-md font-bold text-heading">Filters</h2>
