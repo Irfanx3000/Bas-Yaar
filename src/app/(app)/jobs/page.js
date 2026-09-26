@@ -197,68 +197,74 @@ function JobsBrowser() {
         Jobs
       </SectionTitle>
 
-      <div className="mt-3 flex items-start gap-2">
-        <div className="lg:hidden relative z-40">
-          <details className="group">
-            <summary
-              className="inline-flex h-[50px] w-[50px] cursor-pointer items-center justify-center rounded-[12px] border border-line-input bg-surface text-primary shadow-sm transition-[color,box-shadow] duration-[180ms] ease-standard hover:bg-surface-hover list-none [&::-webkit-details-marker]:hidden"
-              aria-label="Filters"
-            >
-              <Icon name="filter" size={20} />
-            </summary>
-            <div className="absolute left-0 top-[60px] w-[85vw] max-w-[320px] rounded-[12px] border border-line-soft bg-surface p-4 shadow-lg">
-              <div className="mb-3 flex items-center justify-between">
-                <h2 className="text-md font-bold text-heading">Filters</h2>
-                <button
-                  type="button"
-                  className="text-xs font-semibold text-primary hover:underline cursor-pointer"
-                  onClick={(e) => {
-                    e.target.closest("details").removeAttribute("open");
-                  }}
-                >
-                  Close
-                </button>
-              </div>
-              {filters}
-            </div>
-          </details>
-        </div>
-
-        <div className="relative w-full min-w-0 flex-1" ref={searchRootRef}>
-          <form
-            ref={searchFormRef}
-            onSubmit={(e) => {
-              e.preventDefault();
-              setOpenSuggest(false);
-              handleSearch({ keyword: query });
-            }}
-            className="flex w-full items-center gap-2"
+      <div className="mt-3 relative w-full" ref={searchRootRef}>
+        <form
+          ref={searchFormRef}
+          onSubmit={(e) => {
+            e.preventDefault();
+            setOpenSuggest(false);
+            handleSearch({ keyword: query });
+          }}
+          className="flex w-full items-center gap-2"
+        >
+          <div
+            className={`flex min-h-[50px] flex-1 items-center gap-2 rounded-[12px] border bg-surface px-4 transition-[color,box-shadow] duration-[180ms] ease-standard ${
+              openSuggest ? "border-primary ring-4 ring-primary/15" : "border-line-input"
+            }`}
           >
-            <div
-              className={`flex min-h-[50px] flex-1 items-center gap-2 rounded-[12px] border bg-surface px-4 transition-[color,box-shadow] duration-[180ms] ease-standard ${
-                openSuggest ? "border-primary ring-4 ring-primary/15" : "border-line-input"
-              }`}
-            >
-              <Icon name="search" size={14} className="shrink-0 text-hint" />
-              <input
-                type="text"
-                role="combobox"
-                aria-expanded={openSuggest}
-                aria-controls={openSuggest ? listId : undefined}
-                value={query}
-                onChange={(e) => {
-                  setQuery(e.target.value);
-                  setOpenSuggest(true);
-                }}
-                onFocus={() => setOpenSuggest(true)}
-                onKeyDown={(e) => e.key === "Escape" && setOpenSuggest(false)}
-                placeholder="Search by job title, skills…"
-                aria-label="Search jobs"
-                className="w-full min-w-0 bg-transparent text-md text-heading outline-none focus-visible:outline-none placeholder:text-hint"
-              />
-            </div>
-            <Button type="submit">Search</Button>
-          </form>
+            <Icon name="search" size={14} className="shrink-0 text-hint" />
+            <input
+              type="text"
+              role="combobox"
+              aria-expanded={openSuggest}
+              aria-controls={openSuggest ? listId : undefined}
+              value={query}
+              onChange={(e) => {
+                setQuery(e.target.value);
+                setOpenSuggest(true);
+              }}
+              onFocus={() => setOpenSuggest(true)}
+              onKeyDown={(e) => e.key === "Escape" && setOpenSuggest(false)}
+              placeholder="Search by job title, skills…"
+              aria-label="Search jobs"
+              className="w-full min-w-0 bg-transparent text-md text-heading outline-none focus-visible:outline-none placeholder:text-hint"
+            />
+          </div>
+
+          <div className="lg:hidden relative z-40 shrink-0">
+            <details className="group">
+              <summary
+                className="inline-flex h-[50px] w-[50px] cursor-pointer items-center justify-center rounded-[12px] border border-line-input bg-surface text-primary shadow-sm transition-[color,box-shadow] duration-[180ms] ease-standard hover:bg-surface-hover list-none [&::-webkit-details-marker]:hidden"
+                aria-label="Filters"
+              >
+                <Icon name="filter" size={20} />
+              </summary>
+              <div className="absolute right-0 top-[60px] w-[85vw] max-w-[320px] rounded-[12px] border border-line-soft bg-surface p-4 shadow-lg">
+                <div className="mb-3 flex items-center justify-between">
+                  <h2 className="text-md font-bold text-heading">Filters</h2>
+                  <button
+                    type="button"
+                    className="text-xs font-semibold text-primary hover:underline cursor-pointer"
+                    onClick={(e) => {
+                      e.target.closest("details").removeAttribute("open");
+                    }}
+                  >
+                    Close
+                  </button>
+                </div>
+                {filters}
+              </div>
+            </details>
+          </div>
+
+          <Button 
+            type="submit" 
+            aria-label="Search"
+            className="h-[50px] w-[50px] shrink-0 !px-0 flex items-center justify-center rounded-[12px]"
+          >
+            <Icon name="search" size={18} />
+          </Button>
+        </form>
 
           {openSuggest && query.trim().length >= 2 ? (
             <div
