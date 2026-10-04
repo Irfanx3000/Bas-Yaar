@@ -116,6 +116,13 @@ export function JobCard({ job, saved = false, applied = false, onToggleSave, onA
                 <Icon name="check-circle" size={11} />
                 Applied
               </span>
+            ) : href ? (
+              <Link
+                href={href}
+                className="relative z-10 flex w-full items-center justify-center cursor-pointer rounded-xl bg-primary px-4 py-2 text-xs font-bold text-on-primary transition-transform duration-[180ms] ease-standard active:scale-[0.96]"
+              >
+                Apply now
+              </Link>
             ) : (
               <button
                 type="button"

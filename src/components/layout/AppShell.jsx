@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState, useSyncExternalStore } from "react";
+import { useState, useSyncExternalStore, useEffect } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import Image from "next/image";
 import { Icon, Modal } from "@/components/ui";
@@ -11,6 +11,7 @@ import { useSubscriptionStatus } from "@/context/SubscriptionContext";
 import { useNotifications } from "@/context/NotificationContext";
 import { Avatar } from "@/components/ui/Display";
 import { authService } from "@/services/auth.service";
+import { toMediaUrl } from "@/constants/app.constants";
 
 /* The signed-in chrome, and the plan's headline responsive translation:
  *
@@ -166,6 +167,16 @@ export function AppShell({ children, user }) {
     router.replace("/login");
   };
 
+  /* Scroll lock when mobile sidebar is open */
+  useEffect(() => {
+    if (!moreOpen) return;
+    const previous = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = previous;
+    };
+  }, [moreOpen]);
+
   /* Collapsed sidebar preference, read through useSyncExternalStore.
      Previously this was useState + a setState inside useEffect, which is what
      React Compiler flags as a cascading render — and it also rendered once with
@@ -213,50 +224,60 @@ export function AppShell({ children, user }) {
         collapsed ? "lg:grid-cols-[4rem_1fr]" : "lg:grid-cols-[16rem_1fr]"
       }`}
     >
-      {/* Desktop sidebar. Hidden on mobile, where the bottom bar takes over. */}
-      {/* `self-start` is what makes `sticky` actually stick. The aside is a GRID
-          ITEM, and a grid item defaults to align-self:stretch — so it was being
-          sized to the full grid area (the whole page) and a sticky box that
-          already fills its containing block has no travel room, leaving it to
-          scroll away with the page and expose the canvas gradient behind it.
-          The header sticks correctly because it sits INSIDE a grid item rather
-          than being one. */}
-      <aside className={`scrollbar-thin sticky top-0 hidden h-dvh self-start flex-col overflow-y-auto border-r border-line-soft bg-surface py-4 lg:flex ${collapsed ? "px-2" : "px-4"}`}>
+      {/* Mobile Sidebar Backdrop */}
+      {moreOpen ? (
+        <div 
+          className="fixed inset-0 z-40 bg-black/50 lg:hidden transition-opacity duration-[280ms] ease-decelerate" 
+          onClick={() => setMoreOpen(false)} 
+          aria-hidden="true" 
+        />
+      ) : null}
+
+      <aside className={`scrollbar-thin h-dvh flex-col overflow-y-auto bg-surface py-4 flex transition-transform duration-[280ms] ease-decelerate fixed inset-y-0 left-0 z-50 w-64 border-r border-line-soft shadow-2xl ${moreOpen ? "translate-x-0" : "-translate-x-full"} lg:static lg:sticky lg:top-0 lg:z-auto lg:w-auto lg:translate-x-0 lg:shadow-none ${collapsed ? "lg:px-2" : "px-4"}`}>
         <div className={`mb-6 flex items-center ${collapsed ? "flex-col gap-2" : "justify-between gap-2 px-3"}`}>
-          <Link href="/dashboard" className="flex min-w-0 items-center gap-2" aria-label="CrewApply home">
+          <Link href="/dashboard" onClick={() => setMoreOpen(false)} className="flex min-w-0 items-center gap-2" aria-label="CrewApply home">
             <Image src="/logo.png" alt="" width={32} height={32} className="size-8 shrink-0 object-contain" priority />
-            {collapsed ? null : <span className="text-lg font-extrabold text-heading">CrewApply</span>}
+            <span className={`text-lg font-extrabold text-heading ${collapsed ? "lg:hidden" : ""}`}>CrewApply</span>
           </Link>
-          <button
-            type="button"
-            onClick={toggleSidebar}
-            aria-expanded={!collapsed}
-            aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
-            title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
-            className="shrink-0 cursor-pointer rounded-md p-2 text-hint transition-colors duration-[180ms] ease-standard hover:bg-primary-light hover:text-primary"
-          >
-            <Icon name={collapsed ? "chevron-right" : "chevron-left"} size={14} />
-          </button>
+          <div className="flex items-center gap-1">
+            <button
+              type="button"
+              onClick={toggleSidebar}
+              aria-expanded={!collapsed}
+              aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+              title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+              className="shrink-0 cursor-pointer rounded-md p-2 text-hint transition-colors duration-[180ms] ease-standard hover:bg-primary-light hover:text-primary max-lg:hidden"
+            >
+              <Icon name={collapsed ? "chevron-right" : "chevron-left"} size={14} />
+            </button>
+            <button
+              type="button"
+              onClick={() => setMoreOpen(false)}
+              aria-label="Close menu"
+              className="shrink-0 cursor-pointer rounded-md p-2 text-hint transition-colors duration-[180ms] ease-standard hover:bg-primary-light hover:text-primary lg:hidden"
+            >
+              <Icon name="times" size={18} />
+            </button>
+          </div>
         </div>
 
         <nav className="flex flex-col gap-1">
           {PRIMARY.map((item) => (
-            <NavLink key={item.href} item={item} active={isActive(pathname, item.href)} collapsed={collapsed} />
+            <NavLink key={item.href} item={item} active={isActive(pathname, item.href)} collapsed={collapsed} onClick={() => setMoreOpen(false)} />
           ))}
         </nav>
 
-        <hr className="my-4 border-line-soft" />
+        <div className="h-2" />
 
         <nav className="flex flex-col gap-1">
           {SECONDARY.map((item) => (
-            <NavLink key={item.href} item={item} active={isActive(pathname, item.href)} collapsed={collapsed} />
+            <NavLink key={item.href} item={item} active={isActive(pathname, item.href)} collapsed={collapsed} onClick={() => setMoreOpen(false)} />
           ))}
         </nav>
 
         {/* mt-auto pins it to the bottom of the rail when the links are short,
             and it simply follows them when the viewport is. */}
         <div className="mt-auto pt-4">
-          <hr className="mb-2 border-line-soft" />
           <LogoutButton collapsed={collapsed} pending={loggingOut} onLogout={logout} />
         </div>
       </aside>
@@ -283,54 +304,42 @@ export function AppShell({ children, user }) {
              already bg-surface with a line-soft edge, so matching it here makes
              the two read as one continuous white chrome around the canvas
              rather than two unrelated strips. */
-          className={`sticky top-0 z-30 flex items-center justify-between gap-3 border-b border-line-soft bg-surface px-[15px] py-3 transition-[opacity,transform] will-change-[opacity,transform] lg:px-6 ${
+          className={`sticky top-0 z-30 flex items-center gap-3 border-b border-line-soft bg-surface px-[15px] py-3 transition-[opacity,transform] will-change-[opacity,transform] lg:hidden ${
             hidden
               ? "pointer-events-none -translate-y-3 opacity-0 duration-[180ms] ease-accelerate"
               : "translate-y-0 opacity-100 duration-[280ms] ease-decelerate"
           }`}
         >
-          <Link href="/dashboard" className="shrink-0 lg:hidden" aria-label="CrewApply home">
-            <Image src="/logo.png" alt="" width={32} height={32} className="size-8 object-contain" priority />
-          </Link>
+          <button
+            type="button"
+            onClick={() => setMoreOpen(true)}
+            aria-haspopup="dialog"
+            aria-expanded={moreOpen}
+            className="shrink-0 flex items-center justify-center text-body hover:text-primary transition-colors"
+            aria-label="More options"
+          >
+            <Icon name="bars" size={20} />
+          </button>
 
           {/* Global search lives here, not in the page hero — it belongs to the
               app, not to one screen, and every route can reach it from the bar. */}
-          <TopSearch />
-
-          <div className="flex shrink-0 items-center gap-2">
-            {/* Subscription lives here rather than as a card in the page. It is a
-                property of the account, not of the Home screen, so it belongs in
-                the chrome where it is reachable from every route — and it stops
-                a full-width banner pushing the actual content down. */}
-            {showSubscribeCta ? (
-              <Link
-                href="/subscription"
-                className="bg-gradient-secondary press hidden items-center gap-1.5 rounded-lg px-4 py-2 text-sm font-extrabold text-on-secondary shadow-sm transition-transform hover:scale-[1.02] sm:flex"
-              >
-                {/* gem, as the app's Subscription entry draws it. The crown is the
-                    app's ELITE tier badge (SubscriptionStatusCard), so on a CTA
-                    shown to users with no plan it claimed a tier they don't have. */}
-                <Icon name="gem" size={14} />
-                Subscribe
-              </Link>
-            ) : null}
-
-            <Link
-              href="/notifications"
-              aria-label="Notifications"
-              className="glass relative flex size-10 items-center justify-center rounded-full text-primary shadow-float transition-transform hover:scale-105"
-            >
-              <Icon name="bell" size={16} />
-              {unreadCount > 0 ? (
-                <span className="absolute -top-1 -right-1 flex h-4.5 min-w-4.5 items-center justify-center rounded-full bg-danger px-1 text-[10px] font-black leading-none text-white shadow-xs animate-pulse">
-                  {unreadCount > 99 ? "99+" : unreadCount}
-                </span>
-              ) : null}
-            </Link>
-            <Link href="/profile" aria-label="Your profile">
-              <Avatar name={user?.name} src={user?.avatarUrl} size="md" />
-            </Link>
+          <div className="flex-1 min-w-0">
+            <TopSearch />
           </div>
+          
+          {/* Subscription lives here rather than as a card in the page. It is a
+              property of the account, not of the Home screen, so it belongs in
+              the chrome where it is reachable from every route — and it stops
+              a full-width banner pushing the actual content down. */}
+          {showSubscribeCta ? (
+            <Link
+              href="/subscription"
+              className="bg-gradient-secondary press hidden shrink-0 items-center gap-1.5 rounded-lg px-4 py-2 text-sm font-extrabold text-on-secondary shadow-sm transition-transform hover:scale-[1.02] sm:flex"
+            >
+              <Icon name="gem" size={14} />
+              Subscribe
+            </Link>
+          ) : null}
         </header>
 
 
@@ -343,61 +352,53 @@ export function AppShell({ children, user }) {
           exactly as AppNavigator draws it. Mobile only. */}
       <nav
         aria-label="Primary"
-        className="glass fixed inset-x-4 bottom-4 z-40 flex items-center justify-around rounded-xxl px-2 py-2 shadow-float lg:hidden"
+        className="glass fixed inset-x-4 bottom-4 z-40 flex items-center justify-around rounded-xxl px-1 py-2.5 shadow-float lg:hidden min-h-[64px]"
       >
         {PRIMARY.map((item) => {
           const active = isActive(pathname, item.href);
+          
           return (
             <Link
               key={item.href}
               href={item.href}
               aria-current={active ? "page" : undefined}
-              className={`flex flex-1 flex-col items-center gap-[2px] rounded-md py-1 text-nav font-medium ${
+              className={`flex flex-1 flex-col items-center justify-center gap-1 rounded-md text-nav font-medium ${
                 active ? "text-primary" : "text-nav-inactive"
               }`}
             >
-              <Icon name={item.icon} size={18} />
-              <span className="truncate">{item.label}</span>
+              <div className="flex h-[26px] items-center justify-center">
+                {item.href === "/profile" && user?.avatarUrl ? (
+                  <div className="size-[28px] shrink-0 overflow-hidden rounded-full border-2 border-surface bg-surface shadow-xs">
+                    <Image src={toMediaUrl(user.avatarUrl)} alt="Profile" width={28} height={28} className="size-full object-cover" />
+                  </div>
+                ) : (
+                  <Icon name={item.icon} size={22} />
+                )}
+              </div>
+              <span className="truncate w-full text-center px-0.5">{item.label}</span>
             </Link>
           );
         })}
 
-        {/* The overflow the header comment promises. Without it every secondary
-            destination — Settings, Documents, Wallet, My CV — and Log Out were
-            unreachable below `lg`. Active when the current page is one of them. */}
-        <button
-          type="button"
-          onClick={() => setMoreOpen(true)}
-          aria-haspopup="dialog"
-          aria-expanded={moreOpen}
-          className={`flex flex-1 cursor-pointer flex-col items-center gap-[2px] rounded-md py-1 text-nav font-medium ${
-            SECONDARY.some((item) => isActive(pathname, item.href)) ? "text-primary" : "text-nav-inactive"
+        <Link
+          href="/notifications"
+          aria-label="Notifications"
+          className={`flex flex-1 flex-col items-center justify-center gap-1 rounded-md text-nav font-medium ${
+            isActive(pathname, "/notifications") ? "text-primary" : "text-nav-inactive"
           }`}
         >
-          <Icon name="bars" size={18} />
-          <span className="truncate">More</span>
-        </button>
+          <div className="relative flex h-[26px] items-center justify-center">
+            <Icon name="bell" size={22} />
+            {unreadCount > 0 ? (
+              <span className="absolute -top-1.5 -right-1.5 flex h-4 min-w-[16px] items-center justify-center rounded-full bg-danger px-[4px] text-[9px] font-black leading-none text-white shadow-xs animate-pulse">
+                {unreadCount > 99 ? "99+" : unreadCount}
+              </span>
+            ) : null}
+          </div>
+          <span className="truncate w-full text-center px-0.5">Alerts</span>
+        </Link>
       </nav>
 
-      <Modal open={moreOpen} onClose={() => setMoreOpen(false)} title="More">
-        <nav aria-label="More" className="-mx-1 flex flex-col gap-1">
-          {/* The shell never unmounts across routes, so the sheet must close
-              itself on navigation or it would sit open over the new page. */}
-          {SECONDARY.map((item) => (
-            <NavLink
-              key={item.href}
-              item={item}
-              active={isActive(pathname, item.href)}
-              collapsed={false}
-              onClick={() => setMoreOpen(false)}
-            />
-          ))}
-        </nav>
-        <hr className="my-2 border-line-soft" />
-        <div className="-mx-1">
-          <LogoutButton pending={loggingOut} onLogout={logout} />
-        </div>
-      </Modal>
     </div>
   );
 }
