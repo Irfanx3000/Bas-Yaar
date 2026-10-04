@@ -89,9 +89,11 @@ export function FooterSection() {
               <div className="flex flex-col">
                 <h4 className="font-bold text-heading text-sm mb-4 uppercase tracking-wider">Support</h4>
                 <ul className="flex flex-col gap-3 text-sm text-body">
-                  {['Help Center', 'Contact Us', 'Privacy Policy', 'Terms of Service'].map((item, i) => (
-                    <li key={i}><Link href="#" className="hover:text-primary transition-colors">{item}</Link></li>
-                  ))}
+                  <li><Link href="#" className="hover:text-primary transition-colors">Help Center</Link></li>
+                  <li><Link href="mailto:crewapplyjobs@gmail.com" className="hover:text-primary transition-colors">Contact Us</Link></li>
+                  <li><Link href="/legal/privacy" className="hover:text-primary transition-colors">Privacy Policy</Link></li>
+                  <li><Link href="/legal/terms" className="hover:text-primary transition-colors">Terms of Service</Link></li>
+                  <li><Link href="/delete-account" className="hover:text-primary transition-colors">Account Deletion</Link></li>
                 </ul>
               </div>
             </div>
