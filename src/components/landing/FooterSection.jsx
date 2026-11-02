@@ -93,8 +93,14 @@ export function FooterSection() {
               <div className="flex flex-col">
                 <h4 className="font-bold text-heading text-sm mb-4 uppercase tracking-wider">{t("sidebar.sections.support")}</h4>
                 <ul className="flex flex-col gap-3 text-sm text-body">
-                  {['web.landing.footer.helpCenter', 'web.landing.footer.contactUs', 'common.privacyPolicy', 'web.landing.footer.termsOfService'].map((item, i) => (
-                    <li key={i}><Link href="#" className="hover:text-primary transition-colors">{t(item)}</Link></li>
+                  {[
+                    { href: "#", key: "web.landing.footer.helpCenter" },
+                    { href: "mailto:crewapplyjobs@gmail.com", key: "web.landing.footer.contactUs" },
+                    { href: "/legal/privacy", key: "common.privacyPolicy" },
+                    { href: "/legal/terms", key: "web.landing.footer.termsOfService" },
+                    { href: "/delete-account", key: "web.landing.footer.accountDeletion" },
+                  ].map((item) => (
+                    <li key={item.key}><Link href={item.href} className="hover:text-primary transition-colors">{t(item.key)}</Link></li>
                   ))}
                 </ul>
               </div>

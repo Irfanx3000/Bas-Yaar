@@ -133,7 +133,7 @@ export function DatePicker({
     const thisYear = new Date().getFullYear();
     const from = minDate ? minDate.getFullYear() : thisYear - yearsBack;
     const to = maxDate ? maxDate.getFullYear() : thisYear + yearsForward;
-    return Array.from({ length: to - from + 1 }, (_, i) => to - i); // newest first
+    return Array.from({ length: to - from + 1 }, (_, i) => ({ value: to - i, label: String(to - i) })); // newest first; Select only normalises strings
   }, [minDate, maxDate, yearsBack, yearsForward]);
 
   const outOfRange = (d) => {

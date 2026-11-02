@@ -19,7 +19,7 @@ export const APP_CONFIG = {
   // This is also what connectivity.js probes /health against.
   MEDIA_BASE_URL: API_BASE_URL.replace(/\/api\/v\d+\/?$/, ""),
   TIMEOUT: 15000,
-  SUPPORT_EMAIL: "support@crewapply.com",
+  SUPPORT_EMAIL: "crewapplyjobs@gmail.com",
   VERSION: "1.0.0",
 };
 

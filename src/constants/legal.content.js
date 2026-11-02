@@ -56,7 +56,7 @@ export const LEGAL_PAGES = {
       },
       {
         "heading": "11. Contact Us",
-        "body": "If you have questions about this Privacy Policy or how your information is handled, contact us\nat support@crewapply.com."
+        "body": "If you have questions about this Privacy Policy or how your information is handled, contact us\nat crewapplyjobs@gmail.com."
       }
     ]
   },
@@ -114,7 +114,7 @@ export const LEGAL_PAGES = {
       },
       {
         "heading": "13. Contact Us",
-        "body": "If you have questions about these Terms, contact us at support@crewapply.com."
+        "body": "If you have questions about these Terms, contact us at crewapplyjobs@gmail.com."
       }
     ]
   }
