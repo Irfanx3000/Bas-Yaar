@@ -22,7 +22,7 @@
 
 import { useState } from "react";
 import { Button, DatePicker, Input, Modal } from "@/components/ui";
-import { t } from "@/i18n";
+import { useTranslation } from "react-i18next";
 
 const EMPTY = { name: "", issuingAuthority: "", issueDate: "", expiryDate: "" };
 
@@ -39,6 +39,7 @@ const today = () => new Date().toISOString().slice(0, 10);
    and an effect that calls setState on open is the cascading render React
    Compiler rejects. */
 export function CertificateMetadataModal({ onCancel, onSubmit, submitting }) {
+  const { t } = useTranslation();
   const [form, setForm] = useState(EMPTY);
   const [error, setError] = useState(null);
 

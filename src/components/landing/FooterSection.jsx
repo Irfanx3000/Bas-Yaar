@@ -1,8 +1,12 @@
+"use client";
+
 import Image from 'next/image';
 import Link from 'next/link';
 import { Icon } from '@/components/ui/Icon';
+import { useTranslation } from "react-i18next";
 
 export function FooterSection() {
+  const { t } = useTranslation();
   return (
     <>
       {/* Pre-Footer CTA Banner */}
@@ -13,7 +17,7 @@ export function FooterSection() {
             <div className="absolute inset-0 z-0">
                <Image 
                  src="/banner 3.png"
-                 alt="Start Your Next Chapter"
+                 alt={t("web.landing.footer.ctaImageAlt")}
                  fill
                  className="object-cover object-center"
                />
@@ -25,20 +29,20 @@ export function FooterSection() {
               
               <div className="flex-1 max-w-xl">
                 <h2 className="text-3xl sm:text-4xl font-bold text-white mb-3">
-                  Your Next Chapter Starts Here.
+                  {t("web.landing.footer.ctaTitle")}
                 </h2>
                 <p className="text-white/90 text-sm sm:text-base mb-8 max-w-md">
-                  Create your CrewApply profile and take control of your maritime career.
+                  {t("web.landing.footer.ctaSubtitle")}
                 </p>
                 <Link href="/signup" className="bg-primary text-white font-semibold px-8 py-3 rounded-full hover:bg-primary-hover transition-colors inline-block shadow-lg hover:shadow-xl hover:scale-105 transform">
-                  Get Started
+                  {t("web.landing.common.getStarted")}
                 </Link>
               </div>
 
               {/* Right Accent (Script Text) */}
               <div className="hidden md:block flex-1 text-right self-start pt-8 pr-8">
                 <p className="text-2xl font-medium text-white/90 inline-block drop-shadow-md" style={{ fontFamily: '"Caveat", cursive', transform: 'rotate(-4deg)' }}>
-                  Same Oceans. Bigger Opportunities.
+                  {t("web.landing.common.slogan")}
                 </p>
               </div>
 
@@ -62,7 +66,7 @@ export function FooterSection() {
                  <span className="font-bold text-xl tracking-tight text-heading">CrewApply</span>
               </Link>
               <p className="text-sm text-body mt-3 mb-6 max-w-xs leading-relaxed">
-                Building brighter futures for maritime professionals across the globe.
+                {t("web.landing.footer.tagline")}
               </p>
               <div className="flex items-center gap-3">
                 {['linkedin', 'instagram', 'youtube', 'facebook', 'twitter'].map((social, i) => (
@@ -77,20 +81,20 @@ export function FooterSection() {
             <div className="grid grid-cols-2 gap-8 lg:col-span-5 w-full max-w-md mx-auto lg:mx-0">
               {/* Column 2: Quick Links */}
               <div className="flex flex-col">
-                <h4 className="font-bold text-heading text-sm mb-4 uppercase tracking-wider">Quick Links</h4>
+                <h4 className="font-bold text-heading text-sm mb-4 uppercase tracking-wider">{t("web.landing.footer.quickLinks")}</h4>
                 <ul className="flex flex-col gap-3 text-sm text-body">
-                  {['For Crew', 'How It Works', 'Career Support', 'For Employers', 'About Us'].map((item, i) => (
-                    <li key={i}><Link href="#" className="hover:text-primary transition-colors">{item}</Link></li>
+                  {['web.landing.nav.forCrew', 'web.landing.nav.howItWorks', 'web.landing.nav.careerSupport', 'web.landing.nav.forEmployers', 'web.landing.nav.aboutUs'].map((item, i) => (
+                    <li key={i}><Link href="#" className="hover:text-primary transition-colors">{t(item)}</Link></li>
                   ))}
                 </ul>
               </div>
 
               {/* Column 3: Support */}
               <div className="flex flex-col">
-                <h4 className="font-bold text-heading text-sm mb-4 uppercase tracking-wider">Support</h4>
+                <h4 className="font-bold text-heading text-sm mb-4 uppercase tracking-wider">{t("sidebar.sections.support")}</h4>
                 <ul className="flex flex-col gap-3 text-sm text-body">
-                  {['Help Center', 'Contact Us', 'Privacy Policy', 'Terms of Service'].map((item, i) => (
-                    <li key={i}><Link href="#" className="hover:text-primary transition-colors">{item}</Link></li>
+                  {['web.landing.footer.helpCenter', 'web.landing.footer.contactUs', 'common.privacyPolicy', 'web.landing.footer.termsOfService'].map((item, i) => (
+                    <li key={i}><Link href="#" className="hover:text-primary transition-colors">{t(item)}</Link></li>
                   ))}
                 </ul>
               </div>
@@ -98,8 +102,8 @@ export function FooterSection() {
 
             {/* Column 4: Get the App */}
             <div className="flex flex-col items-center text-center lg:items-start lg:text-left lg:col-span-3">
-              <h4 className="font-bold text-heading text-sm mb-4 uppercase tracking-wider hidden lg:block">Get the App</h4>
-              <p className="text-xs text-body mb-3 hidden lg:block">Available on the</p>
+              <h4 className="font-bold text-heading text-sm mb-4 uppercase tracking-wider hidden lg:block">{t("web.landing.footer.getTheApp")}</h4>
+              <p className="text-xs text-body mb-3 hidden lg:block">{t("web.landing.footer.availableOn")}</p>
               
               <div className="flex flex-row sm:flex-col lg:flex-col gap-3 justify-center lg:justify-start w-full">
                 {/* HIDDEN — App Store badge, until the iOS app is published. Uncomment to restore.
@@ -114,7 +118,7 @@ export function FooterSection() {
                 <a href="#" className="flex-1 sm:flex-none flex items-center justify-center lg:justify-start gap-2 bg-heading text-white px-3 sm:px-4 py-2 sm:py-2.5 rounded-xl hover:bg-heading/90 transition-colors w-full lg:max-w-[160px]">
                   <Icon name="google-play" size={18} className="shrink-0" />
                   <div className="flex flex-col items-start text-left">
-                    <span className="text-[9px] sm:text-[10px] leading-none mb-1 opacity-80">GET IT ON</span>
+                    <span className="text-[9px] sm:text-[10px] leading-none mb-1 opacity-80">{t("web.landing.footer.getItOn")}</span>
                     <span className="text-xs sm:text-sm font-semibold leading-none">Google Play</span>
                   </div>
                 </a>
@@ -125,8 +129,8 @@ export function FooterSection() {
 
           {/* Bottom Bar / Sub-footer */}
           <div className="border-t border-line-soft pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-body">
-            <p>© {new Date().getFullYear()} CrewApply. All rights reserved.</p>
-            <p className="font-medium">People at Sea. Progress on Land.</p>
+            <p>{t("web.landing.footer.copyright", { year: new Date().getFullYear() })}</p>
+            <p className="font-medium">{t("web.landing.footer.motto")}</p>
           </div>
 
         </div>

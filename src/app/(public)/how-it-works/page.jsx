@@ -1,31 +1,35 @@
+"use client";
+
 import Link from "next/link";
 import { Navbar } from "@/components/landing/Navbar";
 import { FooterSection } from "@/components/landing/FooterSection";
 import { Icon } from "@/components/ui/Icon";
+import { useTranslation } from "react-i18next";
 
 export default function HowItWorksPage() {
+  const { t } = useTranslation();
   const steps = [
     {
-      title: "Build Your Maritime Profile",
-      desc: "Input your rank, sea service time, and STCW certifications in one centralized digital profile.",
+      titleKey: "web.landing.howItWorks.steps.profile.title",
+      descKey: "web.landing.howItWorks.steps.profile.desc",
       icon: "user",
       color: "bg-blue-50 text-blue-600"
     },
     {
-      title: "Discover Tailored Vacancies",
-      desc: "Filter by vessel type (cruise, tanker, offshore, container) to find the perfect contract.",
+      titleKey: "web.landing.howItWorks.steps.discover.title",
+      descKey: "web.landing.howItWorks.steps.discover.desc",
       icon: "search",
       color: "bg-green-50 text-green-600"
     },
     {
-      title: "Apply & Stand Out",
-      desc: "Submit applications instantly with tailored maritime resumes and verified document attachments.",
+      titleKey: "web.landing.howItWorks.steps.apply.title",
+      descKey: "web.landing.howItWorks.steps.apply.desc",
       icon: "paper-plane",
       color: "bg-purple-50 text-purple-600"
     },
     {
-      title: "Direct Interview & Onboarding",
-      desc: "Access interview preparation guides, breeze through agency screening, and receive travel details.",
+      titleKey: "web.landing.howItWorks.steps.interview.title",
+      descKey: "web.landing.howItWorks.steps.interview.desc",
       icon: "check-circle",
       color: "bg-orange-50 text-orange-600"
     }
@@ -33,16 +37,16 @@ export default function HowItWorksPage() {
 
   const faqs = [
     {
-      q: "What are the costs for seafarers?",
-      a: "Creating a profile, uploading documents, and applying for jobs is completely without cost for all seafarers. We do not charge crew members any placement fees."
+      qKey: "web.landing.howItWorks.faqs.costs.q",
+      aKey: "web.landing.howItWorks.faqs.costs.a"
     },
     {
-      q: "How are my documents kept secure?",
-      a: "Your STCW, CDC, and medical documents are encrypted and stored securely. Only verified employers you apply to can view your confidential documents."
+      qKey: "web.landing.howItWorks.faqs.security.q",
+      aKey: "web.landing.howItWorks.faqs.security.a"
     },
     {
-      q: "Are the job listings verified?",
-      a: "Absolutely. We strictly vet all manning agencies and employers on our platform to ensure they comply with MLC 2006 standards. No middlemen scams."
+      qKey: "web.landing.howItWorks.faqs.verified.q",
+      aKey: "web.landing.howItWorks.faqs.verified.a"
     }
   ];
 
@@ -56,10 +60,10 @@ export default function HowItWorksPage() {
         {/* Hero */}
         <section className="px-6 lg:px-12 max-w-7xl mx-auto text-center mb-24">
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-heading mb-6 tracking-tight">
-            How CrewApply <span className="text-primary">Works.</span>
+            {t("web.landing.howItWorks.title")}<span className="text-primary">{t("web.landing.howItWorks.titleHighlight")}</span>
           </h1>
           <p className="text-lg md:text-xl text-body max-w-3xl mx-auto">
-            A simple, transparent pathway from your job search to embarking your ship.
+            {t("web.landing.howItWorks.subtitle")}
           </p>
         </section>
 
@@ -75,9 +79,9 @@ export default function HowItWorksPage() {
                   <Icon name={step.icon} size={28} />
                 </div>
                 <div className="bg-white p-8 rounded-3xl shadow-sm border border-line-soft flex-1">
-                  <span className="text-xs font-bold text-muted uppercase tracking-wider mb-2 block">Step {i + 1}</span>
-                  <h3 className="text-xl font-bold text-heading mb-3">{step.title}</h3>
-                  <p className="text-body leading-relaxed">{step.desc}</p>
+                  <span className="text-xs font-bold text-muted uppercase tracking-wider mb-2 block">{t("web.landing.howItWorks.step", { n: i + 1 })}</span>
+                  <h3 className="text-xl font-bold text-heading mb-3">{t(step.titleKey)}</h3>
+                  <p className="text-body leading-relaxed">{t(step.descKey)}</p>
                 </div>
               </div>
             ))}
@@ -87,13 +91,13 @@ export default function HowItWorksPage() {
         {/* Seafarer FAQ Accordion (Simulated) */}
         <section className="px-6 lg:px-12 max-w-4xl mx-auto mb-20">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-heading">Frequently Asked Questions</h2>
+            <h2 className="text-3xl font-bold text-heading">{t("web.landing.howItWorks.faqTitle")}</h2>
           </div>
           <div className="space-y-6">
             {faqs.map((faq, i) => (
               <div key={i} className="bg-white p-6 rounded-2xl shadow-sm border border-line-soft">
-                <h4 className="font-bold text-heading text-lg mb-3">{faq.q}</h4>
-                <p className="text-body leading-relaxed">{faq.a}</p>
+                <h4 className="font-bold text-heading text-lg mb-3">{t(faq.qKey)}</h4>
+                <p className="text-body leading-relaxed">{t(faq.aKey)}</p>
               </div>
             ))}
           </div>

@@ -18,6 +18,7 @@
 import { Suspense, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
+import { useTranslation } from "react-i18next";
 import { jobHref } from "@/lib/jobUrl";
 import { useSearchResults } from "@/hooks/useSearchResults";
 import {
@@ -46,6 +47,7 @@ export default function SearchPage() {
 }
 
 function SearchResults() {
+  const { t } = useTranslation();
   const params = useSearchParams();
   const initial = params.get("q") || "";
   const { query, jobsGroup, isLoading, error, runSearch, suggestedJobs, isLoadingSuggestions } =
@@ -56,7 +58,7 @@ function SearchResults() {
 
   return (
     <div className="mx-auto max-w-6xl px-[15px] pb-8 lg:px-6">
-      <SectionTitle className="pt-2">Search</SectionTitle>
+      <SectionTitle className="pt-2">{t("search.title")}</SectionTitle>
 
       <form
         onSubmit={(e) => {
@@ -70,12 +72,12 @@ function SearchResults() {
           <input
             value={term}
             onChange={(e) => setTerm(e.target.value)}
-            placeholder="Search jobs, ranks, vessels…"
-            aria-label="Search"
+            placeholder={t("web.jobs.search.placeholder")}
+            aria-label={t("search.title")}
             className="w-full bg-transparent text-md text-heading outline-none focus-visible:outline-none placeholder:text-hint"
           />
         </label>
-        <Button type="submit">Search</Button>
+        <Button type="submit">{t("search.title")}</Button>
       </form>
 
       <div className="mt-4">
@@ -86,7 +88,7 @@ function SearchResults() {
         ) : results.length > 0 ? (
           <>
             <p className="mb-3 text-sm text-body">
-              {jobsGroup.count ?? results.length} results for “{query}”
+              {t("web.jobs.search.resultsFor", { count: jobsGroup.count ?? results.length, query })}
             </p>
             <div className="space-y-2">
               {results.map((row) => (
@@ -111,14 +113,14 @@ function SearchResults() {
           <>
             <EmptyState
               icon="search"
-              title={`Nothing matched “${query}”`}
-              message="Try a rank, a vessel type, or a shorter term."
+              title={t("web.jobs.search.noMatchTitle", { query })}
+              message={t("web.jobs.search.noMatchMessage")}
             />
             {isLoadingSuggestions ? (
               <LoadingState rows={2} />
             ) : suggestedJobs?.length ? (
               <>
-                <h2 className="mt-6 text-xl font-bold text-heading">You might like these</h2>
+                <h2 className="mt-6 text-xl font-bold text-heading">{t("web.jobs.search.youMightLike")}</h2>
                 <div className="grid-cards mt-3">
                   {suggestedJobs.map((job) => (
                     <JobCard key={job.id} job={job} href={jobHref(job)} />
@@ -130,8 +132,8 @@ function SearchResults() {
         ) : (
           <EmptyState
             icon="search"
-            title="Search for a job"
-            message="Try a rank like “Second Engineer”, or a vessel type."
+            title={t("web.jobs.search.idleTitle")}
+            message={t("web.jobs.search.idleMessage")}
           />
         )}
       </div>

@@ -1,7 +1,10 @@
 "use client";
 
 import { useEffect, useId, useMemo, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useLanguageCode } from "@/i18n";
 import { Icon } from "./Icon";
+import { Select } from "./Select";
 import { dropStyle, useDropPlacement } from "./useDropPlacement";
 
 /* A real date picker, styled to match Input.
@@ -39,15 +42,23 @@ const parseISO = (value) => {
 const startOfDay = (d) => new Date(d.getFullYear(), d.getMonth(), d.getDate());
 const sameDay = (a, b) => a && b && toISO(a) === toISO(b);
 
-const MONTHS = Array.from({ length: 12 }, (_, m) =>
-  new Intl.DateTimeFormat("en", { month: "long" }).format(new Date(2000, m, 1)),
-);
+/* Compact trigger for the calendar header — Select defaults to a 50px form field. */
+const HEADER_SELECT = "min-h-9! rounded-md! px-2.5! py-1! text-sm! font-semibold";
 
-/* Week starts Monday, which is what the app's users expect for rosters and
-   contracts. Built from Intl so the labels are not hardcoded English. */
-const WEEKDAYS = Array.from({ length: 7 }, (_, i) =>
-  new Intl.DateTimeFormat("en", { weekday: "short" }).format(new Date(2024, 0, 1 + i)),
-);
+/* Month and weekday names in the given locale. Week starts Monday, which is
+   what the app's users expect for rosters and contracts. Built from Intl so the
+   labels are not hardcoded English. */
+const buildNames = (locale) => ({
+  monthOptions: Array.from({ length: 12 }, (_, m) => ({
+    value: m,
+    label: new Intl.DateTimeFormat(locale, { month: "long" }).format(new Date(2000, m, 1)),
+  })),
+  weekdays: Array.from({ length: 7 }, (_, i) =>
+    new Intl.DateTimeFormat(locale, { weekday: "short" }).format(new Date(2024, 0, 1 + i)),
+  ),
+  display: new Intl.DateTimeFormat(locale, { day: "2-digit", month: "short", year: "numeric" }),
+  dayLabel: new Intl.DateTimeFormat(locale, { dateStyle: "full" }),
+});
 
 /* Six full weeks, always — a fixed 42-cell grid means the popup never changes
    height between months, which would otherwise make it jump as you navigate. */
@@ -72,7 +83,7 @@ export function DatePicker({
   required,
   error,
   hint,
-  placeholder = "DD-MM-YYYY",
+  placeholder,
   disabled = false,
   id,
   containerClassName = "",
@@ -81,6 +92,11 @@ export function DatePicker({
   yearsBack = 80,
   yearsForward = 5,
 }) {
+  const { t } = useTranslation();
+  const language = useLanguageCode();
+  // en-GB keeps the English trigger as "05 Jan 2020"; other codes (hi → hi-IN) resolve via Intl.
+  const locale = language === "en" ? "en-GB" : language;
+  const { monthOptions, weekdays, display: displayFormat, dayLabel } = useMemo(() => buildNames(locale), [locale]);
   const generatedId = useId();
   const fieldId = id ?? generatedId;
   const messageId = `${fieldId}-message`;
@@ -159,7 +175,7 @@ export function DatePicker({
 
   const today = new Date();
   const display = selected
-    ? new Intl.DateTimeFormat("en-GB", { day: "2-digit", month: "short", year: "numeric" }).format(selected)
+    ? displayFormat.format(selected)
     : "";
 
   return (
@@ -193,14 +209,14 @@ export function DatePicker({
             error ? "border-danger" : open ? "border-primary" : "border-line-input"
           } ${open ? "ring-4 ring-primary/15" : ""} ${display ? "text-heading" : "text-hint"}`}
         >
-          <span className="truncate">{display || placeholder}</span>
+          <span className="truncate">{display || placeholder || t("web.ui.datePicker.placeholder")}</span>
           <Icon name="calendar-alt" size={14} className="shrink-0 text-hint" />
         </button>
 
         {open ? (
           <div
             role="dialog"
-            aria-label={label || "Choose a date"}
+            aria-label={label || t("web.ui.datePicker.chooseDate")}
             /* Fixed for the same reason as Select, and given an explicit width
                so dropStyle can keep the 19rem calendar inside the viewport when
                the field itself is narrower. */
@@ -215,39 +231,36 @@ export function DatePicker({
               <button
                 type="button"
                 onClick={() => shiftView(-1)}
-                aria-label="Previous month"
+                aria-label={t("web.ui.datePicker.previousMonth")}
                 className="cursor-pointer rounded-md p-2 text-hint hover:bg-primary-light hover:text-primary"
               >
                 <Icon name="chevron-left" size={12} />
               </button>
 
-              {/* Month + year as selects, not just arrows — see the note above. */}
-              <select
-                aria-label="Month"
+              {/* Month + year as dropdowns, not just arrows — see the note above.
+                  The app's own Select, not native <select>: a native option list
+                  is OS-painted and ignores the theme. Its panel renders inside
+                  this dialog's DOM, so the outside-click check above still holds. */}
+              <Select
+                options={monthOptions}
                 value={view.getMonth()}
-                onChange={(e) => setView(new Date(view.getFullYear(), Number(e.target.value), 1))}
-                className="min-w-0 flex-1 cursor-pointer rounded-md border border-line-input bg-surface px-2 py-1 text-sm font-semibold text-heading focus-visible:outline-none"
-              >
-                {MONTHS.map((name, i) => (
-                  <option key={name} value={i}>{name}</option>
-                ))}
-              </select>
+                onChange={(m) => setView(new Date(view.getFullYear(), m, 1))}
+                containerClassName="mb-0! min-w-0 flex-1"
+                className={HEADER_SELECT}
+              />
 
-              <select
-                aria-label="Year"
+              <Select
+                options={years}
                 value={view.getFullYear()}
-                onChange={(e) => setView(new Date(Number(e.target.value), view.getMonth(), 1))}
-                className="scrollbar-thin cursor-pointer rounded-md border border-line-input bg-surface px-2 py-1 text-sm font-semibold text-heading focus-visible:outline-none"
-              >
-                {years.map((y) => (
-                  <option key={y} value={y}>{y}</option>
-                ))}
-              </select>
+                onChange={(y) => setView(new Date(y, view.getMonth(), 1))}
+                containerClassName="mb-0! w-[92px] shrink-0"
+                className={HEADER_SELECT}
+              />
 
               <button
                 type="button"
                 onClick={() => shiftView(1)}
-                aria-label="Next month"
+                aria-label={t("web.ui.datePicker.nextMonth")}
                 className="cursor-pointer rounded-md p-2 text-hint hover:bg-primary-light hover:text-primary"
               >
                 <Icon name="chevron-right" size={12} />
@@ -255,7 +268,7 @@ export function DatePicker({
             </div>
 
             <div className="mb-1 grid grid-cols-7 gap-[2px]">
-              {WEEKDAYS.map((w) => (
+              {weekdays.map((w) => (
                 <span key={w} className="py-1 text-center text-xs font-bold text-hint">
                   {w.slice(0, 2)}
                 </span>
@@ -275,7 +288,7 @@ export function DatePicker({
                     type="button"
                     disabled={blocked}
                     aria-pressed={isSelected}
-                    aria-label={d.toDateString()}
+                    aria-label={dayLabel.format(d)}
                     tabIndex={isSelected || (!selected && isToday) ? 0 : -1}
                     onClick={() => commit(d)}
                     className={`flex size-9 items-center justify-center rounded-md text-sm transition-colors duration-[180ms] ease-standard ${
@@ -303,7 +316,7 @@ export function DatePicker({
                 disabled={outOfRange(today)}
                 className="cursor-pointer text-sm font-semibold text-primary hover:underline disabled:cursor-not-allowed disabled:text-hint"
               >
-                Today
+                {t("notifications.groups.today")}
               </button>
               {value ? (
                 <button
@@ -314,7 +327,7 @@ export function DatePicker({
                   }}
                   className="cursor-pointer text-sm font-semibold text-body hover:text-heading"
                 >
-                  Clear
+                  {t("web.ui.datePicker.clear")}
                 </button>
               ) : null}
             </div>

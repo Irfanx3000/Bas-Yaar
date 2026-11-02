@@ -2,10 +2,12 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import { useTranslation } from "react-i18next";
 import { Icon } from "./Icon";
 import { toMediaUrl } from "@/constants/app.constants";
 
 export function CardMediaHeader({ logoSrc, title = "", companyName = "" }) {
+  const { t } = useTranslation();
   const logo = toMediaUrl(logoSrc);
   const [loaded, setLoaded] = useState(false);
   const [error, setError] = useState(false);
@@ -54,7 +56,7 @@ export function CardMediaHeader({ logoSrc, title = "", companyName = "" }) {
       {hasImage ? (
         <Image
           src={logo}
-          alt={companyName || title || "Vessel Image"}
+          alt={companyName || title || t("web.ui.cardMedia.vesselImage")}
           fill
           sizes="(min-width: 768px) 33vw, (min-width: 640px) 50vw, 100vw"
           onLoad={() => setLoaded(true)}

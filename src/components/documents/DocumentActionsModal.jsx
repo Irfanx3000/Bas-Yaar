@@ -39,7 +39,7 @@ import { framableUrl } from "@/lib/framableUrl";
 import { DOC_STATUS } from "@/constants/documents.constants";
 import { getErrorMessage } from "@/i18n/getErrorMessage";
 import { showAlert } from "@/utils/alertRef";
-import { t } from "@/i18n";
+import { useTranslation } from "react-i18next";
 import { CertificateMetadataModal } from "./CertificateMetadataModal";
 
 const CERTIFICATE_TYPE_KEYS = ["certificate", "stcw"];
@@ -66,6 +66,7 @@ function ActionRow({ icon, label, tone = "primary", onClick }) {
 }
 
 export function DocumentActionsModal({ open, doc, onClose, onUpload, uploading, onView, onDelete, deleting }) {
+  const { t } = useTranslation();
   const inputRef = useRef(null);
   const [preview, setPreview] = useState(null); // { url, isPdf, name }
   const [previewLoading, setPreviewLoading] = useState(false);

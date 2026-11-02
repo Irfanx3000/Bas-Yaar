@@ -1,25 +1,29 @@
+"use client";
+
 import { Icon } from '@/components/ui/Icon';
+import { useTranslation } from "react-i18next";
 
 export function FeaturesSection() {
+  const { t } = useTranslation();
   const features = [
     {
-      title: "Discover",
-      description: "Explore career opportunities in the global cruise & maritime industry.",
+      titleKey: "web.landing.features.items.discover.title",
+      descriptionKey: "web.landing.features.items.discover.description",
       icon: "search"
     },
     {
-      title: "Build Your Profile",
-      description: "Create a strong profile and keep your information up to date.",
+      titleKey: "web.landing.features.items.buildProfile.title",
+      descriptionKey: "web.landing.features.items.buildProfile.description",
       icon: "file-alt"
     },
     {
-      title: "Manage Documents",
-      description: "Keep your essential documents ready, always.",
+      titleKey: "web.landing.features.items.manageDocuments.title",
+      descriptionKey: "web.landing.features.items.manageDocuments.description",
       icon: "folder"
     },
     {
-      title: "Track Applications",
-      description: "Know where every application stands, from submission to interview and beyond.",
+      titleKey: "web.landing.features.items.trackApplications.title",
+      descriptionKey: "web.landing.features.items.trackApplications.description",
       icon: "chart-bar"
     }
   ];
@@ -31,14 +35,14 @@ export function FeaturesSection() {
         <div className="flex flex-col lg:flex-row lg:items-start justify-between mb-8 lg:mb-12 gap-6">
           <div className="max-w-2xl text-center lg:text-left mx-auto lg:mx-0">
             <h2 className="text-sm font-bold tracking-wide text-muted uppercase mb-2 block lg:hidden">
-              EVERYTHING YOU NEED
+              {t("web.landing.features.eyebrow")}
             </h2>
             <h3 className="text-h2 lg:text-h1 font-extrabold leading-tight mb-2">
-              <span className="text-heading">Everything You Need.</span><br className="hidden lg:block" />
-              <span className="text-primary lg:ml-2">One Crew Career Platform.</span>
+              <span className="text-heading">{t("web.landing.features.title")}</span><br className="hidden lg:block" />
+              <span className="text-primary lg:ml-2">{t("web.landing.features.titleHighlight")}</span>
             </h3>
             <p className="text-lg text-body font-medium">
-              More than just a job search. CrewApply helps you manage every step of your maritime career.
+              {t("web.landing.features.subtitle")}
             </p>
           </div>
           
@@ -47,7 +51,7 @@ export function FeaturesSection() {
               <Icon name="ship" size={20} />
             </div>
             <p className="text-sm font-bold text-heading leading-snug">
-              Built for the People Who Keep the World Moving.
+              {t("web.landing.common.motto")}
             </p>
           </div>
         </div>
@@ -62,8 +66,8 @@ export function FeaturesSection() {
               <div className="bg-primary-light text-primary w-10 h-10 rounded-lg flex items-center justify-center mb-4">
                 <Icon name={feature.icon} size={20} />
               </div>
-              <h4 className="text-xl font-bold text-heading mb-2">{feature.title}</h4>
-              <p className="text-md text-body leading-relaxed">{feature.description}</p>
+              <h4 className="text-xl font-bold text-heading mb-2">{t(feature.titleKey)}</h4>
+              <p className="text-md text-body leading-relaxed">{t(feature.descriptionKey)}</p>
             </div>
           ))}
         </div>
@@ -74,7 +78,7 @@ export function FeaturesSection() {
             <Icon name="ship" size={20} />
           </div>
           <p className="text-sm font-bold text-heading leading-snug text-left">
-            Built for the People Who Keep the World Moving.
+            {t("web.landing.common.motto")}
           </p>
         </div>
       </div>

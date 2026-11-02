@@ -4,7 +4,8 @@ import { useEffect, useState } from "react";
 import { documentsService } from "@/services/documents.service";
 import { framableUrl } from "@/lib/framableUrl";
 import { getErrorMessage } from "@/i18n/getErrorMessage";
-import { t } from "@/i18n";
+import { useTranslation } from "react-i18next";
+import i18n from "@/i18n";
 import { Button, Icon, Modal } from "@/components/ui";
 
 /* A generated resume PDF — the app's ResumePreviewModal.
@@ -23,6 +24,7 @@ import { Button, Icon, Modal } from "@/components/ui";
  * no second request, and the app's "save to device" becomes the browser's own.
  */
 export function ResumePreviewModal({ documentId, title, onClose }) {
+  const { t } = useTranslation();
   const [attempt, setAttempt] = useState(0);
   const [result, setResult] = useState({ key: null, url: null, error: null });
   const key = documentId ? `${documentId}:${attempt}` : null;
@@ -41,7 +43,7 @@ export function ResumePreviewModal({ documentId, title, onClose }) {
         else setResult({ key, url, error: null });
       })
       .catch((err) => {
-        if (!ignore) setResult({ key, url: null, error: getErrorMessage(err, t) });
+        if (!ignore) setResult({ key, url: null, error: getErrorMessage(err, i18n.t) });
       });
 
     return () => {
@@ -89,7 +91,7 @@ export function ResumePreviewModal({ documentId, title, onClose }) {
           </Button>
         </div>
       ) : (
-        <iframe src={current.url} title={title || "Resume"} className="h-[70vh] w-full rounded-md border-0" />
+        <iframe src={current.url} title={title || t("web.profile.resume.fallbackTitle")} className="h-[70vh] w-full rounded-md border-0" />
       )}
     </Modal>
   );

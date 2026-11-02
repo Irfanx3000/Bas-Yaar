@@ -1,0 +1,59 @@
+{
+  "shell": {
+    "home": "CrewApply home",
+    "expandSidebar": "Expand sidebar",
+    "collapseSidebar": "Collapse sidebar",
+    "closeMenu": "Close menu",
+    "moreOptions": "More options",
+    "primaryNav": "Primary",
+    "consultancy": "Consultancy"
+  },
+  "alerts": {
+    "filterPlaceholder": "Filter your alerts",
+    "filterLabel": "Filter alerts"
+  },
+  "consultancy": {
+    "previousMonth": "Previous month",
+    "nextMonth": "Next month",
+    "loadingAvailability": "Loading availability…",
+    "bookSession": "Book a session"
+  },
+  "notifications": {
+    "unread": "Unread",
+    "settingsSaved": "Notification settings saved"
+  },
+  "preferences": {
+    "saved": "Preferences saved"
+  },
+  "interviewPrep": {
+    "tipsSubtitle": "Simple tips to help you perform better."
+  },
+  "subscription": {
+    "billingCycle": "Billing cycle",
+    "monthly": "Monthly",
+    "yearly": "Yearly",
+    "saveYearly": "Save {{percent}}% yearly",
+    "mostPopular": "Most Popular",
+    "thenPrice": "then {{price}} {{label}}"
+  },
+  "plan": {
+    "noSummary": "Choose a plan to see its summary.",
+    "title": "Order Summary",
+    "subtitle": "Review before you pay.",
+    "amountPayable": "Amount Payable",
+    "activeUntil": "Active until {{date}}",
+    "coveredInFull": "Your credit covers this in full — there is nothing to pay.",
+    "confirm": "Confirm",
+    "payNow": "Pay now",
+    "changePlan": "Change plan",
+    "razorpayNote": "Payments are processed by Razorpay. Card details never reach CrewApply."
+  },
+  "success": {
+    "title": "You're subscribed",
+    "planActive": "{{plan}} is active on your account.",
+    "genericActive": "Your plan is active on your account.",
+    "walletBalance": "Wallet balance: {{amount}}",
+    "browseJobs": "Browse jobs",
+    "managePlan": "Manage plan"
+  }
+}

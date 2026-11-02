@@ -5,17 +5,19 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { Icon } from '@/components/ui/Icon';
+import { useTranslation } from "react-i18next";
 
 const NAV_LINKS = [
-  { label: 'Home', href: '/' },
-  { label: 'For Crew', href: '/for-crew' },
-  { label: 'How It Works', href: '/how-it-works' },
-  { label: 'Career Support', href: '/career-support' },
-  { label: 'For Employers', href: '/for-employers' },
-  { label: 'About Us', href: '/about-us' }
+  { labelKey: 'nav.home', href: '/' },
+  { labelKey: 'web.landing.nav.forCrew', href: '/for-crew' },
+  { labelKey: 'web.landing.nav.howItWorks', href: '/how-it-works' },
+  { labelKey: 'web.landing.nav.careerSupport', href: '/career-support' },
+  { labelKey: 'web.landing.nav.forEmployers', href: '/for-employers' },
+  { labelKey: 'web.landing.nav.aboutUs', href: '/about-us' }
 ];
 
 export function Navbar() {
+  const { t } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
 
@@ -42,7 +44,7 @@ export function Navbar() {
       
       {/* Brand (pointer-events-auto so it's clickable despite wrapper) */}
       <Link href="/" className="flex items-center gap-3 relative z-[70] press pointer-events-auto" onClick={() => setIsOpen(false)}>
-        <Image src="/logo.png" alt="CrewApply Logo" width={40} height={40} className="object-contain drop-shadow-sm" />
+        <Image src="/logo.png" alt={t("web.landing.nav.logoAlt")} width={40} height={40} className="object-contain drop-shadow-sm" />
         <span className="text-xl font-extrabold text-heading tracking-tight drop-shadow-sm">CrewApply</span>
       </Link>
 
@@ -56,7 +58,7 @@ export function Navbar() {
               pathname === link.href ? 'text-primary' : 'text-heading hover:text-primary'
             }`}
           >
-            {link.label}
+            {t(link.labelKey)}
           </Link>
         ))}
       </nav>
@@ -64,10 +66,10 @@ export function Navbar() {
       {/* Desktop Actions */}
       <div className="hidden lg:flex items-center gap-5 relative z-10 pointer-events-auto">
         <Link href="/login" className="px-5 py-2.5 text-sm font-bold text-heading hover:text-primary transition-colors press drop-shadow-sm">
-          Login
+          {t("auth.common.login")}
         </Link>
         <Link href="/signup" className="px-7 py-3 bg-primary text-white text-sm font-bold rounded-pill shadow-md hover:bg-primary-dark transition-colors press">
-          Get Started
+          {t("web.landing.common.getStarted")}
         </Link>
       </div>
 
@@ -76,13 +78,13 @@ export function Navbar() {
         {/* Only show Get Started pill in header when drawer is closed to keep it clean when open */}
         <div className={`transition-opacity duration-200 ${isOpen ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>
           <Link href="/signup" className="px-5 py-2 bg-primary text-white text-sm font-bold rounded-pill shadow-sm hover:bg-primary-dark transition-colors press">
-            Get Started
+            {t("web.landing.common.getStarted")}
           </Link>
         </div>
         
         <button 
           onClick={() => setIsOpen(!isOpen)}
-          aria-label={isOpen ? "Close menu" : "Open menu"}
+          aria-label={isOpen ? t("web.landing.nav.closeMenu") : t("web.landing.nav.openMenu")}
           aria-expanded={isOpen}
           className="text-heading w-10 h-10 press bg-white/90 backdrop-blur-md rounded-full shadow-sm border border-white/40 flex items-center justify-center transition-transform"
         >
@@ -118,7 +120,7 @@ export function Navbar() {
                   : 'text-heading hover:text-primary hover:bg-surface'
               }`}
             >
-              {link.label}
+              {t(link.labelKey)}
             </Link>
           ))}
           
@@ -130,14 +132,14 @@ export function Navbar() {
               onClick={() => setIsOpen(false)}
               className="py-3.5 text-center text-base font-bold text-heading border-2 border-line-soft rounded-pill hover:bg-surface hover:border-line-hard transition-colors"
             >
-              Login
+              {t("auth.common.login")}
             </Link>
             <Link 
               href="/signup" 
               onClick={() => setIsOpen(false)}
               className="py-3.5 text-center text-base font-bold text-white bg-primary rounded-pill hover:bg-primary-dark shadow-sm transition-colors"
             >
-              Get Started
+              {t("web.landing.common.getStarted")}
             </Link>
           </div>
         </nav>

@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { useTranslation } from "react-i18next";
 import { Card, Icon } from "@/components/ui";
 import { CATEGORIES } from "@/constants/categories.constants";
 
@@ -33,11 +34,12 @@ import { CATEGORIES } from "@/constants/categories.constants";
    Type is WHITE here rather than the usual dark tokens, because the panel
    behind it is navy. */
 export function HomeHero({ userName, tagline, action }) {
+  const { t } = useTranslation();
   return (
     <section className="relative isolate h-[260px] overflow-hidden rounded-xl bg-header sm:h-[300px] lg:h-[320px] shadow-sm">
       <Image
         src="/hero-home.png"
-        alt="CrewApply Cruise Careers"
+        alt={t("web.jobs.home.heroAlt")}
         fill
         priority
         sizes="(min-width: 1024px) 69rem, 100vw"
@@ -57,10 +59,10 @@ export function HomeHero({ userName, tagline, action }) {
 
       <div className="flex h-full max-w-lg flex-col justify-center px-[15px] sm:px-8">
         <p className="text-lg font-bold text-white/90">
-          Welcome Back <span aria-hidden="true">&#128075;</span>
+          {t("web.jobs.home.welcomeBack")} <span aria-hidden="true">&#128075;</span>
         </p>
-        <p className="text-h1 font-extrabold text-white tracking-tight">{userName || "there"}</p>
-        <p className="mt-1 text-md font-medium text-white/85">{tagline || "Explore global cruise careers"}</p>
+        <p className="text-h1 font-extrabold text-white tracking-tight">{userName || t("web.jobs.home.there")}</p>
+        <p className="mt-1 text-md font-medium text-white/85">{tagline || t("home.header.exploreCareer")}</p>
         {action ? <div className="mt-4">{action}</div> : null}
       </div>
     </section>
@@ -70,13 +72,14 @@ export function HomeHero({ userName, tagline, action }) {
 
 /* ── Section header with a "View All" affordance ───────────────────────────── */
 export function SectionRow({ title, href, children }) {
+  const { t } = useTranslation();
   return (
     <section className="mt-6">
       <div className="flex items-baseline justify-between gap-3">
         <h2 className="text-xl font-bold text-heading">{title}</h2>
         {href ? (
           <Link href={href} className="flex items-center gap-1 text-sm font-semibold text-primary hover:underline">
-            View All <Icon name="arrow-right" size={11} />
+            {t("common.viewAll")} <Icon name="arrow-right" size={11} />
           </Link>
         ) : null}
       </div>
@@ -91,6 +94,7 @@ export function SectionRow({ title, href, children }) {
 const CATEGORY_ICON = { deck: "deck", engine: "engine", hospitality: "hospitality" };
 
 export function CategoryTiles() {
+  const { t } = useTranslation();
   return (
     <div className="grid grid-cols-3 gap-2 sm:grid-cols-4">
       {CATEGORIES.map((cat) => {
@@ -108,7 +112,7 @@ export function CategoryTiles() {
                 <Icon name="tag" size={22} />
               )}
             </span>
-            <span className="text-sm font-semibold text-heading">{cat.name}</span>
+            <span className="text-sm font-semibold text-heading">{t(cat.labelKey)}</span>
           </Link>
         );
       })}
@@ -119,7 +123,6 @@ export function CategoryTiles() {
 /* ── CV status strip ───────────────────────────────────────────────────────
    Relative dates via Intl.RelativeTimeFormat — no date library. `lastUpdated`
    arrives raw from the hook; applications arrive pre-formatted as `dateText`. */
-const RELATIVE = new Intl.RelativeTimeFormat("en", { numeric: "auto" });
 const STEPS = [
   ["year", 31536000000],
   ["month", 2592000000],
@@ -129,32 +132,34 @@ const STEPS = [
   ["minute", 60000],
 ];
 
-function relativeDate(value) {
+function relativeDate(value, t, lang) {
+  const rtf = new Intl.RelativeTimeFormat(lang, { numeric: "auto" });
   if (!value) return null;
   const diff = new Date(value).getTime() - Date.now();
   if (Number.isNaN(diff)) return null;
   for (const [unit, ms] of STEPS) {
-    if (Math.abs(diff) >= ms) return RELATIVE.format(Math.round(diff / ms), unit);
+    if (Math.abs(diff) >= ms) return rtf.format(Math.round(diff / ms), unit);
   }
-  return "just now";
+  return t("web.jobs.home.justNow");
 }
 
 export function CVMeta({ cvStatus }) {
   /* The hook returns { completionPercent, lastUpdated }. A CV exists once it has
      ever been touched, which lastUpdated is the honest signal for — a 0% CV that
      was saved is still a CV. */
+  const { t, i18n } = useTranslation();
   if (!cvStatus?.lastUpdated) return null;
 
   const percent = cvStatus.completionPercent ?? 0;
-  const updatedLabel = relativeDate(cvStatus.lastUpdated);
+  const updatedLabel = relativeDate(cvStatus.lastUpdated, t, i18n.language);
 
   return (
     <div className="rounded-md bg-primary-light px-3 py-2">
       <p className="flex items-center gap-2 text-sm font-semibold text-heading">
         <Icon name="check-circle" size={12} className="shrink-0 text-success" />
-        CV uploaded{percent > 0 && percent < 100 ? ` · ${percent}% complete` : ""}
+        {t("web.jobs.home.cvUploaded")}{percent > 0 && percent < 100 ? ` · ${t("web.jobs.home.percentComplete", { percent })}` : ""}
       </p>
-      {updatedLabel ? <p className="mt-[2px] text-xs text-body">Updated {updatedLabel}</p> : null}
+      {updatedLabel ? <p className="mt-[2px] text-xs text-body">{t("home.cvStatus.updated", { date: updatedLabel })}</p> : null}
     </div>
   );
 }

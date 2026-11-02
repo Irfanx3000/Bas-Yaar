@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useState, useSyncExternalStore, useEffect } from "react";
 import { usePathname, useRouter } from "next/navigation";
+import { useTranslation } from "react-i18next";
 import Image from "next/image";
 import { Icon, Modal } from "@/components/ui";
 import { TopSearch } from "./TopSearch";
@@ -27,22 +28,22 @@ import { toMediaUrl } from "@/constants/app.constants";
 
 /* Four primary destinations, matching the app's TAB_META exactly and in order. */
 const PRIMARY = [
-  { href: "/dashboard", label: "Home", icon: "home" },
+  { href: "/dashboard", labelKey: "nav.home", icon: "home" },
 
-  { href: "/profile", label: "Profile", icon: "user" },
-  { href: "/applications", label: "My Applications", icon: "file-alt" },
-  { href: "/jobs", label: "Jobs", icon: "briefcase" },
+  { href: "/profile", labelKey: "nav.profile", icon: "user" },
+  { href: "/applications", labelKey: "nav.applications", icon: "file-alt" },
+  { href: "/jobs", labelKey: "nav.jobs", icon: "briefcase" },
 ];
 
 /* The app's sidebar drawer, promoted to always-visible on desktop. */
 const SECONDARY = [
-  { href: "/cv", label: "My CV", icon: "file-alt" },
-  { href: "/documents", label: "Documents", icon: "folder-open" },
-  { href: "/saved", label: "Saved jobs", icon: "bookmark" },
-  { href: "/alerts", label: "Job alerts", icon: "bell" },
-  { href: "/interview-prep", label: "Interview Prep", icon: "lightbulb" },
-  { href: "/subscription", label: "Subscription", icon: "gem" },
-  { href: "/wallet", label: "Wallet", icon: "wallet" },
+  { href: "/cv", labelKey: "sidebar.items.cv", icon: "file-alt" },
+  { href: "/documents", labelKey: "sidebar.items.documents", icon: "folder-open" },
+  { href: "/saved", labelKey: "sidebar.items.saved", icon: "bookmark" },
+  { href: "/alerts", labelKey: "sidebar.items.alerts", icon: "bell" },
+  { href: "/interview-prep", labelKey: "sidebar.items.interview", icon: "lightbulb" },
+  { href: "/subscription", labelKey: "sidebar.items.subscription", icon: "gem" },
+  { href: "/wallet", labelKey: "wallet.title", icon: "wallet" },
   /* HIDDEN — Refer & earn is not being shown to users yet.
      To bring it back: uncomment this row and the referral card in
      jobs/[slug]/page.js, then build /refer (ReferEarn, 427 LOC in the app).
@@ -50,9 +51,14 @@ const SECONDARY = [
      can still enter someone's code on signup, and a paid referral still credits
      the wallet as `referral_reward`. Only the two entry points are hidden.
   { href: "/refer", label: "Refer & earn", icon: "share-alt" }, */
-  { href: "/consultancy", label: "Consultancy", icon: "user-circle" },
-  { href: "/settings", label: "Settings", icon: "cog" },
+  /* Web-only screen — the app has no key for it, so its label lives under web.account. */
+  { href: "/consultancy", labelKey: "web.account.shell.consultancy", icon: "user-circle" },
+  { href: "/language", labelKey: "sidebar.items.language", icon: "globe" },
+  { href: "/settings", labelKey: "sidebar.items.settings", icon: "cog" },
 ];
+
+/* Labels resolve at render, through the hook's t, so a language switch re-renders them. */
+const labelOf = (t, item) => t(item.labelKey, { defaultValue: item.label });
 
 const isActive = (pathname, href) =>
   href === "/dashboard" ? pathname === href : pathname.startsWith(href);
@@ -103,6 +109,8 @@ const writeSidebar = (collapsed) => {
 };
 
 function NavLink({ item, active, collapsed, onClick }) {
+  const { t } = useTranslation();
+  const label = labelOf(t, item);
   return (
     <Link
       href={item.href}
@@ -111,14 +119,14 @@ function NavLink({ item, active, collapsed, onClick }) {
       /* When collapsed the label is gone, so the accessible name has to come
          from somewhere — aria-label carries it, and title gives sighted users
          the same thing on hover. */
-      aria-label={collapsed ? item.label : undefined}
-      title={collapsed ? item.label : undefined}
+      aria-label={collapsed ? label : undefined}
+      title={collapsed ? label : undefined}
       className={`flex items-center rounded-md py-2 text-md font-semibold transition-colors duration-[180ms] ease-standard ${
         collapsed ? "justify-center px-0" : "gap-3 px-3"
       } ${active ? "bg-primary-light text-primary" : "text-body hover:bg-primary-light/60 hover:text-heading"}`}
     >
       <Icon name={item.icon} size={16} className="shrink-0" />
-      {collapsed ? null : item.label}
+      {collapsed ? null : label}
     </Link>
   );
 }
@@ -127,13 +135,14 @@ function NavLink({ item, active, collapsed, onClick }) {
    red badge, no confirmation step. Same row here, in both places a drawer's
    contents live on the web. */
 function LogoutButton({ collapsed = false, pending, onLogout }) {
+  const { t } = useTranslation();
   return (
     <button
       type="button"
       onClick={onLogout}
       disabled={pending}
-      aria-label={collapsed ? "Log Out" : undefined}
-      title={collapsed ? "Log Out" : undefined}
+      aria-label={collapsed ? t("sidebar.logout") : undefined}
+      title={collapsed ? t("sidebar.logout") : undefined}
       className={`flex w-full cursor-pointer items-center rounded-md py-2 text-md font-semibold text-danger transition-colors duration-[180ms] ease-standard hover:bg-danger/10 disabled:cursor-wait disabled:opacity-60 ${
         collapsed ? "justify-center px-0" : "gap-3 px-3"
       }`}
@@ -141,12 +150,13 @@ function LogoutButton({ collapsed = false, pending, onLogout }) {
       <span className="flex size-7 shrink-0 items-center justify-center rounded-md bg-danger/10">
         <Icon name="sign-out-alt" size={14} />
       </span>
-      {collapsed ? null : pending ? "Logging out..." : "Log Out"}
+      {collapsed ? null : pending ? `${t("sidebar.logout")}…` : t("sidebar.logout")}
     </button>
   );
 }
 
 export function AppShell({ children, user }) {
+  const { t } = useTranslation();
   const pathname = usePathname() ?? "";
   const router = useRouter();
   const scrolling = useScrollIdle();
@@ -235,7 +245,7 @@ export function AppShell({ children, user }) {
 
       <aside className={`scrollbar-thin h-dvh flex-col overflow-y-auto bg-surface py-4 flex transition-transform duration-[280ms] ease-decelerate fixed inset-y-0 left-0 z-50 w-64 border-r border-line-soft shadow-2xl ${moreOpen ? "translate-x-0" : "-translate-x-full"} lg:static lg:sticky lg:top-0 lg:z-auto lg:w-auto lg:translate-x-0 lg:shadow-none ${collapsed ? "lg:px-2" : "px-4"}`}>
         <div className={`mb-6 flex items-center ${collapsed ? "flex-col gap-2" : "justify-between gap-2 px-3"}`}>
-          <Link href="/dashboard" onClick={() => setMoreOpen(false)} className="flex min-w-0 items-center gap-2" aria-label="CrewApply home">
+          <Link href="/dashboard" onClick={() => setMoreOpen(false)} className="flex min-w-0 items-center gap-2" aria-label={t("web.account.shell.home")}>
             <Image src="/logo.png" alt="" width={32} height={32} className="size-8 shrink-0 object-contain" priority />
             <span className={`text-lg font-extrabold text-heading ${collapsed ? "lg:hidden" : ""}`}>CrewApply</span>
           </Link>
@@ -244,8 +254,8 @@ export function AppShell({ children, user }) {
               type="button"
               onClick={toggleSidebar}
               aria-expanded={!collapsed}
-              aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
-              title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+              aria-label={collapsed ? t("web.account.shell.expandSidebar") : t("web.account.shell.collapseSidebar")}
+              title={collapsed ? t("web.account.shell.expandSidebar") : t("web.account.shell.collapseSidebar")}
               className="shrink-0 cursor-pointer rounded-md p-2 text-hint transition-colors duration-[180ms] ease-standard hover:bg-primary-light hover:text-primary max-lg:hidden"
             >
               <Icon name={collapsed ? "chevron-right" : "chevron-left"} size={14} />
@@ -253,7 +263,7 @@ export function AppShell({ children, user }) {
             <button
               type="button"
               onClick={() => setMoreOpen(false)}
-              aria-label="Close menu"
+              aria-label={t("web.account.shell.closeMenu")}
               className="shrink-0 cursor-pointer rounded-md p-2 text-hint transition-colors duration-[180ms] ease-standard hover:bg-primary-light hover:text-primary lg:hidden"
             >
               <Icon name="times" size={18} />
@@ -316,7 +326,7 @@ export function AppShell({ children, user }) {
             aria-haspopup="dialog"
             aria-expanded={moreOpen}
             className="shrink-0 flex items-center justify-center text-body hover:text-primary transition-colors"
-            aria-label="More options"
+            aria-label={t("web.account.shell.moreOptions")}
           >
             <Icon name="bars" size={20} />
           </button>
@@ -337,7 +347,7 @@ export function AppShell({ children, user }) {
               className="bg-gradient-secondary press hidden shrink-0 items-center gap-1.5 rounded-lg px-4 py-2 text-sm font-extrabold text-on-secondary shadow-sm transition-transform hover:scale-[1.02] sm:flex"
             >
               <Icon name="gem" size={14} />
-              Subscribe
+              {t("home.subscriptionAlert.subscribe")}
             </Link>
           ) : null}
         </header>
@@ -351,7 +361,7 @@ export function AppShell({ children, user }) {
       {/* The app's floating glass tab bar — 16px inset, pill radius, shadow-float,
           exactly as AppNavigator draws it. Mobile only. */}
       <nav
-        aria-label="Primary"
+        aria-label={t("web.account.shell.primaryNav")}
         className="glass fixed inset-x-4 bottom-4 z-40 flex items-center justify-around rounded-xxl px-1 py-2.5 shadow-float lg:hidden min-h-[64px]"
       >
         {PRIMARY.map((item) => {
@@ -369,20 +379,20 @@ export function AppShell({ children, user }) {
               <div className="flex h-[26px] items-center justify-center">
                 {item.href === "/profile" && user?.avatarUrl ? (
                   <div className="size-[28px] shrink-0 overflow-hidden rounded-full border-2 border-surface bg-surface shadow-xs">
-                    <Image src={toMediaUrl(user.avatarUrl)} alt="Profile" width={28} height={28} className="size-full object-cover" />
+                    <Image src={toMediaUrl(user.avatarUrl)} alt={t("nav.profile")} width={28} height={28} className="size-full object-cover" />
                   </div>
                 ) : (
                   <Icon name={item.icon} size={22} />
                 )}
               </div>
-              <span className="truncate w-full text-center px-0.5">{item.label}</span>
+              <span className="truncate w-full text-center px-0.5">{labelOf(t, item)}</span>
             </Link>
           );
         })}
 
         <Link
           href="/notifications"
-          aria-label="Notifications"
+          aria-label={t("notifications.title")}
           className={`flex flex-1 flex-col items-center justify-center gap-1 rounded-md text-nav font-medium ${
             isActive(pathname, "/notifications") ? "text-primary" : "text-nav-inactive"
           }`}
@@ -395,7 +405,7 @@ export function AppShell({ children, user }) {
               </span>
             ) : null}
           </div>
-          <span className="truncate w-full text-center px-0.5">Alerts</span>
+          <span className="truncate w-full text-center px-0.5">{t("notifications.title")}</span>
         </Link>
       </nav>
 

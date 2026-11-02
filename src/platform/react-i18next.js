@@ -1,12 +1,16 @@
-/* Web stand-in for react-i18next. The data layer uses useTranslation() in
-   seven hooks; every one of them only ever destructures `t`. Backed by the
-   English string table in src/i18n — see the note at the top of that file for
-   why this is a string table and not internationalisation. */
+/* Web stand-in for react-i18next, backed by src/i18n. Same call shape as the
+   app — `const { t } = useTranslation()` — and, like the real hook, the caller
+   re-renders when the language changes and gets a NEW `t`, so a useMemo or
+   useCallback that lists `t` as a dependency recomputes in the new language. */
 
-import i18n from "../i18n";
+import { useMemo } from "react";
+import i18n, { useLanguageCode } from "../i18n";
 
 export function useTranslation() {
-  return { t: i18n.t, i18n, ready: true };
+  const language = useLanguageCode();
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- `language` IS the dependency: t reads it
+  const t = useMemo(() => (key, vars) => i18n.t(key, vars), [language]);
+  return { t, i18n, ready: true };
 }
 
 export const Trans = ({ children }) => children;

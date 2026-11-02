@@ -18,12 +18,14 @@
  */
 
 import Link from "next/link";
+import { useTranslation } from "react-i18next";
 import { jobHref } from "@/lib/jobUrl";
 import { useHomeData } from "@/hooks/useHomeData";
 import { ApplicationCard, Button, ErrorState, JobCard, LoadingState } from "@/components/ui";
 import { CategoryTiles, CVMeta, HomeHero, PromoCard, SectionRow } from "@/components/home/HomeSections";
 
 export default function DashboardPage() {
+  const { t } = useTranslation();
   const {
     userName,
     featuredJobs,
@@ -40,23 +42,23 @@ export default function DashboardPage() {
     <div className="mx-auto max-w-6xl px-[15px] pb-8 lg:px-6">
       <HomeHero
         userName={userName}
-        tagline="Explore global cruise careers"
+        tagline={t("home.header.exploreCareer")}
         action={
           <Link href="/jobs">
-            <Button icon="search">Browse jobs</Button>
+            <Button icon="search">{t("web.jobs.dashboard.browseJobs")}</Button>
           </Link>
         }
       />
 
-      <SectionRow title="Categories" href="/jobs">
+      <SectionRow title={t("home.categories.title")} href="/jobs">
         <CategoryTiles />
       </SectionRow>
 
-      <SectionRow title="Featured Jobs" href="/jobs">
+      <SectionRow title={t("jobs.featured.title")} href="/jobs">
         {isLoading ? (
           <LoadingState rows={2} />
         ) : loadFailed ? (
-          <ErrorState message="We couldn't load featured jobs." onRetry={handleRefresh} />
+          <ErrorState message={t("web.jobs.dashboard.featuredError")} onRetry={handleRefresh} />
         ) : featuredJobs?.length ? (
           <div className="grid-cards">
             {featuredJobs.slice(0, 6).map((job) => (
@@ -70,11 +72,11 @@ export default function DashboardPage() {
             ))}
           </div>
         ) : (
-          <p className="text-md text-body">No featured jobs right now. Check back soon.</p>
+          <p className="text-md text-body">{t("jobs.featured.empty")}</p>
         )}
       </SectionRow>
 
-      <SectionRow title="Recently Applied" href="/applications">
+      <SectionRow title={t("applications.recentlyApplied")} href="/applications">
         {isLoading ? (
           <LoadingState rows={2} />
         ) : recentApplications?.length ? (
@@ -85,9 +87,9 @@ export default function DashboardPage() {
           </div>
         ) : (
           <p className="text-md text-body">
-            You haven&apos;t applied to anything yet.{" "}
+            {t("web.jobs.dashboard.noApplications")}{" "}
             <Link href="/jobs" className="font-semibold text-primary hover:underline">
-              Browse jobs
+              {t("web.jobs.dashboard.browseJobs")}
             </Link>
             .
           </p>
@@ -96,30 +98,30 @@ export default function DashboardPage() {
 
       {/* Same tile shape and same grid as the job and application cards above —
           one page, one visual language. */}
-      <SectionRow title="Next steps">
+      <SectionRow title={t("web.jobs.dashboard.nextSteps")}>
         <div className="grid-cards">
           <PromoCard
             icon="file-alt"
-            title="Your CV"
-            message="A strong CV increases your chances of getting hired."
+            title={t("home.cvStatus.title")}
+            message={t("web.jobs.dashboard.cvMessage")}
             href="/cv"
-            cta={cvStatus?.lastUpdated ? "Update CV" : "Create your CV"}
+            cta={cvStatus?.lastUpdated ? t("home.cvStatus.update") : t("web.jobs.dashboard.createCv")}
             meta={<CVMeta cvStatus={cvStatus} />}
           />
           <PromoCard
             variant="outline"
             icon="check-circle"
-            title="Track your applications"
-            message="We'll notify you the moment there's an update."
+            title={t("web.jobs.dashboard.trackTitle")}
+            message={t("web.jobs.dashboard.trackMessage")}
             href="/applications"
-            cta="View applications"
+            cta={t("web.jobs.dashboard.viewApplications")}
           />
           <PromoCard
             icon="user-circle"
-            title="Personal consultancy"
-            message="Get expert guidance for your marine career in a live 1-on-1 meeting."
+            title={t("home.consultancy.title")}
+            message={t("home.consultancy.subtitle")}
             href="/consultancy"
-            cta="Book a live meeting"
+            cta={t("home.consultancy.book")}
           />
         </div>
       </SectionRow>

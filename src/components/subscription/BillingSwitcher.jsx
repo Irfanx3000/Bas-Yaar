@@ -1,3 +1,6 @@
+"use client";
+
+import { useTranslation } from "react-i18next";
 import { BILLING_CYCLES } from "@/constants/subscription.constants";
 
 /* Monthly / Yearly toggle.
@@ -9,6 +12,7 @@ import { BILLING_CYCLES } from "@/constants/subscription.constants";
  * promise on a pricing page.
  */
 export function BillingSwitcher({ cycle, onChange, discountPercent }) {
+  const { t } = useTranslation();
   const tab = (value, label) => (
     <button
       type="button"
@@ -25,14 +29,14 @@ export function BillingSwitcher({ cycle, onChange, discountPercent }) {
 
   return (
     <div className="my-8 flex flex-wrap items-center justify-center gap-3">
-      <div role="tablist" aria-label="Billing cycle" className="flex items-center rounded-pill bg-primary-light p-1">
-        {tab(BILLING_CYCLES.MONTHLY, "Monthly")}
-        {tab(BILLING_CYCLES.YEARLY, "Yearly")}
+      <div role="tablist" aria-label={t("web.account.subscription.billingCycle")} className="flex items-center rounded-pill bg-primary-light p-1">
+        {tab(BILLING_CYCLES.MONTHLY, t("web.account.subscription.monthly"))}
+        {tab(BILLING_CYCLES.YEARLY, t("web.account.subscription.yearly"))}
       </div>
 
       {discountPercent ? (
         <span className="inline-flex items-center rounded-pill bg-success-light px-4 py-1.5 text-xs font-bold tracking-tight text-success-text uppercase">
-          Save {discountPercent}% yearly
+          {t("web.account.subscription.saveYearly", { percent: discountPercent })}
         </span>
       ) : null}
     </div>

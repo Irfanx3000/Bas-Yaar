@@ -14,7 +14,7 @@
 
 import Link from "next/link";
 import { Card, Icon } from "@/components/ui";
-import { t } from "@/i18n";
+import { useTranslation } from "react-i18next";
 
 const ITEMS = [
   { href: "/wallet", labelKey: "wallet.title", icon: "wallet" },
@@ -24,6 +24,7 @@ const ITEMS = [
 ];
 
 export default function SettingsPage() {
+  const { t } = useTranslation();
   return (
     <div className="mx-auto max-w-2xl px-[15px] pb-8 lg:px-6">
       <header className="pt-2 pb-4">

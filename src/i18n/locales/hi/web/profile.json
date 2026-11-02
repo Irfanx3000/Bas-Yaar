@@ -1,0 +1,92 @@
+{
+  "common": {
+    "edit": "संपादित करें",
+    "add": "जोड़ें",
+    "select": "चुनें"
+  },
+  "overview": {
+    "subtitle": "अपनी प्रोफ़ाइल की जानकारी और करियर की स्थिति प्रबंधित करें।",
+    "yourName": "आपका नाम",
+    "noRank": "कोई रैंक सेट नहीं है",
+    "seafarerId": "सीफ़ेयरर आईडी: {{id}}",
+    "available": "उपलब्ध",
+    "strength": "प्रोफ़ाइल की मज़बूती",
+    "completeMissing": "छूटी हुई जानकारी भरें (+{{pct}}%)",
+    "missing": {
+      "photo": "प्रोफ़ाइल फ़ोटो",
+      "rank": "रैंक / पद"
+    },
+    "personalInfo": "व्यक्तिगत जानकारी",
+    "noEducation": "कोई शिक्षा नहीं जोड़ी गई",
+    "noEducationBody": "अपनी योग्यताएँ जोड़ें ताकि नियोक्ता उन्हें सत्यापित कर सकें।",
+    "jobType": "नौकरी का प्रकार",
+    "nothingSet": "अभी तक कुछ सेट नहीं है।",
+    "addSkills": "अपने कौशल जोड़ें"
+  },
+  "cv": {
+    "title": "मेरा सीवी",
+    "subtitle": "तेज़ी से आवेदन करने के लिए अपनी जानकारी प्रबंधित करें और अपडेट रखें।",
+    "editDetails": "जानकारी संपादित करें",
+    "createCv": "सीवी बनाएँ",
+    "downloadCv": "सीवी डाउनलोड करें",
+    "personalDetails": "व्यक्तिगत विवरण",
+    "percentComplete": "{{pct}}% पूर्ण",
+    "passportNumber": "पासपोर्ट नंबर",
+    "passportExpiry": "पासपोर्ट की समाप्ति तिथि",
+    "placeOfIssue": "जारी करने का स्थान",
+    "editPersonal": "व्यक्तिगत विवरण संपादित करें",
+    "seaExperience": "समुद्री अनुभव",
+    "records_one": "{{count}} रिकॉर्ड",
+    "records_other": "{{count}} रिकॉर्ड",
+    "yearsValue": "{{years}} वर्ष",
+    "noSeaTime": "अभी तक कोई समुद्री समय नहीं जोड़ा गया।",
+    "noEducation": "अभी तक कोई योग्यता नहीं जोड़ी गई।",
+    "added_one": "{{count}} जोड़ा गया",
+    "added_other": "{{count}} जोड़े गए",
+    "noSkills": "अभी तक कोई कौशल नहीं जोड़ा गया।",
+    "noLanguages": "अभी तक कोई भाषा नहीं जोड़ी गई।",
+    "certifications": "प्रमाणपत्र",
+    "viewDocument": "दस्तावेज़ देखें →",
+    "addCertificate": "+ प्रमाणपत्र जोड़ें",
+    "careerObjective": "करियर उद्देश्य",
+    "deleteEntryTitle": "यह प्रविष्टि हटाएँ?",
+    "deleteEntryMessage": "इसे आपके सीवी से हटा दिया जाएगा। इसे पूर्ववत नहीं किया जा सकता।"
+  },
+  "resume": {
+    "templates": "टेम्पलेट",
+    "fallbackTitle": "रिज़्यूमे"
+  },
+  "entry": {
+    "addTitle": "{{section}} जोड़ें",
+    "editTitle": "{{section}} संपादित करें",
+    "lineTooLong": "हर पंक्ति {{max}} अक्षरों या उससे कम की होनी चाहिए।",
+    "noAngleBrackets": "कृपया < या > अक्षर हटाएँ।",
+    "responsibilitiesHint": "हर पंक्ति में एक, अधिकतम {{max}}।",
+    "levels": {
+      "Beginner": "शुरुआती",
+      "Intermediate": "मध्यम",
+      "Expert": "विशेषज्ञ"
+    },
+    "proficiency": {
+      "Basic": "बुनियादी",
+      "Conversational": "बातचीत योग्य",
+      "Fluent": "धाराप्रवाह",
+      "Native": "मातृभाषा"
+    }
+  },
+  "personalInfo": {
+    "updated": "प्रोफ़ाइल अपडेट हो गई",
+    "changePhoto": "बदलें",
+    "uploadPhoto": "अपलोड करें",
+    "removePhoto": "हटाएँ",
+    "appliedOnSave": "सेव करने पर लागू होगा।",
+    "setAtRegistration": "पंजीकरण के समय सेट किया गया",
+    "emailHint": "अपना ईमेल बदलने के लिए सहायता टीम से संपर्क करें",
+    "errors": {
+      "invalidPhone": "कृपया एक मान्य फ़ोन नंबर दर्ज करें",
+      "minAge": "आपकी आयु कम से कम 18 वर्ष होनी चाहिए",
+      "maxAge": "कृपया सही जन्म तिथि दर्ज करें",
+      "futureDob": "जन्म तिथि भविष्य की नहीं हो सकती"
+    }
+  }
+}

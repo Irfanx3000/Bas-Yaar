@@ -13,6 +13,7 @@
 import { Suspense, useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
+import { useTranslation } from "react-i18next";
 import { useAuth } from "@/hooks/useAuth";
 import { Button, Card, InlineAlert, Input } from "@/components/ui";
 
@@ -46,6 +47,7 @@ function LoginForm() {
   const params = useSearchParams();
   const next = safeNext(params.get("next"));
 
+  const { t } = useTranslation();
   const { login, isLoading, error } = useAuth();
   const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
@@ -62,12 +64,12 @@ function LoginForm() {
 
   return (
     <AuthShell>
-      <h1 className="text-h2 font-extrabold text-heading">Welcome back</h1>
-      <p className="mt-[5px] text-md text-body">Sign in to see the jobs you can apply for.</p>
+      <h1 className="text-h2 font-extrabold text-heading">{t("web.auth.login.title")}</h1>
+      <p className="mt-[5px] text-md text-body">{t("web.auth.login.subtitle")}</p>
 
       <form onSubmit={onSubmit} className="mt-5">
         <Input
-          label="Email or phone"
+          label={t("web.auth.login.identifierLabel")}
           type="text"
           autoComplete="username"
           required
@@ -78,7 +80,7 @@ function LoginForm() {
         />
 
         <Input
-          label="Password"
+          label={t("web.auth.login.passwordLabel")}
           type="password"
           autoComplete="current-password"
           required
@@ -90,7 +92,7 @@ function LoginForm() {
 
         <div className="-mt-1 mb-3 text-right">
           <Link href="/forgot-password" className="text-sm font-semibold text-primary hover:underline">
-            Forgot password?
+            {t("auth.login.forgotPassword")}
           </Link>
         </div>
 
@@ -101,14 +103,14 @@ function LoginForm() {
         ) : null}
 
         <Button type="submit" fullWidth loading={isLoading}>
-          {isLoading ? "Signing in" : "Sign in"}
+          {isLoading ? t("web.auth.login.submitting") : t("web.auth.login.submit")}
         </Button>
       </form>
 
       <p className="mt-4 text-center text-md text-body">
-        New to CrewApply?{" "}
+        {t("web.auth.login.newHere")}{" "}
         <Link href="/signup" className="font-semibold text-primary hover:underline">
-          Create an account
+          {t("auth.welcome.createAccount")}
         </Link>
       </p>
     </AuthShell>

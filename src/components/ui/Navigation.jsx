@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslation } from "react-i18next";
 import { Icon } from "./Icon";
 
 /* Tabs and Pagination — the two ways screens move between slices of the same
@@ -87,6 +88,7 @@ const pageWindow = (current, total) => {
 };
 
 export function Pagination({ page = 1, totalPages = 1, onChange, className = "" }) {
+  const { t } = useTranslation();
   if (totalPages <= 1) return null;
 
   const step = (n) => () => onChange?.(Math.min(Math.max(n, 1), totalPages));
@@ -94,8 +96,8 @@ export function Pagination({ page = 1, totalPages = 1, onChange, className = "" 
     "inline-flex size-10 cursor-pointer items-center justify-center rounded-md border border-line-input text-body disabled:cursor-not-allowed disabled:opacity-40";
 
   return (
-    <nav aria-label="Pagination" className={`flex items-center justify-center gap-[5px] ${className}`}>
-      <button type="button" onClick={step(page - 1)} disabled={page <= 1} aria-label="Previous page" className={arrow}>
+    <nav aria-label={t("web.ui.pagination.label")} className={`flex items-center justify-center gap-[5px] ${className}`}>
+      <button type="button" onClick={step(page - 1)} disabled={page <= 1} aria-label={t("web.ui.pagination.previousPage")} className={arrow}>
         <Icon name="chevron-left" size={14} />
       </button>
 
@@ -125,7 +127,7 @@ export function Pagination({ page = 1, totalPages = 1, onChange, className = "" 
         type="button"
         onClick={step(page + 1)}
         disabled={page >= totalPages}
-        aria-label="Next page"
+        aria-label={t("web.ui.pagination.nextPage")}
         className={arrow}
       >
         <Icon name="chevron-right" size={14} />

@@ -1,0 +1,92 @@
+{
+  "common": {
+    "edit": "Edit",
+    "add": "Add",
+    "select": "Select"
+  },
+  "overview": {
+    "subtitle": "Manage your profile details and career status.",
+    "yourName": "Your name",
+    "noRank": "No rank set",
+    "seafarerId": "Seafarer ID: {{id}}",
+    "available": "Available",
+    "strength": "Profile strength",
+    "completeMissing": "Complete missing fields (+{{pct}}%)",
+    "missing": {
+      "photo": "Profile photo",
+      "rank": "Rank / Position"
+    },
+    "personalInfo": "Personal Info",
+    "noEducation": "No education added",
+    "noEducationBody": "Add your qualifications so employers can verify them.",
+    "jobType": "Job type",
+    "nothingSet": "Nothing set yet.",
+    "addSkills": "Add your skills"
+  },
+  "cv": {
+    "title": "My CV",
+    "subtitle": "Manage and keep your details updated for faster applications.",
+    "editDetails": "Edit details",
+    "createCv": "Create CV",
+    "downloadCv": "Download CV",
+    "personalDetails": "Personal Details",
+    "percentComplete": "{{pct}}% Complete",
+    "passportNumber": "Passport Number",
+    "passportExpiry": "Passport Expiry",
+    "placeOfIssue": "Place of Issue",
+    "editPersonal": "Edit personal details",
+    "seaExperience": "Sea Experience",
+    "records_one": "{{count}} Record",
+    "records_other": "{{count}} Records",
+    "yearsValue": "{{years}} Years",
+    "noSeaTime": "No sea time added yet.",
+    "noEducation": "No qualifications added yet.",
+    "added_one": "{{count}} Added",
+    "added_other": "{{count}} Added",
+    "noSkills": "No skills added yet.",
+    "noLanguages": "No languages added yet.",
+    "certifications": "Certifications",
+    "viewDocument": "View Document →",
+    "addCertificate": "+ Add Certificate",
+    "careerObjective": "Career Objective",
+    "deleteEntryTitle": "Delete this entry?",
+    "deleteEntryMessage": "It will be removed from your CV. This cannot be undone."
+  },
+  "resume": {
+    "templates": "Templates",
+    "fallbackTitle": "Resume"
+  },
+  "entry": {
+    "addTitle": "Add {{section}}",
+    "editTitle": "Edit {{section}}",
+    "lineTooLong": "Each line must be {{max}} characters or fewer.",
+    "noAngleBrackets": "Remove any < or > characters.",
+    "responsibilitiesHint": "One per line, up to {{max}}.",
+    "levels": {
+      "Beginner": "Beginner",
+      "Intermediate": "Intermediate",
+      "Expert": "Expert"
+    },
+    "proficiency": {
+      "Basic": "Basic",
+      "Conversational": "Conversational",
+      "Fluent": "Fluent",
+      "Native": "Native"
+    }
+  },
+  "personalInfo": {
+    "updated": "Profile updated",
+    "changePhoto": "Change",
+    "uploadPhoto": "Upload",
+    "removePhoto": "Remove",
+    "appliedOnSave": "Applied when you save.",
+    "setAtRegistration": "Set at registration",
+    "emailHint": "Contact support to change your email",
+    "errors": {
+      "invalidPhone": "Please enter a valid phone number",
+      "minAge": "You must be at least 18 years old",
+      "maxAge": "Please enter a realistic date of birth",
+      "futureDob": "Date of birth cannot be in the future"
+    }
+  }
+}

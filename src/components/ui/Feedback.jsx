@@ -1,3 +1,6 @@
+"use client";
+
+import { useTranslation } from "react-i18next";
 import { Icon } from "./Icon";
 import { Button } from "./Button";
 
@@ -30,9 +33,10 @@ export function Skeleton({ className = "" }) {
 }
 
 export function LoadingState({ rows = 3, className = "" }) {
+  const { t } = useTranslation();
   return (
     <div className={`space-y-3 ${className}`} aria-busy="true" aria-live="polite">
-      <span className="sr-only">Loading</span>
+      <span className="sr-only">{t("common.loading")}</span>
       {Array.from({ length: rows }, (_, i) => (
         <div key={i} className="rounded-md border border-line-soft bg-surface p-4 shadow-sm">
           <Skeleton className="h-4 w-1/2" />
@@ -73,15 +77,16 @@ export function InlineAlert({ tone = "info", title, children, action, className 
  * Message comes from getErrorMessage(), which already turned a server code into
  * something a person can act on. */
 export function ErrorState({ message, onRetry, className = "" }) {
+  const { t } = useTranslation();
   return (
     <InlineAlert
       tone="error"
-      title="Couldn't load this"
+      title={t("web.ui.feedback.loadFailed")}
       className={className}
       action={
         onRetry ? (
           <Button variant="outline" tone="danger" onClick={onRetry}>
-            Try again
+            {t("web.ui.feedback.tryAgain")}
           </Button>
         ) : null
       }

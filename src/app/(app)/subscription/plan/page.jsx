@@ -35,7 +35,8 @@ import { useSubscriptionStatus } from "@/context/SubscriptionContext";
 import { useProfile } from "@/context/ProfileContext";
 import { showAlert } from "@/utils/alertRef";
 import { getErrorMessage } from "@/i18n/getErrorMessage";
-import { t } from "@/i18n";
+import i18n from "@/i18n";
+import { useTranslation } from "react-i18next";
 import { Button, Card, ErrorState, Icon } from "@/components/ui";
 import { formatMoney, planSummaryStore, writePlanSummary } from "@/lib/planSummary";
 
@@ -58,6 +59,7 @@ function Line({ label, value, tone }) {
 }
 
 export default function PlanSummaryPage() {
+  const { t } = useTranslation();
   const router = useRouter();
   const { profile } = useProfile() ?? {};
   const { refresh: refreshStatus } = useSubscriptionStatus() ?? {};
@@ -120,8 +122,8 @@ export default function PlanSummaryPage() {
         }
         showAlert({
           type: "error",
-          title: t("subscription.alerts.paymentFailedTitle"),
-          message: checkoutErr?.description || t("subscription.alerts.paymentFailedBody"),
+          title: i18n.t("subscription.alerts.paymentFailedTitle"),
+          message: checkoutErr?.description || i18n.t("subscription.alerts.paymentFailedBody"),
         });
         return;
       }
@@ -135,8 +137,8 @@ export default function PlanSummaryPage() {
         if (!status?.active) {
           showAlert({
             type: "warning",
-            title: t("subscription.alerts.almostThereTitle"),
-            message: t("subscription.alerts.almostThereBody"),
+            title: i18n.t("subscription.alerts.almostThereTitle"),
+            message: i18n.t("subscription.alerts.almostThereBody"),
           });
           return;
         }
@@ -163,7 +165,7 @@ export default function PlanSummaryPage() {
     } catch (err) {
       showAlert({
         type: "error",
-        title: t("subscription.alerts.couldNotSubscribeTitle"),
+        title: i18n.t("subscription.alerts.couldNotSubscribeTitle"),
         message: getErrorMessage(err),
       });
     } finally {
@@ -177,7 +179,7 @@ export default function PlanSummaryPage() {
     return (
       <div className="mx-auto max-w-2xl px-[15px] py-6 lg:px-6">
         <ErrorState
-          message="Choose a plan to see its summary."
+          message={t("web.account.plan.noSummary")}
           onRetry={() => router.replace("/subscription")}
         />
       </div>
@@ -194,15 +196,15 @@ export default function PlanSummaryPage() {
   return (
     <div className="mx-auto max-w-2xl px-[15px] pb-8 lg:px-6">
       <header className="pt-2 pb-4">
-        <h1 className="text-h2 font-extrabold text-heading">Order Summary</h1>
-        <p className="mt-[2px] text-md text-body">Review before you pay.</p>
+        <h1 className="text-h2 font-extrabold text-heading">{t("web.account.plan.title")}</h1>
+        <p className="mt-[2px] text-md text-body">{t("web.account.plan.subtitle")}</p>
       </header>
 
       <Card radius="lg">
         <div className="flex items-start justify-between gap-3 border-b border-line-soft pb-3">
           <div className="min-w-0">
             <p className="text-lg font-bold text-heading">{summary.planName}</p>
-            <p className="text-sm text-body capitalize">{summary.billingCycle}</p>
+            <p className="text-sm text-body capitalize">{t(`web.account.subscription.${summary.billingCycle}`, { defaultValue: summary.billingCycle })}</p>
           </div>
           <Icon name="tag" size={18} className="shrink-0 text-primary" />
         </div>
@@ -225,7 +227,7 @@ export default function PlanSummaryPage() {
         </div>
 
         <div className="flex items-baseline justify-between gap-3 border-t border-line-soft pt-3">
-          <span className="text-md font-bold text-heading">{total?.label ?? "Amount Payable"}</span>
+          <span className="text-md font-bold text-heading">{total?.label ?? t("web.account.plan.amountPayable")}</span>
           <span className="text-h3 font-extrabold text-primary">
             {formatMoney(total?.amount ?? summary.payableAmount, currency)}
           </span>
@@ -233,28 +235,28 @@ export default function PlanSummaryPage() {
 
         {summary.newPeriodEnd ? (
           <p className="mt-2 text-sm text-hint">
-            Active until {new Date(summary.newPeriodEnd).toLocaleDateString()}
+            {t("web.account.plan.activeUntil", { date: new Date(summary.newPeriodEnd).toLocaleDateString() })}
           </p>
         ) : null}
       </Card>
 
       {summary.activated ? (
         <p className="mt-3 rounded-md bg-success-light px-4 py-3 text-md font-semibold text-success-text">
-          Your credit covers this in full — there is nothing to pay.
+          {t("web.account.plan.coveredInFull")}
         </p>
       ) : null}
 
       <div className="mt-4 flex flex-col gap-2 sm:flex-row-reverse">
         <Button fullWidth loading={processing} onClick={handleConfirm} icon="check-circle">
-          {summary.activated ? "Confirm" : "Pay now"}
+          {summary.activated ? t("web.account.plan.confirm") : t("web.account.plan.payNow")}
         </Button>
         <Button fullWidth variant="outline" disabled={processing} onClick={() => router.back()}>
-          Change plan
+          {t("web.account.plan.changePlan")}
         </Button>
       </div>
 
       <p className="mt-3 text-center text-sm text-hint">
-        Payments are processed by Razorpay. Card details never reach CrewApply.
+        {t("web.account.plan.razorpayNote")}
       </p>
     </div>
   );

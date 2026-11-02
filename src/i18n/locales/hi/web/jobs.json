@@ -1,0 +1,97 @@
+{
+  "dashboard": {
+    "browseJobs": "नौकरियाँ देखें",
+    "featuredError": "हम फ़ीचर्ड नौकरियाँ लोड नहीं कर सके।",
+    "noApplications": "आपने अभी तक कहीं आवेदन नहीं किया है।",
+    "nextSteps": "अगले कदम",
+    "cvMessage": "एक मज़बूत CV से नौकरी मिलने की संभावना बढ़ जाती है।",
+    "createCv": "अपना CV बनाएँ",
+    "trackTitle": "अपने आवेदन ट्रैक करें",
+    "trackMessage": "कोई भी अपडेट आते ही हम आपको सूचित करेंगे।",
+    "viewApplications": "आवेदन देखें"
+  },
+  "home": {
+    "heroAlt": "CrewApply क्रूज़ करियर",
+    "welcomeBack": "फिर से स्वागत है",
+    "there": "दोस्त",
+    "justNow": "अभी-अभी",
+    "cvUploaded": "CV अपलोड हो गया",
+    "percentComplete": "{{percent}}% पूरा"
+  },
+  "list": {
+    "title": "नौकरियाँ",
+    "openCount_one": "{{count}} खुली",
+    "openCount_other": "{{count}} खुली",
+    "searchLabel": "नौकरियाँ खोजें",
+    "filters": "फ़िल्टर",
+    "close": "बंद करें",
+    "searching": "खोज रहे हैं…",
+    "searchFailed": "खोज विफल रही। फिर से कोशिश करें।",
+    "noSuggestions": "“{{query}}” के लिए कोई सुझाव नहीं।",
+    "clearAll": "सभी हटाएँ",
+    "emptyTitle": "इन फ़िल्टर से कोई नौकरी मेल नहीं खाती",
+    "emptyMessage": "कोई फ़िल्टर हटाकर या किसी दूसरी रैंक से खोजकर देखें।"
+  },
+  "details": {
+    "badLink": "यह नौकरी का लिंक सही नहीं लग रहा।",
+    "notFound": "यह नौकरी नहीं मिल सकी।",
+    "goBack": "वापस जाएँ",
+    "responsibilities": "ज़िम्मेदारियाँ",
+    "benefits": "लाभ",
+    "noRequirements": "कोई विशेष आवश्यकता नहीं बताई गई है।",
+    "rank": "रैंक",
+    "vessel": "जहाज़",
+    "vacancies": "रिक्तियाँ",
+    "joining": "जॉइनिंग",
+    "deadline": "अंतिम तिथि"
+  },
+  "saved": {
+    "count_one": "{{count}} सेव की गई",
+    "count_other": "{{count}} सेव की गईं",
+    "searchPlaceholder": "अपनी सेव की गई नौकरियाँ खोजें",
+    "searchLabel": "सेव की गई नौकरियाँ खोजें",
+    "emptyMessage": "किसी भी नौकरी पर बुकमार्क दबाएँ और उसे बाद के लिए यहाँ रखें।"
+  },
+  "search": {
+    "placeholder": "नौकरियाँ, रैंक, जहाज़ खोजें…",
+    "resultsFor_one": "“{{query}}” के लिए {{count}} परिणाम",
+    "resultsFor_other": "“{{query}}” के लिए {{count}} परिणाम",
+    "noMatchTitle": "“{{query}}” से कुछ मेल नहीं खाया",
+    "noMatchMessage": "कोई रैंक, जहाज़ का प्रकार या छोटा शब्द आज़माएँ।",
+    "youMightLike": "आपको ये पसंद आ सकती हैं",
+    "idleTitle": "नौकरी खोजें",
+    "idleMessage": "“Second Engineer” जैसी कोई रैंक या जहाज़ का प्रकार आज़माएँ।"
+  },
+  "applications": {
+    "subtitle": "जिन नौकरियों के लिए आपने आवेदन किया है, उन सबकी स्थिति ट्रैक करें।",
+    "emptyTitle": "यहाँ अभी कुछ नहीं है",
+    "emptyAll": "आपने अभी तक किसी नौकरी के लिए आवेदन नहीं किया है।",
+    "emptyStatus": "इस स्थिति वाला कोई आवेदन नहीं है।",
+    "supportHeading": "सहायता और सलाह सेवाएँ",
+    "needHelpTitle": "मदद चाहिए?",
+    "needHelpMessage": "अपने आवेदनों में मदद के लिए हमारे मरीन करियर सलाहकारों से संपर्क करें।",
+    "consultancyTitle": "1-on-1 परामर्श",
+    "expert": "विशेषज्ञ",
+    "consultancyMessage": "लाइव मीटिंग में अपने मरीन करियर के लिए विशेषज्ञ मार्गदर्शन पाएँ।",
+    "bookMeeting": "लाइव मीटिंग बुक करें"
+  },
+  "card": {
+    "tierStart": "स्टार्ट",
+    "tierSail": "सेल",
+    "tierPremium": "प्रीमियम",
+    "urgent": "अत्यावश्यक",
+    "saveLabel": "{{title}} सेव करें",
+    "unsaveLabel": "{{title}} को सेव की गई नौकरियों से हटाएँ",
+    "withdraw": "आवेदन वापस लें",
+    "detailsUnavailable": "विवरण उपलब्ध नहीं"
+  },
+  "topSearch": {
+    "groupJobs": "नौकरियाँ",
+    "groupApplications": "आवेदन",
+    "groupPeople": "लोग",
+    "groupSubscriptions": "सब्सक्रिप्शन",
+    "clear": "खोज साफ़ करें",
+    "noResults": "“{{query}}” के लिए कोई परिणाम नहीं।",
+    "seeAll": "“{{query}}” के सभी परिणाम देखें"
+  }
+}

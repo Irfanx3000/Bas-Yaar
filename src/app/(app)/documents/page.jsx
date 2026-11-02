@@ -36,7 +36,7 @@ import { useState } from "react";
 import { useDocuments } from "@/hooks/useDocuments";
 import { DOC_FILTER, DOC_STATUS } from "@/constants/documents.constants";
 import { DocumentActionsModal } from "@/components/documents/DocumentActionsModal";
-import { t } from "@/i18n";
+import { useTranslation } from "react-i18next";
 import { Card, EmptyState, Icon, Input, LoadingState, Pagination, Tabs } from "@/components/ui";
 
 const TABS = [
@@ -55,6 +55,7 @@ const STATUS = {
 };
 
 function DocumentRow({ doc, onSelect }) {
+  const { t } = useTranslation();
   const status = STATUS[doc.status] ?? STATUS[DOC_STATUS.NOT_UPLOADED];
 
   return (
@@ -103,6 +104,7 @@ function DocumentRow({ doc, onSelect }) {
 }
 
 function MissingBanner({ docs }) {
+  const { t } = useTranslation();
   if (!docs?.length) return null;
 
   const single = docs.length === 1;
@@ -127,6 +129,7 @@ function MissingBanner({ docs }) {
 }
 
 export default function DocumentsPage() {
+  const { t } = useTranslation();
   const {
     items,
     counts,

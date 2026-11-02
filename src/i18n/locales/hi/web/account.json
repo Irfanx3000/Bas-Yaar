@@ -1,0 +1,59 @@
+{
+  "shell": {
+    "home": "CrewApply होम",
+    "expandSidebar": "साइडबार खोलें",
+    "collapseSidebar": "साइडबार छोटा करें",
+    "closeMenu": "मेनू बंद करें",
+    "moreOptions": "और विकल्प",
+    "primaryNav": "मुख्य",
+    "consultancy": "परामर्श"
+  },
+  "alerts": {
+    "filterPlaceholder": "अपने अलर्ट फ़िल्टर करें",
+    "filterLabel": "अलर्ट फ़िल्टर करें"
+  },
+  "consultancy": {
+    "previousMonth": "पिछला महीना",
+    "nextMonth": "अगला महीना",
+    "loadingAvailability": "उपलब्धता लोड हो रही है…",
+    "bookSession": "सेशन बुक करें"
+  },
+  "notifications": {
+    "unread": "अपठित",
+    "settingsSaved": "सूचना सेटिंग्स सहेज ली गईं"
+  },
+  "preferences": {
+    "saved": "प्राथमिकताएँ सहेज ली गईं"
+  },
+  "interviewPrep": {
+    "tipsSubtitle": "बेहतर प्रदर्शन में मदद करने वाले आसान सुझाव।"
+  },
+  "subscription": {
+    "billingCycle": "बिलिंग चक्र",
+    "monthly": "मासिक",
+    "yearly": "वार्षिक",
+    "saveYearly": "सालाना {{percent}}% बचाएँ",
+    "mostPopular": "सबसे लोकप्रिय",
+    "thenPrice": "फिर {{price}} {{label}}"
+  },
+  "plan": {
+    "noSummary": "सारांश देखने के लिए एक प्लान चुनें।",
+    "title": "ऑर्डर सारांश",
+    "subtitle": "भुगतान से पहले जाँच लें।",
+    "amountPayable": "देय राशि",
+    "activeUntil": "{{date}} तक सक्रिय",
+    "coveredInFull": "आपका क्रेडिट पूरी राशि कवर करता है — कुछ भी भुगतान नहीं करना है।",
+    "confirm": "पुष्टि करें",
+    "payNow": "अभी भुगतान करें",
+    "changePlan": "प्लान बदलें",
+    "razorpayNote": "भुगतान Razorpay द्वारा संसाधित किए जाते हैं। कार्ड विवरण कभी CrewApply तक नहीं पहुँचते।"
+  },
+  "success": {
+    "title": "आपने सब्सक्राइब कर लिया है",
+    "planActive": "{{plan}} आपके खाते पर सक्रिय है।",
+    "genericActive": "आपका प्लान आपके खाते पर सक्रिय है।",
+    "walletBalance": "वॉलेट बैलेंस: {{amount}}",
+    "browseJobs": "नौकरियाँ देखें",
+    "managePlan": "प्लान प्रबंधित करें"
+  }
+}

@@ -32,7 +32,7 @@ import { ResumePreviewModal } from "@/components/cv/ResumePreviewModal";
 import { PersonalInfoModal } from "@/components/profile/PersonalInfoModal";
 import { showAlert } from "@/utils/alertRef";
 import { getErrorMessage } from "@/i18n/getErrorMessage";
-import { t } from "@/i18n";
+import { useTranslation } from "react-i18next";
 import {
   Avatar,
   Button,
@@ -45,9 +45,9 @@ import {
 } from "@/components/ui";
 
 const year = (v) => (v ? String(v).slice(0, 4) : null);
-const range = (a, b, isCurrent) => {
+const range = (a, b, isCurrent, t) => {
   const from = year(a);
-  const to = isCurrent ? "Present" : year(b);
+  const to = isCurrent ? t("careerProfile.present") : year(b);
   if (!from && !to) return null;
   return from && to ? `${from} - ${to}` : String(from ?? to);
 };
@@ -89,6 +89,7 @@ function SectionCard({ icon, title, meta, onAdd, addLabel, children }) {
 /* One row per entry, with edit and delete. Delete goes through a confirmation
    because removeEntry is immediate and there is no undo on the server. */
 function EntryRow({ children, onEdit, onDelete }) {
+  const { t } = useTranslation();
   return (
     <li className="flex items-start justify-between gap-3 border-b border-line-soft py-3 last:border-0">
       <div className="min-w-0 flex-1">{children}</div>
@@ -96,7 +97,7 @@ function EntryRow({ children, onEdit, onDelete }) {
         <button
           type="button"
           onClick={onEdit}
-          aria-label="Edit"
+          aria-label={t("web.profile.common.edit")}
           className="cursor-pointer rounded-round p-2 text-hint hover:bg-primary-light hover:text-primary"
         >
           <Icon name="pencil-alt" size={12} />
@@ -104,7 +105,7 @@ function EntryRow({ children, onEdit, onDelete }) {
         <button
           type="button"
           onClick={onDelete}
-          aria-label="Delete"
+          aria-label={t("common.delete")}
           className="cursor-pointer rounded-round p-2 text-hint hover:bg-danger-light hover:text-danger"
         >
           <Icon name="trash-alt" size={12} />
@@ -119,6 +120,7 @@ function EntryRow({ children, onEdit, onDelete }) {
    (made, but the profile has changed since — the backend's isStale compares
    content hashes, so a CV never quietly shows a certificate that was removed). */
 function ResumeRow({ resume, templateName, generating, onGenerate, onView, onDelete }) {
+  const { t } = useTranslation();
   const lastGeneratedAt = resume.metadata?.lastGeneratedAt;
   const hasGenerated = !!lastGeneratedAt && !!resume.metadata?.lastGeneratedDocumentId;
   const isStale = hasGenerated && !!resume.isStale;
@@ -170,6 +172,7 @@ function ResumeRow({ resume, templateName, generating, onGenerate, onView, onDel
 }
 
 export default function CVPage() {
+  const { t } = useTranslation();
   const { profile: user, refresh: refreshProfile } = useProfile() ?? {};
   const { resumes, templates, generateResume, deleteResume } = useResumeConfigurations();
   const [generatingId, setGeneratingId] = useState(null);
@@ -287,9 +290,9 @@ export default function CVPage() {
   return (
     <div className="mx-auto max-w-5xl px-[15px] pb-8 lg:px-6">
       <header className="pt-2 pb-4">
-        <h1 className="text-h2 font-extrabold text-heading">My CV</h1>
+        <h1 className="text-h2 font-extrabold text-heading">{t("web.profile.cv.title")}</h1>
         <p className="mt-[2px] text-md text-body">
-          Manage and keep your details updated for faster applications.
+          {t("web.profile.cv.subtitle")}
         </p>
       </header>
 
@@ -299,7 +302,7 @@ export default function CVPage() {
           <Avatar name={user?.name} src={user?.avatarUrl} size="xl" />
           <div className="min-w-0 flex-1">
             <h2 className="truncate text-h3 font-extrabold text-heading">
-              {user?.name || "Your name"}
+              {user?.name || t("web.profile.overview.yourName")}
             </h2>
             {user?.rank ? <p className="text-md text-body">{user.rank}</p> : null}
             <div className="mt-2 space-y-1 text-md text-heading">
@@ -323,7 +326,7 @@ export default function CVPage() {
               ) : null}
             </div>
             <div className="mt-3">
-              <StatusBadge status="selected" label="Available" />
+              <StatusBadge status="selected" label={t("web.profile.overview.available")} />
             </div>
           </div>
           {/* Opens the same PersonalInfoModal Profile uses — this linked to
@@ -331,7 +334,7 @@ export default function CVPage() {
           <button
             type="button"
             onClick={() => setEditingPersonal(true)}
-            aria-label="Edit details"
+            aria-label={t("web.profile.cv.editDetails")}
             className="shrink-0 cursor-pointer rounded-round p-1 text-hint hover:text-primary"
           >
             <Icon name="pencil-alt" size={14} />
@@ -340,11 +343,11 @@ export default function CVPage() {
 
         <div className="mt-4 flex flex-wrap gap-2">
           <Link href="/cv/resume" className="flex-1">
-            <Button fullWidth>Create CV</Button>
+            <Button fullWidth>{t("web.profile.cv.createCv")}</Button>
           </Link>
           <Link href="/documents" className="flex-1">
             <Button fullWidth variant="outline">
-              Download CV
+              {t("web.profile.cv.downloadCv")}
             </Button>
           </Link>
         </div>
@@ -356,21 +359,21 @@ export default function CVPage() {
               editing it from this screen would write to the wrong place. */}
           <SectionCard
             icon="user"
-            title="Personal Details"
+            title={t("web.profile.cv.personalDetails")}
             meta={
-              cv?.completion?.personal != null ? `${cv.completion.personal}% Complete` : undefined
+              cv?.completion?.personal != null ? t("web.profile.cv.percentComplete", { pct: cv.completion.personal }) : undefined
             }
           >
             <dl className="grid grid-cols-2 gap-3 text-md sm:grid-cols-4">
               {[
-                ["Full Name", personal.fullName ?? user?.name],
-                ["Date of Birth", dateLabel(personal.dateOfBirth)],
-                ["Nationality", personal.nationality],
-                ["Gender", personal.gender],
-                ["Passport Number", personal.passportNumber],
-                ["Passport Expiry", dateLabel(personal.passportExpiry)],
-                ["Place of Issue", personal.placeOfIssue],
-                ["Marital Status", personal.maritalStatus],
+                [t("careerProfile.personal.fullName"), personal.fullName ?? user?.name],
+                [t("careerProfile.personal.dateOfBirth"), dateLabel(personal.dateOfBirth)],
+                [t("careerProfile.personal.nationality"), personal.nationality],
+                [t("careerProfile.personal.gender"), personal.gender],
+                [t("web.profile.cv.passportNumber"), personal.passportNumber],
+                [t("web.profile.cv.passportExpiry"), dateLabel(personal.passportExpiry)],
+                [t("web.profile.cv.placeOfIssue"), personal.placeOfIssue],
+                [t("profile.personalInfo.labels.maritalStatus"), personal.maritalStatus],
               ]
                 .filter(([, v]) => v)
                 .map(([label, value]) => (
@@ -385,25 +388,25 @@ export default function CVPage() {
               onClick={() => setEditingPersonal(true)}
               className="mt-3 block w-full cursor-pointer border-t border-line-soft pt-3 text-center text-md font-semibold text-primary hover:underline"
             >
-              Edit personal details
+              {t("web.profile.cv.editPersonal")}
             </button>
           </SectionCard>
 
           <SectionCard
             icon="briefcase"
-            title="Sea Experience"
-            meta={experience.length ? `${experience.length} Records` : undefined}
+            title={t("web.profile.cv.seaExperience")}
+            meta={experience.length ? t("web.profile.cv.records", { count: experience.length }) : undefined}
             onAdd={openAdd("experience")}
-            addLabel="Add Experience"
+            addLabel={t("careerProfile.experience.add")}
           >
             {totalYears > 0 ? (
               <p className="mb-2 flex items-baseline justify-between text-md">
-                <span className="text-body">Experience</span>
-                <span className="font-bold text-heading">{totalYears.toFixed(1)} Years</span>
+                <span className="text-body">{t("careerProfile.sections.experience")}</span>
+                <span className="font-bold text-heading">{t("web.profile.cv.yearsValue", { years: totalYears.toFixed(1) })}</span>
               </p>
             ) : null}
             {experience.length === 0 ? (
-              <p className="text-md text-hint">No sea time added yet.</p>
+              <p className="text-md text-hint">{t("web.profile.cv.noSeaTime")}</p>
             ) : (
               <ul>
                 {experience.map((e) => (
@@ -416,8 +419,8 @@ export default function CVPage() {
                     <p className="text-sm text-body">
                       {[e.vesselName, e.vesselType, e.company].filter(Boolean).join(" · ")}
                     </p>
-                    {range(e.startDate, e.endDate, e.isCurrent) ? (
-                      <p className="text-sm text-hint">{range(e.startDate, e.endDate, e.isCurrent)}</p>
+                    {range(e.startDate, e.endDate, e.isCurrent, t) ? (
+                      <p className="text-sm text-hint">{range(e.startDate, e.endDate, e.isCurrent, t)}</p>
                     ) : null}
                   </EntryRow>
                 ))}
@@ -427,13 +430,13 @@ export default function CVPage() {
 
           <SectionCard
             icon="education"
-            title="Education"
-            meta={education.length ? `${education.length} Records` : undefined}
+            title={t("careerProfile.sections.education")}
+            meta={education.length ? t("web.profile.cv.records", { count: education.length }) : undefined}
             onAdd={openAdd("education")}
-            addLabel="Add Education"
+            addLabel={t("careerProfile.education.add")}
           >
             {education.length === 0 ? (
-              <p className="text-md text-hint">No qualifications added yet.</p>
+              <p className="text-md text-hint">{t("web.profile.cv.noEducation")}</p>
             ) : (
               <ul>
                 {education.map((e) => (
@@ -459,13 +462,13 @@ export default function CVPage() {
         <div className="space-y-4">
           <SectionCard
             icon="lightbulb"
-            title="Skills"
-            meta={skills.length ? `${skills.length} Added` : undefined}
+            title={t("careerProfile.sections.skills")}
+            meta={skills.length ? t("web.profile.cv.added", { count: skills.length }) : undefined}
             onAdd={openAdd("skills")}
-            addLabel="Add Skills"
+            addLabel={t("careerProfile.skills.add")}
           >
             {skills.length === 0 ? (
-              <p className="text-md text-hint">No skills added yet.</p>
+              <p className="text-md text-hint">{t("web.profile.cv.noSkills")}</p>
             ) : (
               <ul>
                 {skills.map((s) => (
@@ -477,7 +480,9 @@ export default function CVPage() {
                     <p className="text-md font-semibold text-heading">{s.name}</p>
                     {s.level || s.category ? (
                       <p className="text-sm text-body">
-                        {[s.level, s.category].filter(Boolean).join(" · ")}
+                        {[s.level && t(`web.profile.entry.levels.${s.level}`, { defaultValue: s.level }), s.category]
+                          .filter(Boolean)
+                          .join(" · ")}
                       </p>
                     ) : null}
                   </EntryRow>
@@ -488,13 +493,13 @@ export default function CVPage() {
 
           <SectionCard
             icon="link"
-            title="Languages"
-            meta={languages.length ? `${languages.length} Added` : undefined}
+            title={t("careerProfile.sections.languages")}
+            meta={languages.length ? t("web.profile.cv.added", { count: languages.length }) : undefined}
             onAdd={openAdd("languages")}
-            addLabel="Add Language"
+            addLabel={t("careerProfile.languages.add")}
           >
             {languages.length === 0 ? (
-              <p className="text-md text-hint">No languages added yet.</p>
+              <p className="text-md text-hint">{t("web.profile.cv.noLanguages")}</p>
             ) : (
               <ul>
                 {languages.map((l) => (
@@ -505,7 +510,11 @@ export default function CVPage() {
                   >
                     <p className="flex items-baseline justify-between gap-2">
                       <span className="text-md font-semibold text-heading">{l.name}</span>
-                      <span className="text-sm text-hint">{l.proficiency}</span>
+                      <span className="text-sm text-hint">
+                        {l.proficiency
+                          ? t(`web.profile.entry.proficiency.${l.proficiency}`, { defaultValue: l.proficiency })
+                          : null}
+                      </span>
                     </p>
                   </EntryRow>
                 ))}
@@ -516,11 +525,11 @@ export default function CVPage() {
           {/* AGGREGATED from the documents store — added in Documents, not here. */}
           <SectionCard
             icon="file-alt"
-            title="Certifications"
-            meta={certificates.length ? `${certificates.length} Added` : undefined}
+            title={t("web.profile.cv.certifications")}
+            meta={certificates.length ? t("web.profile.cv.added", { count: certificates.length }) : undefined}
           >
             {certificates.length === 0 ? (
-              <p className="text-md text-hint">No certificates uploaded yet.</p>
+              <p className="text-md text-hint">{t("careerProfile.certificates.empty")}</p>
             ) : (
               <ul>
                 {certificates.map((c) => (
@@ -538,7 +547,7 @@ export default function CVPage() {
                       href="/documents"
                       className="shrink-0 text-sm font-semibold text-primary hover:underline"
                     >
-                      View Document →
+                      {t("web.profile.cv.viewDocument")}
                     </Link>
                   </li>
                 ))}
@@ -548,12 +557,12 @@ export default function CVPage() {
               href="/documents"
               className="mt-3 block border-t border-line-soft pt-3 text-center text-md font-semibold text-primary hover:underline"
             >
-              + Add Certificate
+              {t("web.profile.cv.addCertificate")}
             </Link>
           </SectionCard>
 
           {cv?.careerObjective ? (
-            <SectionCard icon="magic" title="Career Objective">
+            <SectionCard icon="magic" title={t("web.profile.cv.careerObjective")}>
               <p className="max-w-prose text-md text-body">{cv.careerObjective}</p>
             </SectionCard>
           ) : null}
@@ -641,9 +650,9 @@ export default function CVPage() {
         onConfirm={confirmDelete}
         destructive
         loading={deleting}
-        title="Delete this entry?"
-        message="It will be removed from your CV. This cannot be undone."
-        confirmLabel="Delete"
+        title={t("web.profile.cv.deleteEntryTitle")}
+        message={t("web.profile.cv.deleteEntryMessage")}
+        confirmLabel={t("common.delete")}
       />
     </div>
   );

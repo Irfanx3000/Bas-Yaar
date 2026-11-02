@@ -1,31 +1,35 @@
+"use client";
+
 import Link from "next/link";
 import { Navbar } from "@/components/landing/Navbar";
 import { FooterSection } from "@/components/landing/FooterSection";
 import { Icon } from "@/components/ui/Icon";
+import { useTranslation } from "react-i18next";
 
 export default function CareerSupportPage() {
+  const { t } = useTranslation();
   const resources = [
     {
-      title: "1-on-1 Mentorship & Consultancy",
-      desc: "Connect with experienced Chief Engineers and Captains to map out your career progression and address specific challenges.",
+      titleKey: "web.landing.careerSupport.resources.mentorship.title",
+      descKey: "web.landing.careerSupport.resources.mentorship.desc",
       icon: "user",
       link: "/consultancy"
     },
     {
-      title: "Interview Preparation",
-      desc: "Practice technical questions, review maritime regulations, and undergo behavioral prep to ace your next promotion interview.",
+      titleKey: "web.landing.careerSupport.resources.interview.title",
+      descKey: "web.landing.careerSupport.resources.interview.desc",
       icon: "education",
       link: "/interview-prep"
     },
     {
-      title: "STCW & Document Guidance",
-      desc: "Access comprehensive checklists, renewal reminder workflows, and regulatory updates to stay compliant.",
+      titleKey: "web.landing.careerSupport.resources.documents.title",
+      descKey: "web.landing.careerSupport.resources.documents.desc",
       icon: "file-alt",
       link: "/documents"
     },
     {
-      title: "Resume & CV Optimization",
-      desc: "Learn maritime-standard CV formatting tips to highlight your sea time and ensure your profile stands out to manning agencies.",
+      titleKey: "web.landing.careerSupport.resources.resume.title",
+      descKey: "web.landing.careerSupport.resources.resume.desc",
       icon: "pencil-alt",
       link: "/resume"
     }
@@ -41,10 +45,10 @@ export default function CareerSupportPage() {
         {/* Hero */}
         <section className="px-6 lg:px-12 max-w-7xl mx-auto text-center mb-24">
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-heading mb-6 tracking-tight">
-            Empowering Maritime Professionals at <span className="text-primary">Every Step.</span>
+            {t("web.landing.careerSupport.title")}<span className="text-primary">{t("web.landing.careerSupport.titleHighlight")}</span>
           </h1>
           <p className="text-lg md:text-xl text-body max-w-3xl mx-auto">
-            From your cadetship to earning your Master's ticket, we provide the tools and guidance you need to succeed.
+            {t("web.landing.careerSupport.subtitle")}
           </p>
         </section>
 
@@ -56,10 +60,10 @@ export default function CareerSupportPage() {
                 <div className="w-14 h-14 bg-blue-50 text-primary rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
                   <Icon name={res.icon} size={24} />
                 </div>
-                <h3 className="text-2xl font-bold text-heading mb-4 group-hover:text-primary transition-colors">{res.title}</h3>
-                <p className="text-body leading-relaxed flex-1 mb-6">{res.desc}</p>
+                <h3 className="text-2xl font-bold text-heading mb-4 group-hover:text-primary transition-colors">{t(res.titleKey)}</h3>
+                <p className="text-body leading-relaxed flex-1 mb-6">{t(res.descKey)}</p>
                 <div className="flex items-center gap-2 text-primary font-bold">
-                  Explore Resource <span className="group-hover:translate-x-1 transition-transform">&rarr;</span>
+                  {t("web.landing.careerSupport.explore")} <span className="group-hover:translate-x-1 transition-transform">&rarr;</span>
                 </div>
               </Link>
             ))}
@@ -73,12 +77,12 @@ export default function CareerSupportPage() {
             <div className="absolute bottom-0 left-0 w-64 h-64 bg-primary/20 rounded-full blur-3xl -ml-20 -mb-20"></div>
             
             <div className="relative z-10">
-              <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">Need personal career guidance?</h2>
+              <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">{t("web.landing.careerSupport.ctaTitle")}</h2>
               <p className="text-white/80 text-lg mb-8 max-w-xl mx-auto">
-                Book a dedicated session with an industry expert today and navigate your maritime career with confidence.
+                {t("web.landing.careerSupport.ctaDesc")}
               </p>
               <Link href="/consultancy" className="inline-flex items-center justify-center bg-primary text-white rounded-full px-8 py-4 font-bold text-lg hover:bg-primary-hover transition-colors shadow-lg hover:scale-105 transform">
-                Book an Expert
+                {t("web.landing.careerSupport.ctaButton")}
               </Link>
             </div>
           </div>

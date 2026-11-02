@@ -30,7 +30,7 @@ import { notificationService } from "@/services/notification.service";
 import { useNotifications } from "@/context/NotificationContext";
 import { useProfile } from "@/context/ProfileContext";
 import { groupNotifications, formatNotificationTimestamp } from "@/utils/notificationGrouping";
-import { t } from "@/i18n";
+import { useTranslation } from "react-i18next";
 import { Card, EmptyState, Icon, LoadingState, ProgressBar } from "@/components/ui";
 
 const PAGE_LIMIT = 20;
@@ -51,6 +51,7 @@ const STATUS_ACCENT = {
 const DEFAULT_ACCENT = "bg-[#EFF5FF] text-[#056DED]";
 
 export default function NotificationsPage() {
+  const { t } = useTranslation();
   const router = useRouter();
   const { refreshUnreadCount, setUnreadCount } = useNotifications();
   const { completion } = useProfile() ?? {};
@@ -184,7 +185,7 @@ export default function NotificationsPage() {
                 >
                   {loadingMore ? (
                     <span
-                      aria-label="Loading"
+                      aria-label={t("common.loading")}
                       className="size-4 animate-spin rounded-round border-2 border-current border-t-transparent"
                     />
                   ) : (
@@ -201,9 +202,9 @@ export default function NotificationsPage() {
       {showProfileCard ? (
         <Link href="/profile" className="mt-6 block">
           <Card interactive radius="lg">
-            <p className="text-md font-bold text-heading">Complete your profile</p>
+            <p className="text-md font-bold text-heading">{t("notifications.items.completeProfile.title")}</p>
             {completion.message ? <p className="mt-[2px] text-sm text-body">{completion.message}</p> : null}
-            <ProgressBar className="mt-3" value={completion.percentage} label="Profile strength" />
+            <ProgressBar className="mt-3" value={completion.percentage} label={t("sidebar.profileStrength")} />
           </Card>
         </Link>
       ) : null}
@@ -227,6 +228,7 @@ function Section({ label, items, onOpen, onMarkRead, footer }) {
 }
 
 function NotificationCard({ notification, onOpen, onMarkRead }) {
+  const { t } = useTranslation();
   const { date, time, dayOfWeek } = formatNotificationTimestamp(notification.createdAt);
   const accent = STATUS_ACCENT[notification.data?.status] || DEFAULT_ACCENT;
   const unread = !notification.read;
@@ -276,7 +278,7 @@ function NotificationCard({ notification, onOpen, onMarkRead }) {
       </div>
 
       {unread ? (
-        <span aria-label="Unread" className="absolute top-4 right-3 size-2 rounded-round bg-[#056DED]" />
+        <span aria-label={t("web.account.notifications.unread")} className="absolute top-4 right-3 size-2 rounded-round bg-[#056DED]" />
       ) : null}
     </li>
   );

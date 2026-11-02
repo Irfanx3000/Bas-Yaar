@@ -36,7 +36,7 @@ import Link from "next/link";
 import { jobHref } from "@/lib/jobUrl";
 import { useJobAlerts } from "@/hooks/useJobAlerts";
 import { useSubscriptionStatus } from "@/context/SubscriptionContext";
-import { t } from "@/i18n";
+import { useTranslation } from "react-i18next";
 import {
   Button,
   Card,
@@ -50,6 +50,7 @@ import {
 } from "@/components/ui";
 
 export default function JobAlertsPage() {
+  const { t } = useTranslation();
   const {
     jobs,
     totalCount,
@@ -98,12 +99,12 @@ export default function JobAlertsPage() {
           <input
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Filter your alerts"
-            aria-label="Filter alerts"
+            placeholder={t("web.account.alerts.filterPlaceholder")}
+            aria-label={t("web.account.alerts.filterLabel")}
             className="w-full bg-transparent text-md text-heading outline-none focus-visible:outline-none placeholder:text-hint"
           />
         </label>
-        <Button type="submit">Search</Button>
+        <Button type="submit">{t("search.title")}</Button>
       </form>
 
       {/* The app's exact branching order. The no-plan card comes FIRST, because

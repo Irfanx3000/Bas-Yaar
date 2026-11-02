@@ -16,6 +16,10 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { LEGAL_PAGES } from "@/constants/legal.content";
+import { T } from "@/components/T";
+
+/* Page titles in the user's language; the document body stays English. */
+const TITLE_KEYS = { privacy: "common.privacyPolicy", terms: "common.termsConditions" };
 
 /* Both documents are known at build time and neither takes a parameter, so
    they prerender as static HTML — no request-time work, and `dynamicParams`
@@ -45,10 +49,10 @@ export default async function LegalPage({ params }) {
   return (
     <main className="mx-auto max-w-3xl px-[15px] py-8 lg:px-6">
       <Link href="/settings" className="text-md font-semibold text-primary hover:underline">
-        ← Settings
+        ← <T k="sidebar.items.settings" />
       </Link>
 
-      <h1 className="mt-4 text-h1 font-extrabold text-heading">{page.title}</h1>
+      <h1 className="mt-4 text-h1 font-extrabold text-heading"><T k={TITLE_KEYS[doc]} /></h1>
       <p className="mt-1 text-sm text-hint">{page.updatedAt}</p>
 
       <div className="mt-6 flex flex-col gap-6">

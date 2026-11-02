@@ -2,6 +2,7 @@
 
 import { useEffect, useId, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
+import { useTranslation } from "react-i18next";
 import { Icon } from "@/components/ui";
 import { searchService } from "@/services/search.service";
 import { jobHref } from "@/lib/jobUrl";
@@ -31,13 +32,14 @@ const MIN_CHARS = 2;
 const DEBOUNCE_MS = 300;
 
 const GROUP_LABEL = {
-  jobs: "Jobs",
-  applications: "Applications",
-  users: "People",
-  subscriptions: "Subscriptions",
+  jobs: "web.jobs.topSearch.groupJobs",
+  applications: "web.jobs.topSearch.groupApplications",
+  users: "web.jobs.topSearch.groupPeople",
+  subscriptions: "web.jobs.topSearch.groupSubscriptions",
 };
 
 export function TopSearch() {
+  const { t } = useTranslation();
   const router = useRouter();
   const listId = useId();
 
@@ -128,9 +130,9 @@ export function TopSearch() {
           role="combobox"
           aria-expanded={open}
           aria-controls={open ? listId : undefined}
-          aria-label="Search jobs"
+          aria-label={t("web.jobs.list.searchLabel")}
           value={term}
-          placeholder="Search jobs, ranks, vessels…"
+          placeholder={t("web.jobs.search.placeholder")}
           onChange={(e) => {
             const next = e.target.value;
             setTerm(next);
@@ -151,7 +153,7 @@ export function TopSearch() {
         {term ? (
           <button
             type="button"
-            aria-label="Clear search"
+            aria-label={t("web.jobs.topSearch.clear")}
             onClick={() => {
               setTerm("");
               setGroups([]);
@@ -175,13 +177,13 @@ export function TopSearch() {
           className={`scrollbar-thin absolute left-0 z-50 flex max-h-[min(26rem,calc(100dvh-6rem))] w-full flex-col overflow-y-auto rounded-md border border-line-soft bg-surface p-[5px] shadow-lg ${dropClass(placement)}`}
         >
           {tooShort ? (
-            <p className="px-3 py-4 text-center text-sm text-hint">Keep typing — at least {MIN_CHARS} characters.</p>
+            <p className="px-3 py-4 text-center text-sm text-hint">{t("search.tooShort")}</p>
           ) : state === "loading" ? (
-            <p className="animate-pulse px-3 py-4 text-center text-sm text-hint">Searching…</p>
+            <p className="animate-pulse px-3 py-4 text-center text-sm text-hint">{t("web.jobs.list.searching")}</p>
           ) : state === "error" ? (
-            <p className="px-3 py-4 text-center text-sm text-danger">Search failed. Try again.</p>
+            <p className="px-3 py-4 text-center text-sm text-danger">{t("web.jobs.list.searchFailed")}</p>
           ) : total === 0 ? (
-            <p className="px-3 py-4 text-center text-sm text-hint">No results for “{term.trim()}”.</p>
+            <p className="px-3 py-4 text-center text-sm text-hint">{t("web.jobs.topSearch.noResults", { query: term.trim() })}</p>
           ) : (
             <>
               {groups
@@ -189,7 +191,7 @@ export function TopSearch() {
                 .map((group) => (
                   <div key={group.entityType}>
                     <p className="px-3 pt-2 pb-1 text-xs font-bold tracking-wide text-hint">
-                      {GROUP_LABEL[group.entityType] ?? group.entityType}
+                      {GROUP_LABEL[group.entityType] ? t(GROUP_LABEL[group.entityType]) : group.entityType}
                     </p>
                     {group.results.map((row) => (
                       <button
@@ -216,7 +218,7 @@ export function TopSearch() {
                 onClick={submit}
                 className="mt-1 cursor-pointer border-t border-line-soft px-3 py-2 text-center text-sm font-semibold text-primary hover:underline"
               >
-                See all results for “{term.trim()}”
+                {t("web.jobs.topSearch.seeAll", { query: term.trim() })}
               </button>
             </>
           )}

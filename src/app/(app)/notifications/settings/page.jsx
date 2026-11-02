@@ -28,12 +28,14 @@
 import { useEffect, useState } from "react";
 import { notificationService } from "@/services/notification.service";
 import { showToast } from "@/utils/toastRef";
-import { t } from "@/i18n";
+import { useTranslation } from "react-i18next";
+import i18n from "@/i18n";
 import { Button, Card, Icon, InlineAlert, LoadingState } from "@/components/ui";
 
 const EXPIRY_OPTIONS = [5, 10, 15];
 
 export default function NotificationSettingsPage() {
+  const { t } = useTranslation();
   const [form, setForm] = useState(null); // null until loaded — never a guessed default
   const [saved, setSaved] = useState(null);
   const [error, setError] = useState("");
@@ -56,7 +58,7 @@ export default function NotificationSettingsPage() {
         const fallback = { notificationExpiryDays: 10, pushNotificationsEnabled: true };
         setForm(fallback);
         setSaved(null);
-        setError(t("notifications.settingsScreen.loadError"));
+        setError(i18n.t("notifications.settingsScreen.loadError"));
       });
 
     return () => {
@@ -77,7 +79,7 @@ export default function NotificationSettingsPage() {
       const result = await notificationService.updateNotificationSettings(form);
       setForm(result);
       setSaved(result);
-      showToast({ message: "Notification settings saved", tone: "success", icon: "bell" });
+      showToast({ message: i18n.t("web.account.notifications.settingsSaved"), tone: "success", icon: "bell" });
     } catch {
       setError(t("notifications.settingsScreen.saveError"));
     } finally {

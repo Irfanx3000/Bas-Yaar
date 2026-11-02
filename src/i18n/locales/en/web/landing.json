@@ -1,0 +1,273 @@
+{
+  "common": {
+    "getStarted": "Get Started",
+    "slogan": "Same Oceans. Bigger Opportunities.",
+    "motto": "Built for the People Who Keep the World Moving.",
+    "smarterWay": "A Smarter Way to Build Your Career",
+    "heroBgAlt": "Hero Background"
+  },
+  "nav": {
+    "forCrew": "For Crew",
+    "howItWorks": "How It Works",
+    "careerSupport": "Career Support",
+    "forEmployers": "For Employers",
+    "aboutUs": "About Us",
+    "logoAlt": "CrewApply Logo",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu"
+  },
+  "hero": {
+    "badge": "Global Opportunities. A Brighter Tomorrow.",
+    "titleLine1": "Your Career at Sea,",
+    "titleHighlight": "Simplified.",
+    "subtitle": "Find opportunities, manage your applications, keep your documents ready, and take control of your maritime career — all from one platform.",
+    "explore": "Explore CrewApply"
+  },
+  "trust": {
+    "builtFor": "Built for Maritime Professionals",
+    "trustedBy": "Trusted by Crew Worldwide",
+    "scrollToExplore": "Scroll to explore"
+  },
+  "features": {
+    "eyebrow": "EVERYTHING YOU NEED",
+    "title": "Everything You Need.",
+    "titleHighlight": "One Crew Career Platform.",
+    "subtitle": "More than just a job search. CrewApply helps you manage every step of your maritime career.",
+    "items": {
+      "discover": {
+        "title": "Discover",
+        "description": "Explore career opportunities in the global cruise & maritime industry."
+      },
+      "buildProfile": {
+        "title": "Build Your Profile",
+        "description": "Create a strong profile and keep your information up to date."
+      },
+      "manageDocuments": {
+        "title": "Manage Documents",
+        "description": "Keep your essential documents ready, always."
+      },
+      "trackApplications": {
+        "title": "Track Applications",
+        "description": "Know where every application stands, from submission to interview and beyond."
+      }
+    }
+  },
+  "documents": {
+    "imageAlt": "Keep Your Career Documents Ready Graphic",
+    "eyebrow": "KEEP YOUR CAREER",
+    "title": "Keep Your Career Documents Ready.",
+    "titleMobile": "Documents ",
+    "titleMobileHighlight": "Ready.",
+    "subtitle": "Your next opportunity shouldn't be delayed because your documents aren't ready.",
+    "cards": {
+      "cv": "CV",
+      "certificates": "Certificates",
+      "otherDocuments": "Other Documents"
+    },
+    "learnMore": "Learn More"
+  },
+  "guidance": {
+    "imageAlt": "Get Expert Guidance Graphic",
+    "eyebrow": "NOT SURE WHAT'S NEXT?",
+    "title": "Get Expert ",
+    "titleHighlight": "Guidance.",
+    "subtitle": "Get personalised guidance for your maritime career through one-on-one consultations with industry experts.",
+    "bookConsultation": "Book a Consultation",
+    "trustedTitle": "Trusted by Professionals",
+    "trustedDesc": "Get guidance from experienced maritime professionals."
+  },
+  "testimonials": {
+    "eyebrow": "REAL PEOPLE. REAL JOURNEYS.",
+    "title": "Trusted by ",
+    "titleHighlight": "Maritime Professionals.",
+    "subtitle": "Hear from crew members who've found better opportunities and taken control of their careers with CrewApply.",
+    "viewMore": "View More Stories",
+    "joinDesc": "Join thousands of maritime professionals who trust CrewApply.",
+    "items": {
+      "rohit": {
+        "quote": "“CrewApply made it so much easier for me to manage my applications and keep track of everything in one place.”",
+        "role": "Deck Officer"
+      },
+      "priya": {
+        "quote": "“A very useful platform for anyone looking to build a career in the cruise industry. The document management feature is a game changer.”",
+        "role": "Hospitality Crew"
+      },
+      "ahmed": {
+        "quote": "“The best part is the application tracking. I always know the status, and the consultation feature really helped me plan my next step.”",
+        "role": "Engine Cadet"
+      },
+      "carlos": {
+        "quote": "“I finally feel in control of my maritime career. The interface is clean, fast, and gives me exactly what I need.”",
+        "role": "Chief Engineer"
+      }
+    }
+  },
+  "footer": {
+    "ctaImageAlt": "Start Your Next Chapter",
+    "ctaTitle": "Your Next Chapter Starts Here.",
+    "ctaSubtitle": "Create your CrewApply profile and take control of your maritime career.",
+    "tagline": "Building brighter futures for maritime professionals across the globe.",
+    "quickLinks": "Quick Links",
+    "helpCenter": "Help Center",
+    "contactUs": "Contact Us",
+    "termsOfService": "Terms of Service",
+    "getTheApp": "Get the App",
+    "availableOn": "Available on the",
+    "getItOn": "GET IT ON",
+    "copyright": "© {{year}} CrewApply. All rights reserved.",
+    "motto": "People at Sea. Progress on Land."
+  },
+  "about": {
+    "title": "Bridging the Gap Between Seafarers and ",
+    "titleHighlight": "Global Opportunities.",
+    "mission": "\"Built for the people who keep the world moving. We empower maritime professionals with modern digital tools to manage their careers with dignity, transparency, and ease.\"",
+    "eyebrow": "Our Foundation",
+    "coreValues": "Core Values",
+    "values": {
+      "transparency": {
+        "title": "Transparency First",
+        "desc": "Zero hidden fees for crew and verified legitimate listings only."
+      },
+      "crewCentric": {
+        "title": "Crew-Centric Design",
+        "desc": "Designed for mobile-first seafarers working on-board and ashore."
+      },
+      "compliance": {
+        "title": "Industry Compliance",
+        "desc": "Fully aligned with MLC 2006 standards and modern maritime hiring practices."
+      }
+    },
+    "stats": {
+      "registeredCrew": "Registered Crew",
+      "vesselTypes": "Vessel Types",
+      "partnerAgencies": "Partner Agencies"
+    }
+  },
+  "careerSupport": {
+    "title": "Empowering Maritime Professionals at ",
+    "titleHighlight": "Every Step.",
+    "subtitle": "From your cadetship to earning your Master's ticket, we provide the tools and guidance you need to succeed.",
+    "resources": {
+      "mentorship": {
+        "title": "1-on-1 Mentorship & Consultancy",
+        "desc": "Connect with experienced Chief Engineers and Captains to map out your career progression and address specific challenges."
+      },
+      "interview": {
+        "title": "Interview Preparation",
+        "desc": "Practice technical questions, review maritime regulations, and undergo behavioral prep to ace your next promotion interview."
+      },
+      "documents": {
+        "title": "STCW & Document Guidance",
+        "desc": "Access comprehensive checklists, renewal reminder workflows, and regulatory updates to stay compliant."
+      },
+      "resume": {
+        "title": "Resume & CV Optimization",
+        "desc": "Learn maritime-standard CV formatting tips to highlight your sea time and ensure your profile stands out to manning agencies."
+      }
+    },
+    "explore": "Explore Resource",
+    "ctaTitle": "Need personal career guidance?",
+    "ctaDesc": "Book a dedicated session with an industry expert today and navigate your maritime career with confidence.",
+    "ctaButton": "Book an Expert"
+  },
+  "forCrew": {
+    "title": "Chart Your Course to a ",
+    "titleHighlight": "Better Maritime Career.",
+    "subtitle": "CrewApply helps deck, engine, and hospitality crew land verified roles worldwide. Ditch the paperwork and take control of your career path.",
+    "cta": "Get Started Today",
+    "benefits": {
+      "listings": {
+        "title": "Verified Cruise & Cargo Listings",
+        "desc": "Direct access to accredited employers and manning agencies without middlemen scams."
+      },
+      "documents": {
+        "title": "Centralized Maritime CV & Documents",
+        "desc": "Store STCW, CDC, CoC, and medical certificates in one place with expiry alerts."
+      },
+      "tracking": {
+        "title": "Application Tracking",
+        "desc": "Real-time status updates from submission to contract signing."
+      }
+    },
+    "howItWorks": "How it works",
+    "steps": {
+      "profile": "Create Profile",
+      "upload": "Upload STCW & Sea Time",
+      "apply": "Apply with 1 Click",
+      "track": "Track & Interview"
+    },
+    "ctaBanner": "Ready to Join 10,000+ Seafarers Worldwide?",
+    "joinNow": "Join CrewApply Now"
+  },
+  "forEmployers": {
+    "title": "Hire Verified Maritime & Cruise Talent ",
+    "titleHighlight": "Faster.",
+    "subtitle": "Connect directly with qualified seafarers worldwide. Streamline your maritime recruitment with our smart matching tools.",
+    "values": {
+      "vetted": {
+        "title": "Pre-vetted Crew Profiles",
+        "desc": "Source candidates with verified STCW certs, CDC validity, and documented sea service, ready to deploy."
+      },
+      "matching": {
+        "title": "Smart Rank Matching",
+        "desc": "Filter by vessel experience (passenger, LNG, bulk carrier), specific ranks, and contract availability dates."
+      },
+      "pipeline": {
+        "title": "Efficient Hiring Pipeline",
+        "desc": "Experience streamlined candidate shortlisting and direct communications all from one central dashboard."
+      }
+    },
+    "partnerTitle": "Partner With Us",
+    "partnerDesc": "Tell us about your crewing needs and our team will get in touch to set up your employer account.",
+    "form": {
+      "companyName": "Company / Agency Name",
+      "workEmail": "Work Email",
+      "fleetSize": "Fleet Size",
+      "fleetSmall": "1-10 Vessels",
+      "fleetMedium": "11-50 Vessels",
+      "fleetLarge": "50+ Vessels",
+      "hiringNeeds": "Immediate Hiring Needs",
+      "hiringNeedsPlaceholder": "Tell us which ranks or vessel types you are urgently hiring for...",
+      "submit": "Submit Inquiry"
+    }
+  },
+  "howItWorks": {
+    "title": "How CrewApply ",
+    "titleHighlight": "Works.",
+    "subtitle": "A simple, transparent pathway from your job search to embarking your ship.",
+    "step": "Step {{n}}",
+    "steps": {
+      "profile": {
+        "title": "Build Your Maritime Profile",
+        "desc": "Input your rank, sea service time, and STCW certifications in one centralized digital profile."
+      },
+      "discover": {
+        "title": "Discover Tailored Vacancies",
+        "desc": "Filter by vessel type (cruise, tanker, offshore, container) to find the perfect contract."
+      },
+      "apply": {
+        "title": "Apply & Stand Out",
+        "desc": "Submit applications instantly with tailored maritime resumes and verified document attachments."
+      },
+      "interview": {
+        "title": "Direct Interview & Onboarding",
+        "desc": "Access interview preparation guides, breeze through agency screening, and receive travel details."
+      }
+    },
+    "faqTitle": "Frequently Asked Questions",
+    "faqs": {
+      "costs": {
+        "q": "What are the costs for seafarers?",
+        "a": "Creating a profile, uploading documents, and applying for jobs is completely without cost for all seafarers. We do not charge crew members any placement fees."
+      },
+      "security": {
+        "q": "How are my documents kept secure?",
+        "a": "Your STCW, CDC, and medical documents are encrypted and stored securely. Only verified employers you apply to can view your confidential documents."
+      },
+      "verified": {
+        "q": "Are the job listings verified?",
+        "a": "Absolutely. We strictly vet all manning agencies and employers on our platform to ensure they comply with MLC 2006 standards. No middlemen scams."
+      }
+    }
+  }
+}

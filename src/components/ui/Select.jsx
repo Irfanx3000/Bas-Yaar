@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useId, useMemo, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Icon } from "./Icon";
 import { dropStyle, useDropPlacement } from "./useDropPlacement";
 
@@ -74,7 +75,7 @@ export function Select({
   error,
   hint,
   options = [],
-  placeholder = "Select an option",
+  placeholder: placeholderProp,
   value,
   onChange,
   disabled = false,
@@ -84,9 +85,12 @@ export function Select({
   className = "",
   containerClassName = "",
   searchable = false,
-  searchPlaceholder = "Search...",
+  searchPlaceholder: searchPlaceholderProp,
   loading = false,
 }) {
+  const { t } = useTranslation();
+  const placeholder = placeholderProp ?? t("web.ui.select.placeholder");
+  const searchPlaceholder = searchPlaceholderProp ?? t("common.search");
   const generatedId = useId();
   const selectId = id ?? generatedId;
   const listId = `${selectId}-list`;
@@ -248,7 +252,7 @@ export function Select({
       ? "border-primary"
       : "border-line-input";
 
-  const emptyText = loading ? "Loading..." : searchable && query.trim() ? "No results found" : "No options";
+  const emptyText = loading ? t("common.loading") : searchable && query.trim() ? t("common.noResults") : t("web.ui.select.noOptions");
 
   return (
     <div className={`mb-3 ${containerClassName}`} ref={rootRef}>

@@ -1,0 +1,97 @@
+{
+  "dashboard": {
+    "browseJobs": "Browse jobs",
+    "featuredError": "We couldn't load featured jobs.",
+    "noApplications": "You haven't applied to anything yet.",
+    "nextSteps": "Next steps",
+    "cvMessage": "A strong CV increases your chances of getting hired.",
+    "createCv": "Create your CV",
+    "trackTitle": "Track your applications",
+    "trackMessage": "We'll notify you the moment there's an update.",
+    "viewApplications": "View applications"
+  },
+  "home": {
+    "heroAlt": "CrewApply Cruise Careers",
+    "welcomeBack": "Welcome Back",
+    "there": "there",
+    "justNow": "just now",
+    "cvUploaded": "CV uploaded",
+    "percentComplete": "{{percent}}% complete"
+  },
+  "list": {
+    "title": "Jobs",
+    "openCount_one": "{{count}} open",
+    "openCount_other": "{{count}} open",
+    "searchLabel": "Search jobs",
+    "filters": "Filters",
+    "close": "Close",
+    "searching": "Searching…",
+    "searchFailed": "Search failed. Try again.",
+    "noSuggestions": "No suggestions for “{{query}}”.",
+    "clearAll": "Clear all",
+    "emptyTitle": "No jobs match those filters",
+    "emptyMessage": "Try removing a filter or searching for a different rank."
+  },
+  "details": {
+    "badLink": "That job link doesn't look right.",
+    "notFound": "That job could not be found.",
+    "goBack": "Go back",
+    "responsibilities": "Responsibilities",
+    "benefits": "Benefits",
+    "noRequirements": "No specific requirements were listed.",
+    "rank": "Rank",
+    "vessel": "Vessel",
+    "vacancies": "Vacancies",
+    "joining": "Joining",
+    "deadline": "Deadline"
+  },
+  "saved": {
+    "count_one": "{{count}} saved",
+    "count_other": "{{count}} saved",
+    "searchPlaceholder": "Search your saved jobs",
+    "searchLabel": "Search saved jobs",
+    "emptyMessage": "Tap the bookmark on any job to keep it here for later."
+  },
+  "search": {
+    "placeholder": "Search jobs, ranks, vessels…",
+    "resultsFor_one": "{{count}} result for “{{query}}”",
+    "resultsFor_other": "{{count}} results for “{{query}}”",
+    "noMatchTitle": "Nothing matched “{{query}}”",
+    "noMatchMessage": "Try a rank, a vessel type, or a shorter term.",
+    "youMightLike": "You might like these",
+    "idleTitle": "Search for a job",
+    "idleMessage": "Try a rank like “Second Engineer”, or a vessel type."
+  },
+  "applications": {
+    "subtitle": "Track the status of all the jobs you've applied for.",
+    "emptyTitle": "Nothing here yet",
+    "emptyAll": "You haven't applied to any jobs yet.",
+    "emptyStatus": "No applications with this status.",
+    "supportHeading": "Support & Advisory Services",
+    "needHelpTitle": "Need Assistance?",
+    "needHelpMessage": "Get in touch with our marine career advisors for help with your applications.",
+    "consultancyTitle": "1-on-1 Consultancy",
+    "expert": "Expert",
+    "consultancyMessage": "Get expert guidance for your marine career in a live meeting.",
+    "bookMeeting": "Book Live Meeting"
+  },
+  "card": {
+    "tierStart": "Start",
+    "tierSail": "Sail",
+    "tierPremium": "Premium",
+    "urgent": "Urgent",
+    "saveLabel": "Save {{title}}",
+    "unsaveLabel": "Remove {{title}} from saved jobs",
+    "withdraw": "Withdraw Application",
+    "detailsUnavailable": "Details unavailable"
+  },
+  "topSearch": {
+    "groupJobs": "Jobs",
+    "groupApplications": "Applications",
+    "groupPeople": "People",
+    "groupSubscriptions": "Subscriptions",
+    "clear": "Clear search",
+    "noResults": "No results for “{{query}}”.",
+    "seeAll": "See all results for “{{query}}”"
+  }
+}

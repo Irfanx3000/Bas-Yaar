@@ -27,7 +27,7 @@
 import Link from "next/link";
 import { useApplicationsData } from "@/hooks/useApplicationsData";
 import { APPLICATION_TABS } from "@/constants/applications.constants";
-import { t } from "@/i18n";
+import { useTranslation } from "react-i18next";
 import {
   ApplicationCard,
   Button,
@@ -45,6 +45,7 @@ import {
 const WITHDRAWABLE = APPLICATION_TABS.find((tab) => tab.id === "active")?.statuses ?? [];
 
 export default function ApplicationsPage() {
+  const { t } = useTranslation();
   const {
     tabs,
     activeTab,
@@ -62,14 +63,14 @@ export default function ApplicationsPage() {
     <div className="mx-auto max-w-6xl px-[15px] pb-8 lg:px-6">
       <header className="flex flex-wrap items-start justify-between gap-3 pt-2 pb-4">
         <div className="min-w-0">
-          <h1 className="text-h2 font-extrabold text-heading">My Applications</h1>
+          <h1 className="text-h2 font-extrabold text-heading">{t("applications.title")}</h1>
           <p className="mt-[2px] text-md text-body">
-            Track the status of all the jobs you&apos;ve applied for.
+            {t("web.jobs.applications.subtitle")}
           </p>
         </div>
         <Link href="/cv" className="shrink-0">
           <Button variant="outline" size="sm" icon="file-alt">
-            Your CV
+            {t("applications.yourCV")}
           </Button>
         </Link>
       </header>
@@ -104,15 +105,15 @@ export default function ApplicationsPage() {
           ) : applications.length === 0 ? (
             <EmptyState
               icon="file-alt"
-              title="Nothing here yet"
+              title={t("web.jobs.applications.emptyTitle")}
               message={
                 activeTab === "all"
-                  ? "You haven't applied to any jobs yet."
-                  : "No applications with this status."
+                  ? t("web.jobs.applications.emptyAll")
+                  : t("web.jobs.applications.emptyStatus")
               }
               action={
                 <Link href="/jobs">
-                  <Button>Browse jobs</Button>
+                  <Button>{t("web.jobs.dashboard.browseJobs")}</Button>
                 </Link>
               }
             />
@@ -149,7 +150,7 @@ export default function ApplicationsPage() {
             <div className="flex items-center gap-2 border-b border-line-soft bg-primary-light/60 px-5 py-3">
               <Icon name="cog" size={14} className="text-primary" />
               <h2 className="text-xs font-extrabold tracking-wider uppercase text-primary">
-                Support & Advisory Services
+                {t("web.jobs.applications.supportHeading")}
               </h2>
             </div>
 
@@ -160,15 +161,15 @@ export default function ApplicationsPage() {
                   <Icon name="help-circle" size={20} />
                 </span>
                 <div className="min-w-0 flex-1">
-                  <h3 className="text-md font-bold text-heading">Need Assistance?</h3>
+                  <h3 className="text-md font-bold text-heading">{t("web.jobs.applications.needHelpTitle")}</h3>
                   <p className="mt-0.5 text-xs leading-relaxed text-body">
-                    Get in touch with our marine career advisors for help with your applications.
+                    {t("web.jobs.applications.needHelpMessage")}
                   </p>
                   <Link
                     href="/settings"
                     className="press mt-2.5 inline-flex items-center gap-1.5 rounded-lg border border-primary/30 bg-primary-light/50 px-3 py-1.5 text-xs font-bold text-primary transition-colors hover:bg-primary hover:text-white"
                   >
-                    Contact Support
+                    {t("applications.support.contact")}
                     <Icon name="arrow-right" size={10} />
                   </Link>
                 </div>
@@ -185,19 +186,19 @@ export default function ApplicationsPage() {
                   </span>
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center justify-between">
-                      <h3 className="text-md font-bold text-heading">1-on-1 Consultancy</h3>
+                      <h3 className="text-md font-bold text-heading">{t("web.jobs.applications.consultancyTitle")}</h3>
                       <span className="rounded-full bg-secondary-tint px-2 py-0.5 text-[10px] font-extrabold uppercase text-warning-text">
-                        Expert
+                        {t("web.jobs.applications.expert")}
                       </span>
                     </div>
                     <p className="mt-0.5 text-xs leading-relaxed text-body">
-                      Get expert guidance for your marine career in a live meeting.
+                      {t("web.jobs.applications.consultancyMessage")}
                     </p>
                     <Link
                       href="/consultancy"
                       className="bg-gradient-primary press mt-2.5 block w-full rounded-lg py-2 text-center text-xs font-extrabold text-on-primary shadow-xs"
                     >
-                      Book Live Meeting
+                      {t("web.jobs.applications.bookMeeting")}
                     </Link>
                   </div>
                 </div>

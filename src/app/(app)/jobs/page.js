@@ -15,6 +15,7 @@
 
 import { Suspense, useState, useId, useRef, useEffect } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
+import { useTranslation } from "react-i18next";
 import { useJobsData } from "@/hooks/useJobsData";
 import { jobHref } from "@/lib/jobUrl";
 import { searchService } from "@/services/search.service";
@@ -83,6 +84,7 @@ export default function JobsPage() {
 }
 
 function JobsBrowser() {
+  const { t } = useTranslation();
   const params = useSearchParams();
   const router = useRouter();
   const {
@@ -168,19 +170,19 @@ function JobsBrowser() {
   const filters = (
     <div className="space-y-3">
       <FilterGroup
-        title="Category"
+        title={t("jobs.filterModal.category")}
         options={categoryOptions}
         selected={selectedCategories}
         onToggle={(v) => setFilter("categories", v)}
       />
       <FilterGroup
-        title="Department"
+        title={t("jobs.filterModal.department")}
         options={departmentOptions}
         selected={selectedDepartments}
         onToggle={(v) => setFilter("departments", v)}
       />
       <FilterGroup
-        title="Vessel type"
+        title={t("jobs.filterModal.vesselType")}
         options={vesselTypeOptions}
         selected={selectedVesselTypes}
         onToggle={(v) => setFilter("vesselTypes", v)}
@@ -192,9 +194,9 @@ function JobsBrowser() {
     <div className="mx-auto max-w-6xl px-[15px] pb-8 lg:px-6">
       <SectionTitle
         className="pt-2"
-        action={!isLoading && !error ? <span className="text-sm text-body">{resultCount} open</span> : null}
+        action={!isLoading && !error ? <span className="text-sm text-body">{t("web.jobs.list.openCount", { count: resultCount })}</span> : null}
       >
-        Jobs
+        {t("web.jobs.list.title")}
       </SectionTitle>
 
       <div className="mt-3 relative w-full" ref={searchRootRef}>
@@ -225,8 +227,8 @@ function JobsBrowser() {
               }}
               onFocus={() => setOpenSuggest(true)}
               onKeyDown={(e) => e.key === "Escape" && setOpenSuggest(false)}
-              placeholder="Search by job title, skills…"
-              aria-label="Search jobs"
+              placeholder={t("common.searchJobsPlaceholder")}
+              aria-label={t("web.jobs.list.searchLabel")}
               className="w-full min-w-0 bg-transparent text-md text-heading outline-none focus-visible:outline-none placeholder:text-hint"
             />
           </div>
@@ -235,13 +237,13 @@ function JobsBrowser() {
             <details className="group">
               <summary
                 className="inline-flex h-[50px] w-[50px] cursor-pointer items-center justify-center rounded-[12px] border border-line-input bg-surface text-primary shadow-sm transition-[color,box-shadow] duration-[180ms] ease-standard hover:bg-surface-hover list-none [&::-webkit-details-marker]:hidden"
-                aria-label="Filters"
+                aria-label={t("web.jobs.list.filters")}
               >
                 <Icon name="filter" size={20} />
               </summary>
               <div className="absolute right-0 top-[60px] w-full max-w-[320px] rounded-[12px] border border-line-soft bg-surface p-4 shadow-lg z-50">
                 <div className="mb-3 flex items-center justify-between">
-                  <h2 className="text-md font-bold text-heading">Filters</h2>
+                  <h2 className="text-md font-bold text-heading">{t("web.jobs.list.filters")}</h2>
                   <button
                     type="button"
                     className="text-xs font-semibold text-primary hover:underline cursor-pointer"
@@ -249,7 +251,7 @@ function JobsBrowser() {
                       e.target.closest("details").removeAttribute("open");
                     }}
                   >
-                    Close
+                    {t("web.jobs.list.close")}
                   </button>
                 </div>
                 {filters}
@@ -259,7 +261,7 @@ function JobsBrowser() {
 
           <Button 
             type="submit" 
-            aria-label="Search"
+            aria-label={t("search.title")}
             className="h-[50px] w-[50px] shrink-0 !px-0 flex items-center justify-center rounded-[12px]"
           >
             <Icon name="search" size={18} />
@@ -272,11 +274,11 @@ function JobsBrowser() {
               className={`scrollbar-thin absolute left-0 z-50 flex max-h-[26rem] w-full flex-col overflow-y-auto rounded-[12px] border border-line-soft bg-surface p-[5px] shadow-lg ${dropClass(placement)}`}
             >
               {suggestState === "loading" ? (
-                <p className="animate-pulse px-3 py-4 text-center text-sm text-hint">Searching…</p>
+                <p className="animate-pulse px-3 py-4 text-center text-sm text-hint">{t("web.jobs.list.searching")}</p>
               ) : suggestState === "error" ? (
-                <p className="px-3 py-4 text-center text-sm text-danger">Search failed. Try again.</p>
+                <p className="px-3 py-4 text-center text-sm text-danger">{t("web.jobs.list.searchFailed")}</p>
               ) : suggestions.length === 0 ? (
-                <p className="px-3 py-4 text-center text-sm text-hint">No suggestions for “{query.trim()}”.</p>
+                <p className="px-3 py-4 text-center text-sm text-hint">{t("web.jobs.list.noSuggestions", { query: query.trim() })}</p>
               ) : (
                 <>
                   {suggestions.map((row) => (
@@ -316,7 +318,7 @@ function JobsBrowser() {
             onClick={() => applyFilters({ departments: [], vesselTypes: [], categories: [] })}
             className="ml-2 cursor-pointer text-xs font-semibold text-primary hover:underline"
           >
-            Clear all
+            {t("web.jobs.list.clearAll")}
           </button>
         </div>
       ) : null}
@@ -324,7 +326,7 @@ function JobsBrowser() {
       <div className="mt-4 lg:grid lg:grid-cols-[16rem_1fr] lg:gap-6">
         <aside className="mb-4 lg:mb-0">
           <div className="hidden rounded-md border border-line-soft bg-surface p-4 lg:block">
-            <h2 className="text-md font-bold text-heading">Filters</h2>
+            <h2 className="text-md font-bold text-heading">{t("web.jobs.list.filters")}</h2>
             <div className="mt-3">{filters}</div>
           </div>
         </aside>
@@ -337,8 +339,8 @@ function JobsBrowser() {
           ) : jobs.length === 0 ? (
             <EmptyState
               icon="briefcase"
-              title="No jobs match those filters"
-              message="Try removing a filter or searching for a different rank."
+              title={t("web.jobs.list.emptyTitle")}
+              message={t("web.jobs.list.emptyMessage")}
             />
           ) : (
             <div className="grid-cards">

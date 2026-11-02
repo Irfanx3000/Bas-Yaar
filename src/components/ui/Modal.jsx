@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { useTranslation } from "react-i18next";
 import { Icon } from "./Icon";
 import { Button } from "./Button";
 
@@ -16,6 +17,7 @@ import { Button } from "./Button";
  * stacking for free, which is most of what a modal library sells.
  */
 export function Modal({ open, onClose, title, children, footer, size = "md" }) {
+  const { t } = useTranslation();
   const ref = useRef(null);
 
   useEffect(() => {
@@ -82,7 +84,7 @@ export function Modal({ open, onClose, title, children, footer, size = "md" }) {
         <button
           type="button"
           onClick={onClose}
-          aria-label="Close"
+          aria-label={t("web.ui.modal.close")}
           className="-mt-1 -mr-1 shrink-0 cursor-pointer rounded-round p-2 text-hint hover:bg-canvas hover:text-heading"
         >
           <Icon name="times" size={16} />
@@ -111,26 +113,27 @@ export function ConfirmationModal({
   open,
   onClose,
   onConfirm,
-  title = "Are you sure?",
+  title,
   message,
-  confirmLabel = "Confirm",
-  cancelLabel = "Cancel",
+  confirmLabel,
+  cancelLabel,
   destructive = false,
   loading = false,
 }) {
+  const { t } = useTranslation();
   return (
     <Modal
       open={open}
       onClose={onClose}
-      title={title}
+      title={title ?? t("web.ui.modal.confirmTitle")}
       size="sm"
       footer={
         <>
           <Button variant="text" onClick={onClose}>
-            {cancelLabel}
+            {cancelLabel ?? t("common.cancel")}
           </Button>
           <Button tone={destructive ? "danger" : "primary"} loading={loading} onClick={onConfirm}>
-            {confirmLabel}
+            {confirmLabel ?? t("web.ui.modal.confirm")}
           </Button>
         </>
       }

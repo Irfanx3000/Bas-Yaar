@@ -1,4 +1,7 @@
+"use client";
+
 import Image from "next/image";
+import { useTranslation } from "react-i18next";
 import { Icon } from "./Icon";
 import { toMediaUrl } from "@/constants/app.constants";
 
@@ -11,6 +14,7 @@ const AVATAR_SIZE = { sm: 32, md: 40, lg: 56, xl: 88 };
  * app's own helper, so a stored relative path ("uploads/profile/x.webp") and an
  * absolute URL both work. */
 export function Avatar({ src, name = "", size = "md", showEditOverlay = false, onEditClick, className = "" }) {
+  const { t } = useTranslation();
   const px = AVATAR_SIZE[size] ?? AVATAR_SIZE.md;
   const url = toMediaUrl(src);
   const initials = name
@@ -27,7 +31,7 @@ export function Avatar({ src, name = "", size = "md", showEditOverlay = false, o
         style={{ width: px, height: px, fontSize: Math.round(px * 0.36) }}
       >
         {url ? (
-          <Image src={url} alt={name || "Profile photo"} width={px} height={px} className="size-full object-cover" />
+          <Image src={url} alt={name || t("profile.photo.sheetTitle")} width={px} height={px} className="size-full object-cover" />
         ) : initials ? (
           initials
         ) : (
@@ -39,7 +43,7 @@ export function Avatar({ src, name = "", size = "md", showEditOverlay = false, o
         <button
           type="button"
           onClick={onEditClick}
-          aria-label="Change photo"
+          aria-label={t("web.ui.display.changePhoto")}
           className="absolute right-0 bottom-0 flex size-6 cursor-pointer items-center justify-center rounded-full border border-surface bg-primary text-white shadow-xs transition-transform hover:scale-110 active:scale-95"
         >
           <Icon name="camera" size={11} />
@@ -50,6 +54,7 @@ export function Avatar({ src, name = "", size = "md", showEditOverlay = false, o
 }
 
 export function ProgressBar({ value = 0, label, className = "" }) {
+  const { t } = useTranslation();
   const pct = Math.max(0, Math.min(100, Math.round(value)));
 
   // Color semantics based on completion percent
@@ -77,7 +82,7 @@ export function ProgressBar({ value = 0, label, className = "" }) {
         aria-valuenow={pct}
         aria-valuemin={0}
         aria-valuemax={100}
-        aria-label={label || "Progress"}
+        aria-label={label || t("web.ui.display.progress")}
         className="h-2.5 w-full overflow-hidden rounded-full bg-primary-tint/60 p-[1px]"
       >
         <div

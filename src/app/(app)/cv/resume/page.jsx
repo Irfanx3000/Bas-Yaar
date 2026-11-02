@@ -28,7 +28,8 @@ import { TemplateCard } from "@/components/cv/TemplateCard";
 import { ResumePreviewModal } from "@/components/cv/ResumePreviewModal";
 import { showAlert } from "@/utils/alertRef";
 import { getErrorMessage } from "@/i18n/getErrorMessage";
-import { t } from "@/i18n";
+import { useTranslation } from "react-i18next";
+import i18n from "@/i18n";
 import { Button, ErrorState, Icon, Input, LoadingState } from "@/components/ui";
 
 // Same rule as the backend's textSanitizer.js — caught here before a round trip.
@@ -38,7 +39,7 @@ const OBJECTIVE_MAX = 1000;
 
 const toggleId = (ids, id) => (ids.includes(id) ? ids.filter((i) => i !== id) : [...ids, id]);
 
-const validateTitle = (value) => {
+const validateTitle = (value, t) => {
   const trimmed = (value || "").trim();
   if (!trimmed) return t("careerProfile.editor.errors.required");
   if (!NO_HTML_REGEX.test(trimmed)) return t("careerProfile.editor.errors.noHtml");
@@ -46,7 +47,7 @@ const validateTitle = (value) => {
   return null;
 };
 
-const validateObjective = (value) => {
+const validateObjective = (value, t) => {
   const trimmed = (value || "").trim();
   if (!trimmed) return null; // optional
   if (!NO_HTML_REGEX.test(trimmed)) return t("careerProfile.editor.errors.noHtml");
@@ -69,6 +70,7 @@ function Frame({ children }) {
 }
 
 function ResumeEditor() {
+  const { t } = useTranslation();
   const router = useRouter();
   const resumeId = useSearchParams().get("id");
   const isEditing = !!resumeId;
@@ -109,7 +111,7 @@ function ResumeEditor() {
         });
       })
       .catch((err) => {
-        if (!ignore) setLoadError(getErrorMessage(err, t));
+        if (!ignore) setLoadError(getErrorMessage(err, i18n.t));
       });
     return () => {
       ignore = true;
@@ -124,8 +126,8 @@ function ResumeEditor() {
     });
 
   const validateForSave = () => {
-    const titleError = validateTitle(title);
-    const objectiveError = validateObjective(objectiveOverride);
+    const titleError = validateTitle(title, t);
+    const objectiveError = validateObjective(objectiveOverride, t);
     setErrors({ title: titleError, objectiveOverride: objectiveError });
     return !titleError && !objectiveError;
   };
@@ -226,7 +228,7 @@ function ResumeEditor() {
           className="mb-2 inline-flex items-center gap-1.5 text-sm font-semibold text-primary hover:underline"
         >
           <Icon name="chevron-left" size={11} />
-          My CV
+          {t("web.profile.cv.title")}
         </Link>
         <h1 className="text-h2 font-extrabold text-heading">
           {t(isEditing ? "careerProfile.resumeEditor.editTitle" : "careerProfile.resumeEditor.createTitle")}
@@ -244,7 +246,7 @@ function ResumeEditor() {
         maxLength={TITLE_MAX}
         placeholder={t("careerProfile.resumeEditor.titlePlaceholder")}
         onChange={(e) => setTitle(e.target.value)}
-        onBlur={() => setErrors((prev) => ({ ...prev, title: validateTitle(title) }))}
+        onBlur={() => setErrors((prev) => ({ ...prev, title: validateTitle(title, t) }))}
         error={errors.title}
       />
 
@@ -259,7 +261,7 @@ function ResumeEditor() {
       {templatesLoading && templates.length === 0 ? (
         <LoadingState rows={2} />
       ) : (
-        <div className="grid grid-cols-[repeat(auto-fill,minmax(min(100%,9rem),1fr))] gap-3" role="group" aria-label="Templates">
+        <div className="grid grid-cols-[repeat(auto-fill,minmax(min(100%,9rem),1fr))] gap-3" role="group" aria-label={t("web.profile.resume.templates")}>
           {templates.map((tpl) => (
             <TemplateCard
               key={tpl._id}
@@ -283,7 +285,7 @@ function ResumeEditor() {
           placeholder={profile?.careerObjective || t("careerProfile.resumeEditor.objectivePlaceholder")}
           onChange={(e) => setObjectiveOverride(e.target.value)}
           onBlur={() =>
-            setErrors((prev) => ({ ...prev, objectiveOverride: validateObjective(objectiveOverride) }))
+            setErrors((prev) => ({ ...prev, objectiveOverride: validateObjective(objectiveOverride, t) }))
           }
           aria-invalid={errors.objectiveOverride ? true : undefined}
           className={`w-full rounded-[12px] border bg-surface px-4 py-3 text-md text-heading outline-none placeholder:text-hint focus-visible:outline-none ${

@@ -1,0 +1,43 @@
+{
+  "badge": {
+    "declined": "अस्वीकार किया",
+    "withdrawn": "वापस लिया गया",
+    "filter": "फ़िल्टर",
+    "remove": "{{name}} हटाएँ"
+  },
+  "cardMedia": {
+    "vesselImage": "जहाज़ की तस्वीर"
+  },
+  "datePicker": {
+    "placeholder": "दिन-माह-वर्ष",
+    "chooseDate": "तारीख चुनें",
+    "previousMonth": "पिछला महीना",
+    "nextMonth": "अगला महीना",
+    "clear": "साफ़ करें"
+  },
+  "display": {
+    "changePhoto": "फ़ोटो बदलें",
+    "progress": "प्रगति"
+  },
+  "feedback": {
+    "loadFailed": "इसे लोड नहीं किया जा सका",
+    "tryAgain": "फिर से कोशिश करें"
+  },
+  "modal": {
+    "close": "बंद करें",
+    "confirmTitle": "क्या आप निश्चित हैं?",
+    "confirm": "पुष्टि करें"
+  },
+  "pagination": {
+    "label": "पेज नेविगेशन",
+    "previousPage": "पिछला पेज",
+    "nextPage": "अगला पेज"
+  },
+  "promoBanner": {
+    "showBanner": "बैनर {{current}} / {{total}} दिखाएँ"
+  },
+  "select": {
+    "placeholder": "कोई विकल्प चुनें",
+    "noOptions": "कोई विकल्प नहीं"
+  }
+}

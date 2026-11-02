@@ -11,6 +11,8 @@
 import { Suspense, useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
+import { useTranslation } from "react-i18next";
+import i18n from "@/i18n";
 import { authService } from "@/services/auth.service";
 import { getErrorMessage } from "@/i18n/getErrorMessage";
 import { Button, Card, InlineAlert, Input } from "@/components/ui";
@@ -26,6 +28,7 @@ export default function ResetPasswordPage() {
 }
 
 function ResetForm() {
+  const { t } = useTranslation();
   const router = useRouter();
   const params = useSearchParams();
 
@@ -43,7 +46,7 @@ function ResetForm() {
     setFieldError(null);
 
     if (newPassword !== confirmPassword) {
-      setFieldError("Those passwords do not match.");
+      setFieldError(i18n.t("auth.stayConnected.passwordMismatchBody"));
       return;
     }
 
@@ -66,12 +69,12 @@ function ResetForm() {
   return (
     <main className="flex min-h-dvh items-center justify-center px-[15px] py-8">
       <Card className="w-full max-w-sm" elevation="md">
-        <h1 className="text-h2 font-extrabold text-heading">Choose a new password</h1>
-        <p className="mt-[5px] text-md text-body">Enter the code we emailed you.</p>
+        <h1 className="text-h2 font-extrabold text-heading">{t("web.auth.reset.title")}</h1>
+        <p className="mt-[5px] text-md text-body">{t("web.auth.reset.subtitle")}</p>
 
         <form onSubmit={onSubmit} className="mt-5">
           <Input
-            label="Email address"
+            label={t("auth.stayConnected.emailLabel")}
             type="email"
             required
             icon="email"
@@ -80,7 +83,7 @@ function ResetForm() {
           />
 
           <Input
-            label="Verification code"
+            label={t("web.auth.reset.codeLabel")}
             required
             inputMode="numeric"
             autoComplete="one-time-code"
@@ -91,7 +94,7 @@ function ResetForm() {
           />
 
           <Input
-            label="New password"
+            label={t("auth.resetPassword.newPasswordLabel")}
             type="password"
             required
             minLength={8}
@@ -99,11 +102,11 @@ function ResetForm() {
             autoComplete="new-password"
             value={newPassword}
             onChange={(e) => setNewPassword(e.target.value)}
-            hint="At least 8 characters."
+            hint={t("web.auth.reset.passwordHint")}
           />
 
           <Input
-            label="Confirm new password"
+            label={t("web.auth.reset.confirmLabel")}
             type="password"
             required
             icon="lock"
@@ -120,13 +123,13 @@ function ResetForm() {
           ) : null}
 
           <Button type="submit" fullWidth loading={submitting} disabled={otp.length !== OTP_LENGTH}>
-            Reset password
+            {t("auth.resetPassword.submit")}
           </Button>
         </form>
 
         <p className="mt-4 text-center text-md text-body">
           <Link href="/forgot-password" className="font-semibold text-primary hover:underline">
-            Send a new code
+            {t("web.auth.reset.sendNewCode")}
           </Link>
         </p>
       </Card>

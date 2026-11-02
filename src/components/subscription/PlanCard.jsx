@@ -1,3 +1,6 @@
+"use client";
+
+import { useTranslation } from "react-i18next";
 import { Card } from "../ui/Card";
 import { Button } from "../ui/Button";
 import { Icon } from "../ui/Icon";
@@ -50,6 +53,7 @@ const THEME = {
 };
 
 export function PlanCard({ plan, isCurrent, subscribing, disabled, onSelect }) {
+  const { t } = useTranslation();
   const theme = THEME[plan.theme] ?? THEME.purple;
   const isPopular = plan.theme === "blue";
 
@@ -62,7 +66,7 @@ export function PlanCard({ plan, isCurrent, subscribing, disabled, onSelect }) {
     >
       {isPopular ? (
         <span className="bg-primary text-on-primary absolute -top-3 left-1/2 flex -translate-x-1/2 items-center gap-1.5 rounded-pill px-4 py-1 text-xs font-bold whitespace-nowrap shadow-sm">
-          <span aria-hidden="true">👑</span> Most Popular
+          <span aria-hidden="true">👑</span> {t("web.account.subscription.mostPopular")}
         </span>
       ) : null}
 
@@ -79,7 +83,7 @@ export function PlanCard({ plan, isCurrent, subscribing, disabled, onSelect }) {
         >
           {plan.thenPrice ? (
             <span className={`mb-2 rounded-sm px-2 py-0.5 text-[10px] font-bold tracking-tight uppercase ${theme.chip}`}>
-              Launch Offer
+              {t("subscription.launchBadge")}
             </span>
           ) : null}
 
@@ -90,7 +94,7 @@ export function PlanCard({ plan, isCurrent, subscribing, disabled, onSelect }) {
               null otherwise, and "then ₹X" with no discount is a lie. */}
           {plan.thenPrice ? (
             <span className="mt-2 text-[10px] opacity-80">
-              then {plan.thenPrice} {plan.thenLabel}
+              {t("web.account.subscription.thenPrice", { price: plan.thenPrice, label: plan.thenLabel })}
             </span>
           ) : null}
         </div>
@@ -116,7 +120,7 @@ export function PlanCard({ plan, isCurrent, subscribing, disabled, onSelect }) {
           disabled={disabled || isCurrent}
           onClick={onSelect}
         >
-          {isCurrent ? "Current Plan" : plan.buttonLabel}
+          {isCurrent ? t("subscription.summary.currentPlanLabel") : plan.buttonLabel}
         </Button>
       </div>
     </Card>

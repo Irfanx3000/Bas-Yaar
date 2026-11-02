@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useCareerProfile } from "@/context/CareerProfileContext";
 import { useJobTaxonomyOptions } from "@/hooks/useJobTaxonomyOptions";
 import { getErrorMessage } from "@/i18n/getErrorMessage";
@@ -65,11 +66,15 @@ const TEXT_FIELDS = {
 const RESPONSIBILITY_MAX_LENGTH = 300;
 const RESPONSIBILITY_MAX_COUNT = 15;
 
-const TITLE = {
-  experience: "Sea Experience",
-  education: "Education",
-  skills: "Skill",
-  languages: "Language",
+/* Option values are what the backend stores; only the shown label is translated. */
+const optionsWithLabels = (values, prefix, t) =>
+  values.map((value) => ({ value, label: t(`${prefix}.${value}`) }));
+
+const TITLE_KEY = {
+  experience: "web.profile.cv.seaExperience",
+  education: "careerProfile.sections.education",
+  skills: "careerProfile.skills.name",
+  languages: "careerProfile.languages.name",
 };
 
 const EMPTY = {
@@ -85,6 +90,7 @@ const EMPTY = {
 const toPickerDate = (value) => (value ? String(value).slice(0, 10) : "");
 
 export function EntryModal({ open, section, entry, onClose }) {
+  const { t } = useTranslation();
   const { addEntry, updateEntry } = useCareerProfile() ?? {};
   const { vesselTypeOptions } = useJobTaxonomyOptions();
 
@@ -120,18 +126,18 @@ export function EntryModal({ open, section, entry, onClose }) {
     if (key === "responsibilities") {
       const lines = value.split("\n").map((s) => s.trim()).filter(Boolean);
       if (lines.length > RESPONSIBILITY_MAX_COUNT)
-        return `Keep it to ${RESPONSIBILITY_MAX_COUNT} lines or fewer.`;
+        return t("careerProfile.editor.errors.tooManyLines", { max: RESPONSIBILITY_MAX_COUNT });
       if (lines.some((l) => l.length > RESPONSIBILITY_MAX_LENGTH))
-        return `Each line must be ${RESPONSIBILITY_MAX_LENGTH} characters or fewer.`;
-      if (lines.some((l) => !NO_HTML.test(l))) return "Remove any < or > characters.";
+        return t("web.profile.entry.lineTooLong", { max: RESPONSIBILITY_MAX_LENGTH });
+      if (lines.some((l) => !NO_HTML.test(l))) return t("web.profile.entry.noAngleBrackets");
       return null;
     }
 
-    if (key === REQUIRED_FIELD[section] && !value.trim()) return "This is required.";
-    if (!NO_HTML.test(value)) return "Remove any < or > characters.";
+    if (key === REQUIRED_FIELD[section] && !value.trim()) return t("careerProfile.editor.errors.required");
+    if (!NO_HTML.test(value)) return t("web.profile.entry.noAngleBrackets");
 
     const cap = limitFor(key);
-    if (cap && value.length > cap) return `Must be ${cap} characters or fewer.`;
+    if (cap && value.length > cap) return t("careerProfile.editor.errors.tooLong", { max: cap });
     return null;
   };
 
@@ -217,14 +223,16 @@ export function EntryModal({ open, section, entry, onClose }) {
       open={open}
       onClose={onClose}
       size="lg"
-      title={`${isEditing ? "Edit" : "Add"} ${TITLE[section] ?? section}`}
+      title={t(isEditing ? "web.profile.entry.editTitle" : "web.profile.entry.addTitle", {
+        section: TITLE_KEY[section] ? t(TITLE_KEY[section]) : section,
+      })}
       footer={
         <>
           <Button variant="text" onClick={onClose}>
-            Cancel
+            {t("common.cancel")}
           </Button>
           <Button type="submit" form="cv-entry-form" loading={saving}>
-            {isEditing ? "Save changes" : "Add"}
+            {isEditing ? t("profile.personalInfo.save") : t("web.profile.common.add")}
           </Button>
         </>
       }
@@ -232,29 +240,29 @@ export function EntryModal({ open, section, entry, onClose }) {
       <form id="cv-entry-form" onSubmit={onSubmit}>
         {section === "experience" ? (
           <>
-            {field("role", "Rank / Role")}
+            {field("role", t("careerProfile.experience.role"))}
             <div className="grid gap-3 sm:grid-cols-2">
-              {field("vesselName", "Vessel name")}
+              {field("vesselName", t("careerProfile.experience.vesselName"))}
               <Select
-                label="Vessel type"
-                placeholder="Select"
+                label={t("careerProfile.experience.vesselType")}
+                placeholder={t("web.profile.common.select")}
                 options={vesselTypeOptions}
                 value={values.vesselType}
                 onChange={set("vesselType")}
               />
             </div>
-            {field("company", "Company")}
-            {field("location", "Location")}
+            {field("company", t("careerProfile.experience.company"))}
+            {field("location", t("careerProfile.contact.location"))}
             <div className="grid gap-3 sm:grid-cols-2">
               <DatePicker
-                label="Start date"
+                label={t("careerProfile.experience.startDate")}
                 yearsBack={60}
                 yearsForward={0}
                 value={values.startDate}
                 onChange={set("startDate")}
               />
               <DatePicker
-                label="End date"
+                label={t("careerProfile.experience.endDate")}
                 yearsBack={60}
                 yearsForward={0}
                 min={values.startDate || undefined}
@@ -270,11 +278,11 @@ export function EntryModal({ open, section, entry, onClose }) {
                 onChange={(e) => set("isCurrent")(e.target.checked)}
                 className="size-4 accent-primary"
               />
-              I currently work here
+              {t("careerProfile.experience.isCurrent")}
             </label>
             <TextArea
-              label="Responsibilities"
-              hint={`One per line, up to ${RESPONSIBILITY_MAX_COUNT}.`}
+              label={t("careerProfile.experience.responsibilities")}
+              hint={t("web.profile.entry.responsibilitiesHint", { max: RESPONSIBILITY_MAX_COUNT })}
               value={values.responsibilities}
               onChange={set("responsibilities")}
               error={errors.responsibilities}
@@ -285,22 +293,22 @@ export function EntryModal({ open, section, entry, onClose }) {
 
         {section === "education" ? (
           <>
-            {field("institution", "Institution")}
+            {field("institution", t("careerProfile.education.institution"))}
             <div className="grid gap-3 sm:grid-cols-2">
-              {field("degree", "Degree")}
-              {field("fieldOfStudy", "Field of study")}
+              {field("degree", t("careerProfile.education.degree"))}
+              {field("fieldOfStudy", t("careerProfile.education.fieldOfStudy"))}
             </div>
-            {field("location", "Location")}
+            {field("location", t("careerProfile.contact.location"))}
             <div className="grid gap-3 sm:grid-cols-2">
               <DatePicker
-                label="Start date"
+                label={t("careerProfile.experience.startDate")}
                 yearsBack={60}
                 yearsForward={10}
                 value={values.startDate}
                 onChange={set("startDate")}
               />
               <DatePicker
-                label="End date"
+                label={t("careerProfile.experience.endDate")}
                 yearsBack={60}
                 yearsForward={10}
                 min={values.startDate || undefined}
@@ -309,7 +317,7 @@ export function EntryModal({ open, section, entry, onClose }) {
               />
             </div>
             <TextArea
-              label="Description"
+              label={t("careerProfile.education.description")}
               value={values.description}
               onChange={set("description")}
               error={errors.description}
@@ -321,27 +329,27 @@ export function EntryModal({ open, section, entry, onClose }) {
 
         {section === "skills" ? (
           <>
-            {field("name", "Skill")}
+            {field("name", t("careerProfile.skills.name"))}
             <div className="grid gap-3 sm:grid-cols-2">
               <Select
-                label="Level"
-                placeholder="Select"
-                options={SKILL_LEVELS}
+                label={t("careerProfile.skills.level")}
+                placeholder={t("web.profile.common.select")}
+                options={optionsWithLabels(SKILL_LEVELS, "web.profile.entry.levels", t)}
                 value={values.level}
                 onChange={set("level")}
               />
-              {field("category", "Category")}
+              {field("category", t("careerProfile.skills.category"))}
             </div>
           </>
         ) : null}
 
         {section === "languages" ? (
           <>
-            {field("name", "Language")}
+            {field("name", t("careerProfile.languages.name"))}
             <Select
-              label="Proficiency"
-              placeholder="Conversational"
-              options={LANGUAGE_PROFICIENCY}
+              label={t("careerProfile.languages.proficiency")}
+              placeholder={t("web.profile.entry.proficiency.Conversational")}
+              options={optionsWithLabels(LANGUAGE_PROFICIENCY, "web.profile.entry.proficiency", t)}
               value={values.proficiency}
               onChange={set("proficiency")}
             />

@@ -1,0 +1,1081 @@
+{
+  "splash": {
+    "tagline": "Navigate Your Maritime Career"
+  },
+  "common": {
+    "back": "वापस",
+    "retry": "पुनः प्रयास करें",
+    "offline": "इंटरनेट कनेक्शन नहीं है",
+    "backOnline": "फिर से ऑनलाइन",
+    "couldNotLoad": "लोड नहीं हो सका। अपना कनेक्शन जाँचें।",
+    "cancel": "रद्द करें",
+    "save": "सहेजें",
+    "next": "आगे",
+    "skip": "छोड़ें",
+    "ok": "ठीक है",
+    "loading": "लोड हो रहा है...",
+    "viewAll": "सभी देखें",
+    "seeAll": "सभी देखें",
+    "somethingWentWrong": "कुछ गलत हो गया। कृपया पुनः प्रयास करें।",
+    "helpSupport": "सहायता और समर्थन",
+    "contactSupport": "सहायता से संपर्क करें",
+    "privacyPolicy": "गोपनीयता नीति",
+    "termsConditions": "नियम और शर्तें",
+    "error": "त्रुटि",
+    "search": "खोजें...",
+    "searchJobsPlaceholder": "नौकरी शीर्षक, कौशल से खोजें...",
+    "noResults": "कोई परिणाम नहीं मिला",
+    "moreOptions": {
+      "supportBody": "सहायता के लिए, कृपया हमसे संपर्क करें:\n{{email}}",
+      "emailUs": "हमें ईमेल करें",
+      "mailError": "मेल ऐप नहीं खोल सका।",
+      "privacyBody": "हम आपकी गोपनीयता को गंभीरता से लेते हैं। हमारी पूरी गोपनीयता नीति पढ़ने के लिए नीचे \"अधिक देखें\" पर टैप करें।",
+      "termsBody": "CrewApply का उपयोग करके, आप हमारी नियम और शर्तों से सहमत होते हैं। उन्हें पूरा पढ़ने के लिए नीचे \"अधिक देखें\" पर टैप करें।",
+      "viewMore": "अधिक देखें"
+    }
+  },
+  "language": {
+    "title": "भाषा",
+    "subtitle": "बेहतर अनुभव के लिए अपनी पसंदीदा भाषा चुनें",
+    "recommended": "अनुशंसित",
+    "all": "सभी भाषाएँ",
+    "comingSoon": "जल्द आ रहा है",
+    "comingSoonAlertTitle": "जल्द आ रहा है",
+    "comingSoonAlertBody": "{{language}} अभी उपलब्ध नहीं है — हम अभी भी इस पर काम कर रहे हैं। अंग्रेज़ी और हिंदी आज पूरी तरह से समर्थित हैं।"
+  },
+  "sidebar": {
+    "profileStrength": "प्रोफ़ाइल क्षमता",
+    "logout": "लॉग आउट",
+    "sections": {
+      "careerTools": "करियर टूल्स",
+      "growCareer": "अपना करियर बढ़ाएँ",
+      "support": "सहायता"
+    },
+    "items": {
+      "cv": "मेरा CV",
+      "saved": "सहेजी गई नौकरियाँ",
+      "documents": "मेरे दस्तावेज़",
+      "alerts": "नौकरी अलर्ट",
+      "subscription": "सब्सक्रिप्शन प्लान",
+      "refer": "रेफ़र करें और कमाएँ",
+      "interview": "इंटरव्यू तैयारी",
+      "supportCenter": "सहायता / हेल्प सेंटर",
+      "language": "भाषा",
+      "settings": "सेटिंग्स"
+    }
+  },
+  "home": {
+    "subscriptionAlert": {
+      "title": "कोई सक्रिय\nसब्सक्रिप्शन नहीं",
+      "subtitle": "अभी सब्सक्राइब करें और\nनौकरियों के लिए आवेदन शुरू करें",
+      "subscribe": "सब्सक्राइब करें"
+    },
+    "subscriptionStatus": {
+      "activeUntil": "{{date}} तक सक्रिय",
+      "expiresIn": "{{count}} दिन में समाप्त",
+      "expiresIn_plural": "{{count}} दिनों में समाप्त",
+      "active": "सक्रिय",
+      "manage": "प्रबंधित करें",
+      "renew": "नवीनीकरण"
+    },
+    "header": {
+      "welcomeBack": "वापसी पर स्वागत है 👋",
+      "exploreCareer": "वैश्विक क्रूज़ करियर खोजें",
+      "taglines": {
+        "jobsAvailable": "{{count}} job open now",
+        "jobsAvailable_plural": "{{count}} jobs open now",
+        "activeApplications": "{{count}} active application",
+        "activeApplications_plural": "{{count}} active applications",
+        "cvIncomplete": "Your CV is {{percent}}% complete",
+        "jobsSaved": "{{count}} saved job waiting",
+        "jobsSaved_plural": "{{count}} saved jobs waiting",
+        "findVoyage": "Find Your Next Voyage"
+      }
+    },
+    "cvStatus": {
+      "title": "आपका CV",
+      "subtitle": "एक मज़बूत CV आपके चयनित होने की संभावना बढ़ाता है",
+      "uploaded": "CV अपलोड हो गया",
+      "completion": "CV {{percent}}% पूर्ण",
+      "updated": "{{date}} को अपडेट किया गया",
+      "preview": "पूर्वावलोकन",
+      "update": "CV अपडेट करें",
+      "complete": "CV पूरा करें"
+    },
+    "applicationTracker": {
+      "title": "अपने आवेदनों को ट्रैक करें और अपडेट रहें",
+      "subtitle": "कोई अपडेट होने पर हम आपको सूचित करेंगे"
+    },
+    "consultancy": {
+      "title": "व्यक्तिगत परामर्श",
+      "subtitle": "लाइव 1-ऑन-1 मीटिंग में अपने समुद्री करियर के लिए विशेषज्ञ मार्गदर्शन प्राप्त करें।",
+      "book": "लाइव मीटिंग बुक करें"
+    },
+    "categories": {
+      "title": "श्रेणियाँ"
+    },
+    "jobSearch": {
+      "searchPlaceholder": "नौकरी शीर्षक, कौशल से खोजें...",
+      "locationPlaceholder": "सभी स्थान",
+      "searchButton": "नौकरियाँ खोजें",
+      "noSuggestions": "कोई मेल खाती नौकरी नहीं मिली"
+    }
+  },
+  "categories": {
+    "deck": "डेक",
+    "engine": "इंजन",
+    "hospitality": "आतिथ्य",
+    "catering": "खानपान",
+    "others": "अन्य"
+  },
+  "subscription": {
+    "screenTitle": "सब्सक्रिप्शन और प्लान",
+    "screenSubtitle": "वह प्लान चुनें जो आपको आपकी मनचाही नौकरी के करीब ले जाए।",
+    "bannerHeading": "अधिक अवसर अनलॉक करें",
+    "bannerBody": "अधिक नौकरियों के लिए आवेदन करने, फ़ीचर होने और प्राथमिकता सहायता पाने के लिए अपना प्लान अपग्रेड करें।",
+    "launchBadge": "लॉन्च ऑफ़र",
+    "infoHeading": "महत्वपूर्ण जानकारी",
+    "infoBody": "Crew Connect उम्मीदवारों को क्रूज़ शिप नौकरियाँ खोजने और उनके लिए आवेदन करने में मदद करता है। हम नौकरी मिलने या भर्ती के परिणामों की गारंटी नहीं देते। अंतिम निर्णय भर्तीकर्ता और क्रूज़ कंपनियाँ लेती हैं।",
+    "terms": "जारी रखकर, आप हमारी शर्तों और गोपनीयता नीति से सहमत होते हैं।",
+    "saveUpTo": "{{percent}}% तक बचाएँ",
+    "noPlans": "अभी कोई प्लान उपलब्ध नहीं है।",
+    "currentPlan": "वर्तमान प्लान",
+    "processing": "प्रोसेस हो रहा है...",
+    "onPlan": "आप {{tier}} प्लान पर हैं",
+    "onPlanUntil": "आप {{tier}} प्लान पर हैं · {{date}} तक सक्रिय",
+    "alerts": {
+      "alreadySubscribedTitle": "पहले से सब्सक्राइब्ड",
+      "onThisPlan": "आप पहले से ही इस प्लान पर हैं।",
+      "activeOtherPlan": "आपके पास पहले से एक सक्रिय {{tier}} प्लान है — यह समाप्त होने तक सक्रिय रहेगा।",
+      "updateRequiredTitle": "अपडेट आवश्यक",
+      "updateRequiredBody": "इस बिल्ड में भुगतान उपलब्ध नहीं है। कृपया ऐप को रीबिल्ड/अपडेट करें।",
+      "paymentFailedTitle": "भुगतान विफल",
+      "paymentFailedBody": "भुगतान पूरा नहीं हुआ। आपसे कोई शुल्क नहीं लिया गया है।",
+      "subscribedTitle": "सब्सक्राइब किया गया",
+      "subscribedBody": "आपका सब्सक्रिप्शन अब सक्रिय है।",
+      "almostThereTitle": "लगभग हो गया",
+      "almostThereBody": "भुगतान प्राप्त हुआ — आपका सब्सक्रिप्शन जल्द ही सक्रिय हो जाएगा। रीफ़्रेश करने के लिए नीचे खींचें।",
+      "paymentReceivedTitle": "भुगतान प्राप्त हुआ",
+      "successTitle": "सफल",
+      "successBody": "अब आप {{plan}} पर हैं। अपने लाभों का आनंद लें!",
+      "renewedBody": "आपका {{plan}} प्लान नवीनीकृत कर दिया गया है।",
+      "unavailableTitle": "अनुपलब्ध",
+      "unavailableBody": "भुगतान अस्थायी रूप से अनुपलब्ध हैं। कृपया बाद में पुनः प्रयास करें।",
+      "couldNotSubscribeTitle": "सब्सक्राइब नहीं कर सके"
+    },
+    "loadError": "प्लान लोड नहीं हो सके। अपना कनेक्शन जाँचें और पुनः प्रयास करें।",
+    "summary": {
+      "headers": {
+        "purchase": "प्लान खरीदें",
+        "renewal": "सदस्यता नवीनीकृत करें",
+        "upgrade": "प्लान अपग्रेड करें",
+        "downgrade": "प्लान बदलें",
+        "walletPurchase": "वॉलेट से खरीद"
+      },
+      "currentPlanLabel": "वर्तमान प्लान",
+      "newPlanLabel": "नया प्लान",
+      "remainingDays": "{{count}} दिन शेष",
+      "remainingDays_plural": "{{count}} दिनों शेष",
+      "unusedCredit": "अप्रयुक्त सदस्यता क्रेडिट",
+      "walletCreditAdded": "वॉलेट क्रेडिट जोड़ा गया",
+      "notes": {
+        "purchaseStarts": "सफल भुगतान के तुरंत बाद आपकी सदस्यता शुरू हो जाएगी।",
+        "renewalContinues": "आपकी मौजूदा सदस्यता बिना किसी रुकावट के जारी रहेगी।",
+        "startsImmediately": "आपकी नई सदस्यता तुरंत शुरू होगी।",
+        "oldEndsAutomatically": "आपकी पुरानी सदस्यता स्वतः समाप्त हो जाएगी।",
+        "valueAdjusted": "शेष मूल्य पहले ही समायोजित कर दिया गया है।",
+        "noValueLost": "कोई भी शेष सदस्यता मूल्य नहीं खोया।",
+        "oldEndsImmediately": "आपकी मौजूदा सदस्यता तुरंत समाप्त हो जाएगी।",
+        "transferredToWallet": "शेष राशि आपके CrewApply वॉलेट में स्थानांतरित कर दी गई है।",
+        "walletFutureUse": "वॉलेट बैलेंस भविष्य की खरीद के लिए उपयोग किया जा सकता है।",
+        "walletPurchase": "यह खरीद आपके वॉलेट बैलेंस का उपयोग करके पूरी की जाएगी।"
+      },
+      "buttons": {
+        "continueToPayment": "भुगतान जारी रखें",
+        "renewSubscription": "सदस्यता नवीनीकृत करें",
+        "upgradeAndPay": "अपग्रेड करें और भुगतान करें",
+        "confirmSwitch": "स्विच की पुष्टि करें",
+        "confirmPurchase": "खरीद की पुष्टि करें"
+      }
+    },
+    "success": {
+      "activatedTitle": "{{plan}} सक्रिय हो गया",
+      "renewedTitle": "सदस्यता नवीनीकृत हुई",
+      "switchedTitle": "प्लान सफलतापूर्वक बदला गया",
+      "walletPurchaseTitle": "वॉलेट खरीद पूर्ण हुई",
+      "currentPlan": "वर्तमान प्लान",
+      "expiryDate": "समाप्ति तिथि",
+      "walletRemaining": "शेष वॉलेट राशि",
+      "exploreJobs": "नौकरियां देखें",
+      "goToProfile": "प्रोफ़ाइल पर जाएं"
+    }
+  },
+  "profile": {
+    "personalOverview": "व्यक्तिगत अवलोकन",
+    "editProfile": "प्रोफ़ाइल संपादित करें",
+    "contactSupport": "सहायता से संपर्क करें",
+    "subscriptionCard": {
+      "noPlan": "कोई सक्रिय प्लान नहीं",
+      "viewPlans": "प्लान देखें",
+      "activeUntil": "{{date}} तक सक्रिय",
+      "expiring": "{{count}} दिन में समाप्त · नवीनीकरण",
+      "expiring_plural": "{{count}} दिनों में समाप्त · नवीनीकरण",
+      "active": "सक्रिय"
+    },
+    "header": {
+      "greeting": "नमस्ते 👋",
+      "subtitle": "अपना विवरण प्रबंधित करें और\nअपनी यात्रा ट्रैक करें"
+    },
+    "completion": {
+      "title": "प्रोफ़ाइल पूर्णता"
+    },
+    "support": {
+      "needHelp": "मदद चाहिए?",
+      "helpText": "Have a question or run into an issue? We're here to help — reach out and we'll get back to you."
+    },
+    "menu": {
+      "personalInfo": {
+        "title": "व्यक्तिगत जानकारी",
+        "subtitle": "बुनियादी व्यक्तिगत विवरण"
+      },
+      "documents": {
+        "title": "दस्तावेज़",
+        "subtitle": "दस्तावेज़ अपलोड और प्रबंधित करें"
+      },
+      "cv": {
+        "title": "आपका CV",
+        "subtitle": "दस्तावेज़ अपलोड और प्रबंधित करें"
+      },
+      "preferences": {
+        "title": "प्राथमिकताएँ",
+        "subtitle": "अपनी पसंदीदा नौकरी श्रेणियों के बारे में सूचनाएं पाएं"
+      },
+      "appHistory": {
+        "title": "आवेदन इतिहास",
+        "subtitle": "अपने नौकरी आवेदनों को ट्रैक करें"
+      }
+    },
+    "preferencesScreen": {
+      "title": "प्राथमिकताएँ",
+      "subtitle": "उन नौकरी श्रेणियों को चुनें जिनके बारे में आप सूचनाएं पाना चाहते हैं",
+      "save": "प्राथमिकताएँ सहेजें",
+      "loadError": "आपकी प्राथमिकताएँ लोड नहीं हो सकीं। कृपया पुनः प्रयास करें।",
+      "saveError": "आपकी प्राथमिकताएँ सहेजी नहीं जा सकीं। कृपया पुनः प्रयास करें।"
+    },
+    "personalInfo": {
+      "title": "व्यक्तिगत जानकारी",
+      "subtitle": "अपने बुनियादी व्यक्तिगत विवरण अपडेट करें",
+      "save": "परिवर्तन सहेजें",
+      "selectLabel": "{{label}} चुनें",
+      "validationErrorTitle": "अपनी जानकारी जांचें",
+      "validationErrorBody": "सेव करने से पहले हाइलाइट किए गए फ़ील्ड ठीक करें।",
+      "sections": {
+        "photo": "प्रोफ़ाइल फ़ोटो",
+        "basic": "बुनियादी विवरण",
+        "contact": "संपर्क विवरण",
+        "location": "स्थान"
+      },
+      "labels": {
+        "fullName": "पूरा नाम",
+        "dob": "जन्म तिथि",
+        "gender": "लिंग",
+        "nationality": "राष्ट्रीयता",
+        "maritalStatus": "वैवाहिक स्थिति",
+        "email": "ईमेल पता",
+        "phone": "फ़ोन नंबर",
+        "altPhone": "वैकल्पिक फ़ोन (वैकल्पिक)",
+        "location": "वर्तमान स्थान"
+      },
+      "placeholders": {
+        "fullName": "पूरा नाम दर्ज करें",
+        "dob": "जन्म तिथि चुनें",
+        "gender": "लिंग चुनें",
+        "nationality": "राष्ट्रीयता चुनें",
+        "maritalStatus": "वैवाहिक स्थिति चुनें",
+        "email": "ईमेल पता दर्ज करें",
+        "phone": "फ़ोन नंबर दर्ज करें",
+        "altPhone": "वैकल्पिक फ़ोन नंबर दर्ज करें",
+        "location": "वर्तमान स्थान चुनें"
+      },
+      "options": {
+        "gender": {
+          "male": "पुरुष",
+          "female": "महिला",
+          "other": "अन्य"
+        },
+        "maritalStatus": {
+          "single": "अविवाहित",
+          "married": "विवाहित",
+          "divorced": "तलाकशुदा",
+          "widowed": "विधवा/विधुर"
+        }
+      }
+    },
+    "photo": {
+      "unavailableTitle": "फ़ोटो अनुपलब्ध",
+      "unavailableBody": "कैमरा / गैलरी तक पहुँच नहीं हो सकी। ऐप अनुमतियाँ जाँचें।",
+      "errorTitle": "फ़ोटो त्रुटि",
+      "errorBody": "फ़ोटो चुनने में कुछ गलत हो गया। कृपया पुनः प्रयास करें।",
+      "sheetTitle": "प्रोफ़ाइल फ़ोटो",
+      "takePhoto": "फ़ोटो लें",
+      "chooseGallery": "गैलरी से चुनें",
+      "removePhoto": "फ़ोटो हटाएँ",
+      "adjustTitle": "फ़ोटो समायोजित करें",
+      "adjustHint": "हटाने के लिए खींचें, ज़ूम के लिए पिंच करें",
+      "adjustConfirm": "यह फ़ोटो उपयोग करें"
+    },
+    "upload": {
+      "title": "नई फ़ोटो अपलोड करें",
+      "subtitle": "JPG, PNG 5MB तक"
+    },
+    "locationField": {
+      "placeholder": "उदा. मुंबई, महाराष्ट्र",
+      "detecting": "आपका स्थान पता किया जा रहा है…",
+      "hint": "अपना शहर और राज्य टाइप करें, या स्वतः पता लगाने के लिए तीर पर टैप करें।",
+      "locationTitle": "स्थान",
+      "couldNotDetermine": "आपका शहर निर्धारित नहीं हो सका। कृपया इसे मैन्युअल रूप से टाइप करें।",
+      "permissionTitle": "स्थान अनुमति आवश्यक",
+      "permissionBody": "अपना शहर स्वतः भरने के लिए स्थान पहुँच की अनुमति दें, या नीचे इसे मैन्युअल रूप से टाइप करें।",
+      "unavailableTitle": "स्थान अनुपलब्ध",
+      "unavailableBody": "आपका स्थान पता नहीं लगाया जा सका। कृपया अपना शहर मैन्युअल रूप से टाइप करें।"
+    }
+  },
+  "tier": {
+    "start": "क्रू स्टार्ट",
+    "premium": "क्रू प्रीमियम",
+    "elite": "क्रू एलीट",
+    "badge": {
+      "start": "स्टार्ट",
+      "premium": "प्रीमियम",
+      "elite": "एलीट",
+      "free": "फ्री प्लान"
+    }
+  },
+  "wallet": {
+    "title": "वॉलेट",
+    "cardTitle": "CrewApply वॉलेट",
+    "availableBalance": "उपलब्ध शेष राशि",
+    "stats": {
+      "balance": "वॉलेट शेष",
+      "totalCredited": "कुल अर्जित क्रेडिट",
+      "totalSpent": "कुल खर्च",
+      "pendingCredits": "लंबित क्रेडिट"
+    },
+    "info": {
+      "heading": "आपके वॉलेट का उपयोग इनके लिए किया जा सकता है",
+      "subscriptions": "सदस्यता खरीद",
+      "futureMarketplace": "भविष्य की मार्केटप्लेस खरीद",
+      "expiryNote": "प्रचार नियमों में परिभाषित न होने पर वॉलेट क्रेडिट कभी समाप्त नहीं होते।"
+    },
+    "activityHeading": "वॉलेट गतिविधि",
+    "emptyTitle": "अभी तक कोई वॉलेट गतिविधि नहीं।",
+    "emptySubtitle": "सदस्यता क्रेडिट, रिवॉर्ड्स और प्रचार शेष यहां दिखाई देंगे।",
+    "types": {
+      "referralReward": "रेफ़रल रिवॉर्ड",
+      "redemption": "खरीद",
+      "adjustment": "एडमिन प्रचार क्रेडिट",
+      "planSwitchCredit": "सदस्यता क्रेडिट"
+    },
+    "status": {
+      "completed": "पूर्ण"
+    },
+    "detail": {
+      "referenceId": "संदर्भ आईडी",
+      "transactionType": "लेनदेन प्रकार",
+      "description": "विवरण",
+      "status": "स्थिति",
+      "date": "तिथि",
+      "paymentMethod": "भुगतान विधि",
+      "relatedSubscription": "संबंधित सदस्यता",
+      "invoiceReference": "इनवॉइस संदर्भ",
+      "paymentMethodRazorpay": "Razorpay",
+      "paymentMethodSystem": "CrewApply"
+    }
+  },
+  "errors": {
+    "ALREADY_SUBSCRIBED": "आपके पास पहले से एक सक्रिय सब्सक्रिप्शन है। यह समाप्त होने तक सक्रिय रहेगा।",
+    "PAYMENT_IN_PROGRESS": "एक भुगतान पहले से प्रगति पर है। कृपया दूसरा शुरू करने से पहले इसे पूरा करें या प्रतीक्षा करें।",
+    "PAYMENT_ALREADY_MADE": "आपका पिछला भुगतान पहले ही हो चुका है — आपका सब्सक्रिप्शन अब सक्रिय है।",
+    "PAYMENTS_NOT_CONFIGURED": "भुगतान अस्थायी रूप से अनुपलब्ध हैं। कृपया बाद में पुनः प्रयास करें।",
+    "INVALID_CREDENTIALS": "अमान्य लॉगिन क्रेडेंशियल।",
+    "EMAIL_EXISTS": "इस ईमेल के साथ एक खाता पहले से मौजूद है।",
+    "PHONE_EXISTS": "इस फ़ोन नंबर के साथ एक खाता पहले से मौजूद है।",
+    "ALREADY_VERIFIED": "यह खाता पहले से सत्यापित है।",
+    "EMAIL_NOT_VERIFIED": "कृपया जारी रखने से पहले अपना ईमेल सत्यापित करें।",
+    "PDF_NETWORK_ERROR": "सर्वर तक नहीं पहुंच सका। अपना कनेक्शन जांचें और पुनः प्रयास करें।",
+    "PDF_DOWNLOAD_FAILED": "यह दस्तावेज़ डाउनलोड नहीं हो सका। कृपया पुनः प्रयास करें।",
+    "PDF_TOKEN_ERROR": "यह दस्तावेज़ अभी उपलब्ध नहीं है। कृपया पुनः प्रयास करें।",
+    "generic": "कुछ गलत हो गया। कृपया पुनः प्रयास करें।",
+    "accountBlockedBodyWithReason": "आपका खाता एक प्रशासक द्वारा निम्नलिखित कारण से अवरुद्ध कर दिया गया है:\n\n\"{{reason}}\"\n\nयदि आपको लगता है कि यह एक गलती है, तो कृपया सहायता से संपर्क करें।",
+    "INVALID_CREDENTIALS_attemptsOne": "गलत पासवर्ड। आपका खाता {{minutes}} मिनट के लिए लॉक होने से पहले आपके पास 1 प्रयास बचा है।",
+    "INVALID_CREDENTIALS_attemptsMany": "गलत पासवर्ड। आपका खाता {{minutes}} मिनट के लिए लॉक होने से पहले आपके पास {{attempts}} प्रयास बचे हैं।",
+    "ACCOUNT_LOCKED": "बहुत बार गलत लॉगिन प्रयास। आपका खाता अस्थायी रूप से लॉक कर दिया गया है। कृपया बाद में पुनः प्रयास करें।",
+    "ACCOUNT_LOCKED_wait": "बहुत बार गलत लॉगिन प्रयास। आपका खाता लॉक है — कृपया {{wait}} बाद पुनः प्रयास करें।",
+    "RATE_LIMIT_EXCEEDED": "बहुत अधिक प्रयास। कृपया थोड़ी देर बाद पुनः प्रयास करें।",
+    "RATE_LIMIT_EXCEEDED_wait": "इस डिवाइस से बहुत अधिक प्रयास। कृपया {{wait}} बाद पुनः प्रयास करें।"
+  },
+  "auth": {
+    "common": {
+      "basicInfoSubtitle": "आइए कुछ बुनियादी जानकारी से शुरू करें",
+      "next": "आगे →",
+      "login": "लॉग इन करें",
+      "alreadyHaveAccount": "पहले से एक खाता है?",
+      "cancel": "रद्द करें",
+      "stepIndicator": "चरण {{current}} / {{total}}"
+    },
+    "welcome": {
+      "titleLine1": "स्वागत है",
+      "titleHighlight": "Crew Apply",
+      "subtitle": "वैश्विक क्रूज़ करियर के लिए\nआपका प्रवेश द्वार",
+      "createAccount": "खाता बनाएँ",
+      "socialProof": "अपना भविष्य बना रहे 10,000+ नाविकों से जुड़ें"
+    },
+    "login": {
+      "title": "अपने खाते में लॉग इन करें",
+      "mobileOrEmailLabel": "Email",
+      "mobileOrEmailPlaceholder": "Enter your email",
+      "passwordLabel": "पासवर्ड दर्ज करें",
+      "passwordPlaceholder": "पासवर्ड",
+      "forgotPassword": "पासवर्ड भूल गए?",
+      "noAccount": "खाता नहीं है?",
+      "signUp": "साइन अप करें",
+      "missingFieldsTitle": "जानकारी अधूरी है",
+      "missingFieldsBody": "Please enter your email and password.",
+      "loginFailedTitle": "लॉग इन विफल",
+      "lockedRetryIn": "आप {{wait}} बाद पुनः प्रयास कर सकते हैं",
+      "lockedRetryNow": "अब आप फिर से साइन इन कर सकते हैं"
+    },
+    "tellUs": {
+      "title": "हमें अपने बारे में बताएँ",
+      "fullNameLabel": "पूरा नाम",
+      "fullNamePlaceholder": "पूरा नाम दर्ज करें",
+      "dobLabel": "जन्म तिथि",
+      "dobPlaceholder": "DD-MM-YYYY",
+      "genderLabel": "लिंग",
+      "male": "पुरुष",
+      "female": "महिला",
+      "others": "अन्य",
+      "fullNameRequiredTitle": "पूरा नाम आवश्यक है",
+      "fullNameRequiredBody": "कृपया अपना पूरा नाम दर्ज करें।",
+      "invalidNameTitle": "अमान्य नाम",
+      "invalidNameLengthBody": "नाम 2 से 50 अक्षरों के बीच होना चाहिए।",
+      "invalidNameCharsBody": "नाम में केवल अक्षर, स्थान, हाइफ़न और एपोस्ट्रॉफ़ी हो सकते हैं।",
+      "dobRequiredTitle": "जन्म तिथि आवश्यक है",
+      "dobRequiredBody": "कृपया अपनी जन्म तिथि DD-MM-YYYY के रूप में दर्ज करें।",
+      "invalidDateTitle": "अमान्य तिथि",
+      "invalidDateBody": "कृपया एक मान्य जन्म तिथि दर्ज करें (DD-MM-YYYY)।",
+      "ageRequirementTitle": "आयु आवश्यकता",
+      "ageRequirementBody": "पंजीकरण के लिए आपकी आयु कम से कम 18 वर्ष होनी चाहिए।"
+    },
+    "location": {
+      "title": "आप कहाँ स्थित हैं?",
+      "nationalityLabel": "राष्ट्रीयता",
+      "nationalityPlaceholder": "अपनी राष्ट्रीयता चुनें",
+      "countryLabel": "देश",
+      "countryPlaceholder": "अपना देश चुनें",
+      "stateLabel": "राज्य / प्रांत",
+      "statePlaceholderEnabled": "अपना राज्य चुनें",
+      "statePlaceholderDisabled": "पहले एक देश चुनें",
+      "cityLabel": "शहर",
+      "cityPlaceholderEnabled": "अपना शहर चुनें",
+      "cityPlaceholderDisabled": "पहले एक राज्य चुनें",
+      "selectNationality": "राष्ट्रीयता चुनें",
+      "searchNationality": "राष्ट्रीयता खोजें...",
+      "selectCountry": "देश चुनें",
+      "searchCountry": "देश खोजें...",
+      "selectState": "राज्य / प्रांत चुनें",
+      "searchState": "राज्य खोजें...",
+      "selectCity": "शहर चुनें",
+      "searchCity": "शहर खोजें...",
+      "nationalityRequiredTitle": "राष्ट्रीयता आवश्यक है",
+      "nationalityRequiredBody": "कृपया अपनी राष्ट्रीयता चुनें।",
+      "countryRequiredTitle": "देश आवश्यक है",
+      "countryRequiredBody": "कृपया अपना देश चुनें।"
+    },
+    "stayConnected": {
+      "title": "आइए जुड़े रहें",
+      "mobileLabel": "मोबाइल नंबर",
+      "mobilePlaceholder": "अपना फ़ोन नंबर दर्ज करें",
+      "emailLabel": "ईमेल पता",
+      "emailPlaceholder": "अपना ईमेल पता दर्ज करें",
+      "setPasswordLabel": "पासवर्ड सेट करें",
+      "setPasswordPlaceholder": "पासवर्ड सेट करें",
+      "confirmPasswordLabel": "पासवर्ड की पुष्टि करें",
+      "confirmPasswordPlaceholder": "पासवर्ड फिर से दर्ज करें",
+      "referralCodeLabel": "रेफ़रल या प्रोमो कोड (वैकल्पिक)",
+      "referralCodePlaceholder": "किसी दोस्त या इन्फ़्लुएंसर का कोड है? यहाँ दर्ज करें",
+      "sendCode": "सत्यापन कोड भेजें",
+      "sending": "भेजा जा रहा है...",
+      "missingFieldsTitle": "जानकारी अधूरी है",
+      "missingFieldsBody": "कृपया सभी आवश्यक फ़ील्ड भरें।",
+      "invalidPhoneTitle": "अमान्य फ़ोन नंबर",
+      "invalidPhoneBody": "कृपया एक मान्य मोबाइल नंबर दर्ज करें।",
+      "invalidEmailTitle": "अमान्य ईमेल",
+      "invalidEmailBody": "कृपया एक मान्य ईमेल पता दर्ज करें।",
+      "passwordShortTitle": "पासवर्ड बहुत छोटा है",
+      "passwordShortBody": "पासवर्ड कम से कम 8 अक्षरों का होना चाहिए।",
+      "passwordMismatchTitle": "पासवर्ड मेल नहीं खाते",
+      "passwordMismatchBody": "पासवर्ड मेल नहीं खाते।",
+      "accountExistsTitle": "खाता पहले से मौजूद है",
+      "loginPrompt": "क्या आप इसके बजाय लॉग इन करना चाहेंगे?",
+      "registrationFailedTitle": "पंजीकरण विफल",
+      "invalidReferralTitle": "कोड पहचाना नहीं गया",
+      "invalidReferralMessage": "यह कोड मान्य नहीं है या समाप्त हो चुका है। आप इसके बिना आगे बढ़ सकते हैं, या वापस जाकर कोड ठीक कर सकते हैं।",
+      "invalidReferralRetry": "कोड ठीक करें",
+      "invalidReferralContinue": "फिर भी आगे बढ़ें"
+    },
+    "otp": {
+      "title": "अपना ईमेल सत्यापित करें",
+      "subtitle": "6-अंकीय कोड दर्ज करें",
+      "emailLabel": "ईमेल पता",
+      "edit": "संपादित करें",
+      "verify": "सत्यापित करें",
+      "verifying": "सत्यापित किया जा रहा है...",
+      "didntReceive": "OTP प्राप्त नहीं हुआ?",
+      "resend": "OTP पुनः भेजें",
+      "enterOtpTitle": "OTP दर्ज करें",
+      "enterOtpBody": "कृपया 6-अंकीय सत्यापन कोड दर्ज करें।",
+      "verificationFailedTitle": "सत्यापन विफल",
+      "otpSentTitle": "OTP भेजा गया",
+      "otpSentBody": "आपके ईमेल पर एक नया सत्यापन कोड भेजा गया है।",
+      "resendFailedTitle": "पुनः भेजने में विफल"
+    },
+    "maritime": {
+      "title": "आपकी समुद्री प्रोफ़ाइल",
+      "subtitle": "हमें अपनी व्यावसायिक पृष्ठभूमि के बारे में बताएँ",
+      "departmentLabel": "विभाग",
+      "departmentPlaceholder": "अपना विभाग चुनें",
+      "rankLabel": "रैंक",
+      "rankPlaceholderEnabled": "अपनी रैंक चुनें",
+      "rankPlaceholderDisabled": "पहले एक विभाग चुनें",
+      "designationLabel": "पदनाम",
+      "designationPlaceholder": "अपना पदनाम चुनें",
+      "experienceLabel": "अनुभव",
+      "startDate": "आरंभ तिथि",
+      "endDate": "समाप्ति तिथि",
+      "saving": "सहेजा जा रहा है...",
+      "skip": "छोड़ें",
+      "selectDepartment": "विभाग चुनें",
+      "searchDepartment": "विभाग खोजें...",
+      "selectRank": "रैंक चुनें",
+      "searchRank": "रैंक खोजें...",
+      "selectDesignation": "पदनाम चुनें",
+      "searchDesignation": "पदनाम खोजें...",
+      "couldNotSaveTitle": "प्रोफ़ाइल सहेजी नहीं जा सकी",
+      "couldNotSaveHint": "आप इसे बाद में अपनी प्रोफ़ाइल से पूरा कर सकते हैं।",
+      "continue": "जारी रखें"
+    },
+    "success": {
+      "title": "आप पूरी तरह तैयार हैं!",
+      "subtitle": "नौकरियाँ तलाशना शुरू करें, और\nअपनी मनचाही नौकरियों के लिए आवेदन करें",
+      "exploreJobs": "नौकरियाँ देखें →",
+      "completeProfile": "प्रोफ़ाइल पूरी करें"
+    },
+    "forgotPassword": {
+      "title": "Forgot Password?",
+      "subtitle": "Enter your email and we'll send you a code to reset your password.",
+      "emailLabel": "Email",
+      "emailPlaceholder": "Enter your email",
+      "submit": "Send Code",
+      "missingEmailTitle": "Email required",
+      "missingEmailBody": "Please enter your email address.",
+      "failedTitle": "Something went wrong"
+    },
+    "resetPassword": {
+      "title": "Reset Password",
+      "subtitle": "Enter the code sent to {{email}} and choose a new password.",
+      "newPasswordLabel": "New Password",
+      "newPasswordPlaceholder": "Enter new password",
+      "confirmPasswordLabel": "Confirm Password",
+      "confirmPasswordPlaceholder": "Re-enter new password",
+      "submit": "Reset Password",
+      "missingFieldsTitle": "Missing fields",
+      "missingFieldsBody": "Please enter and confirm your new password.",
+      "mismatchTitle": "Passwords don't match",
+      "mismatchBody": "Please make sure both passwords match.",
+      "successTitle": "Password reset",
+      "successBody": "Your password has been reset. Please log in with your new password.",
+      "failedTitle": "Reset failed"
+    }
+  },
+  "jobs": {
+    "hero": {
+      "title": "अपना अगला\nसमुद्री अवसर खोजें",
+      "subtitle": "दुनिया भर की भरोसेमंद कंपनियों से 500+ क्रूज़ और समुद्री नौकरियाँ देखें",
+      "applicationsUsed": "इस अवधि में {{limit}} में से {{used}} आवेदन उपयोग किए गए"
+    },
+    "filterBar": {
+      "applied": "{{count}} फ़िल्टर लागू",
+      "applied_plural": "{{count}} फ़िल्टर लागू"
+    },
+    "categoryFilter": {
+      "label": "श्रेणी: {{category}}"
+    },
+    "results": {
+      "title": "खोज परिणाम",
+      "jobsFound": "{{n}} नौकरियाँ मिलीं"
+    },
+    "list": {
+      "retry": "पुनः प्रयास करें",
+      "noJobs": "कोई नौकरी नहीं मिली। अपनी खोज या फ़िल्टर समायोजित करने का प्रयास करें।"
+    },
+    "card": {
+      "applyNow": "अभी आवेदन करें",
+      "applied": "आवेदन किया"
+    },
+    "featured": {
+      "title": "विशेष नौकरियाँ"
+    },
+    "filterModal": {
+      "title": "नौकरियाँ फ़िल्टर करें",
+      "subtitle": "अपनी खोज को परिष्कृत करें और अपने लिए सही नौकरी खोजें",
+      "applied": "{{count}} फ़िल्टर लागू",
+      "applied_plural": "{{count}} फ़िल्टर लागू",
+      "resetAll": "सभी रीसेट करें",
+      "category": "श्रेणी",
+      "department": "विभाग",
+      "deptSearchPlaceholder": "नौकरी शीर्षक, कौशल द्वारा खोजें...",
+      "vesselType": "पोत प्रकार",
+      "vesselSearchPlaceholder": "पोत प्रकार खोजें...",
+      "more": "+ और",
+      "less": "- कम",
+      "viewJobs": "{{n}} नौकरियाँ देखें"
+    },
+    "referModal": {
+      "title": "इस नौकरी को रेफ़र करें",
+      "subtitle": "क्या आप किसी ऐसे व्यक्ति को जानते हैं जो उपयुक्त हो सकता है?\nउन्हें रेफ़र करें और नज़र में आने में उनकी मदद करें।",
+      "referVia": "इसके माध्यम से रेफ़र करें",
+      "whatsapp": "व्हाट्सएप",
+      "email": "ईमेल",
+      "copyLink": "लिंक कॉपी करें",
+      "more": "अधिक",
+      "linkCopiedTitle": "लिंक कॉपी किया गया",
+      "linkCopiedMessage": "नौकरी का लिंक क्लिपबोर्ड पर सफलतापूर्वक कॉपी किया गया!"
+    },
+    "shareModal": {
+      "title": "इस नौकरी को साझा करें"
+    },
+    "saved": {
+      "title": "सहेजी गई नौकरियाँ",
+      "subtitle": "बाद के लिए सहेजी गई नौकरियाँ",
+      "searchPlaceholder": "नौकरी शीर्षक, कौशल द्वारा खोजें...",
+      "counter": "{{count}} सहेजी गई नौकरियाँ",
+      "counter_plural": "{{count}} सहेजी गई नौकरियाँ",
+      "emptyTitle": "अभी तक कोई सहेजी गई नौकरी नहीं",
+      "emptySubtitle": "इसे यहाँ देखने के लिए किसी नौकरी को बुकमार्क करें",
+      "noMatches": "कोई सहेजी गई नौकरी मेल नहीं खाती"
+    },
+    "docTypes": {
+      "resume": "रिज़्यूमे",
+      "passport": "पासपोर्ट",
+      "certificate": "प्रमाणपत्र",
+      "stcw": "STCW",
+      "cdc": "CDC",
+      "medical": "मेडिकल",
+      "visa": "वीज़ा"
+    },
+    "details": {
+      "submittedAlertTitle": "आवेदन जमा किया गया",
+      "submittedAlertMessage": "आपका आवेदन सफलतापूर्वक जमा कर दिया गया है।",
+      "ok": "ठीक है",
+      "applyErrorTitle": "आवेदन नहीं कर सके",
+      "tagRejected": "अस्वीकृत",
+      "tagApplied": "आवेदन किया",
+      "tagUnderReview": "समीक्षाधीन",
+      "tagInterview": "साक्षात्कार",
+      "tagSelected": "चयनित",
+      "tagFeatured": "विशेष",
+      "notSelectedTitle": "आवेदन चयनित नहीं हुआ",
+      "notSelectedSubtitle": "आपकी रुचि के लिए धन्यवाद। दुर्भाग्यवश, इस पद के लिए आपका आवेदन चयनित नहीं हुआ।",
+      "submittedBannerTitle": "आवेदन जमा किया गया",
+      "submittedBannerSubtitle": "आपने {{date}} को इस नौकरी के लिए सफलतापूर्वक आवेदन किया",
+      "underReviewBannerTitle": "आवेदन की समीक्षा हो रही है",
+      "underReviewBannerSubtitle": "भर्तीकर्ता द्वारा आपके आवेदन की समीक्षा की जा रही है।",
+      "interviewBannerTitle": "साक्षात्कार निर्धारित",
+      "interviewBannerSubtitle": "बधाई हो! आपको साक्षात्कार के लिए चुना गया है। विवरण के लिए अपना ईमेल और सूचनाएं देखें।",
+      "selectedBannerTitle": "आप चयनित हो गए हैं!",
+      "selectedBannerSubtitle": "बधाई हो! आपको इस पद के लिए चयनित किया गया है।",
+      "eligibleTitle": "आप इस नौकरी के लिए आवेदन करने के योग्य हैं",
+      "eligibleSubtitle": "बढ़िया! आप अधिकांश आवश्यकताओं को पूरा करते हैं।",
+      "ineligibleTitle": "आप इस नौकरी के लिए आवेदन करने के योग्य नहीं हैं",
+      "ineligibleSubtitle": "आवश्यकताओं को पूरा करने के लिए आपको पूर्ण दस्तावेज़ अपलोड करने होंगे।",
+      "tabOverview": "अवलोकन",
+      "tabRequirements": "आवश्यकताएँ",
+      "aboutTitle": "नौकरी के बारे में",
+      "noDescription": "इस पद के लिए कोई विवरण प्रदान नहीं किया गया।",
+      "documentsSubmitted": "जमा किए गए दस्तावेज़",
+      "documentsRequired": "आवश्यक दस्तावेज़",
+      "noDocsRequired": "इस नौकरी के लिए किसी दस्तावेज़ की आवश्यकता नहीं है",
+      "haveAllDocs": "इस पद के लिए आपके पास सभी आवश्यक दस्तावेज़ हैं",
+      "missingDocs": "इस पद के लिए आपके पास सभी आवश्यक दस्तावेज़ नहीं हैं",
+      "appreciation": "आवेदन करने के लिए आपके समय की हम सराहना करते हैं। हम आपको अन्य उपयुक्त अवसरों को तलाशने के लिए प्रोत्साहित करते हैं।",
+      "unlockTitle": "इस नौकरी के लिए आवेदन हेतु अनलॉक करें",
+      "unlockSubtitle": "असीमित नौकरियों के लिए आवेदन हेतु किसी भी प्लान की सदस्यता लें",
+      "unlockTitleTier": "आवेदन के लिए अपग्रेड करें",
+      "unlockSubtitleTier": "इस नौकरी के लिए {{tier}} या उच्चतर आवश्यक है। इस जैसी नौकरियों तक पहुंच अनलॉक करने के लिए अपग्रेड करें।",
+      "unlockTitleLimit": "मासिक सीमा समाप्त",
+      "unlockSubtitleLimit": "आपने इस अवधि में अपने सभी आवेदन उपयोग कर लिए हैं। अधिक के लिए {{tier}} में अपग्रेड करें।",
+      "applicationsUsed": "इस अवधि में {{limit}} में से {{used}} आवेदन उपयोग किए गए",
+      "tierRequiredAlertTitle": "अपग्रेड आवश्यक है",
+      "tierRequiredAlertMessage": "इस नौकरी के लिए {{tier}} या उच्चतर आवश्यक है।",
+      "limitReachedAlertTitle": "मासिक सीमा समाप्त",
+      "limitReachedAlertMessage": "आपने इस अवधि में अपने सभी आवेदन उपयोग कर लिए हैं। अधिक के लिए {{tier}} में अपग्रेड करें।",
+      "viewPlans": "प्लान देखें",
+      "subscribe": "सदस्यता लें",
+      "referTitle": "इस नौकरी को रेफ़र करें",
+      "referSubtitle": "अपने दोस्तों को क्रूज़ नौकरी के अवसर खोजने में मदद करें और समुद्र में उनकी यात्रा शुरू करें",
+      "referButton": "इस नौकरी को रेफ़र करें",
+      "viewOtherJobs": "अन्य नौकरियाँ देखें",
+      "viewSimilarJobs": "समान नौकरियाँ देखें",
+      "saveJob": "नौकरी सहेजें",
+      "savedJob": "सहेजा गया",
+      "applying": "आवेदन हो रहा है...",
+      "applyNow": "अभी आवेदन करें",
+      "cantApply": "आवेदन नहीं कर सकते",
+      "alreadyApplied": "पहले से आवेदन किया गया"
+    }
+  },
+  "applications": {
+    "tabs": {
+      "all": "सभी",
+      "active": "सक्रिय",
+      "selected": "चयनित",
+      "closed": "बंद"
+    },
+    "title": "मेरे आवेदन",
+    "subtitle": "उन सभी नौकरियों की स्थिति ट्रैक करें जिनके लिए आपने आवेदन किया है",
+    "empty": "इस श्रेणी में अभी तक कोई आवेदन नहीं।",
+    "yourCV": "आपका सीवी",
+    "recentlyApplied": "हाल ही में आवेदन किया",
+    "card": {
+      "applied": "{{date}} को आवेदन किया",
+      "viewDetails": "विवरण देखें"
+    },
+    "support": {
+      "help": "Have a question about an application? We're here to help — reach out and we'll get back to you.",
+      "contact": "सहायता से संपर्क करें"
+    }
+  },
+  "support": {
+    "title": "Contact Support",
+    "subtitle": "Send us a message and we'll get back to you",
+    "nameLabel": "Name",
+    "namePlaceholder": "Your name",
+    "emailLabel": "Email address",
+    "emailPlaceholder": "name@example.com",
+    "messageLabel": "How can we help?",
+    "messagePlaceholder": "Describe the issue you're facing…",
+    "submit": "Submit",
+    "successTitle": "Message sent",
+    "successMessage": "Thanks for reaching out — our team will reply as soon as possible.",
+    "errors": {
+      "nameRequired": "Please enter your name.",
+      "emailRequired": "Please enter your email address.",
+      "emailInvalid": "Please enter a valid email address.",
+      "messageRequired": "Please describe the issue you're facing.",
+      "dangerousContent": "This cannot contain script tags, HTML markup, or command-like text."
+    }
+  },
+  "consultancy": {
+    "topics": {
+      "career_guidance": "करियर मार्गदर्शन और सलाह",
+      "resume_review": "रिज़्यूमे और सीवी समीक्षा",
+      "interview_prep": "साक्षात्कार तैयारी",
+      "visa_support": "वीज़ा और दस्तावेज़ सहायता",
+      "sea_time": "समुद्री समय गणना"
+    },
+    "weekdays": {
+      "sun": "रवि",
+      "mon": "सोम",
+      "tue": "मंगल",
+      "wed": "बुध",
+      "thurs": "गुरु",
+      "fri": "शुक्र",
+      "sat": "शनि"
+    },
+    "replaceResume": {
+      "title": "रिज़्यूमे बदलें",
+      "message": "नई रिज़्यूमे फ़ाइल अपलोड करें?",
+      "upload": "मॉक रिज़्यूमे अपलोड करें"
+    },
+    "selectionRequired": {
+      "title": "चयन आवश्यक",
+      "message": "जारी रखने से पहले कृपया एक विषय चुनें।"
+    },
+    "bookingConfirmed": {
+      "title": "बुकिंग की पुष्टि हुई",
+      "message": "{{month}} {{day}} को {{time}} बजे आपकी लाइव मीटिंग सफलतापूर्वक निर्धारित कर दी गई है।"
+    },
+    "viewResume": {
+      "title": "रिज़्यूमे देखें",
+      "opening": "{{name}} खोला जा रहा है..."
+    },
+    "headerTitle": "लाइव मीटिंग बुक करें",
+    "headerSubtitle": "हमारे सहायता विशेषज्ञ के साथ\nएक-पर-एक सत्र निर्धारित करें।",
+    "steps": {
+      "booking": "बुकिंग",
+      "payment": "भुगतान"
+    },
+    "selectTopic": "एक विषय चुनें",
+    "selectTopicPlaceholder": "एक विषय चुनें",
+    "selectDate": "तारीख़ चुनें",
+    "unavailable": "अनुपलब्ध",
+    "selectTimeSlot": "समय स्लॉट चुनें (IST)",
+    "describeRequirement": "अपनी आवश्यकता बताएं",
+    "requirementPlaceholder": "हमें अपनी पूछताछ, नौकरी की पसंद, साक्षात्कार तैयारी की ज़रूरतों, या जो भी आप चर्चा करना चाहें, उसके बारे में बताएं।",
+    "attachedResume": "संलग्न रिज़्यूमे (स्वतः संलग्न)",
+    "uploadedOn": "{{date}} को अपलोड किया गया",
+    "replace": "बदलें",
+    "calendarInviteNotice": "बुकिंग की पुष्टि होने पर आपको Google Meet लिंक के साथ एक कैलेंडर आमंत्रण प्राप्त होगा।",
+    "priceNotice": "यह एक सशुल्क परामर्श सत्र है — प्रति सत्र {{amount}}।",
+    "reviewBooking": "बुकिंग की समीक्षा करें",
+    "reviewBookingWithPrice": "बुकिंग की समीक्षा करें — {{amount}}",
+    "review": {
+      "title": "अपनी बुकिंग की समीक्षा करें",
+      "topic": "विषय",
+      "date": "तारीख़",
+      "time": "समय",
+      "requirement": "आपकी आवश्यकता",
+      "resume": "रिज़्यूमे",
+      "resumeNotAttached": "संलग्न नहीं है",
+      "sessionFee": "सत्र शुल्क",
+      "payButton": "{{amount}} भुगतान करें",
+      "editDetails": "विवरण संपादित करें"
+    },
+    "needHelp": "मदद चाहिए? हमसे संपर्क करें",
+    "searchTopics": "विषय खोजें..."
+  },
+  "search": {
+    "title": "खोजें",
+    "tooShort": "टाइप करना जारी रखें — कम से कम 2 अक्षर।",
+    "empty": "\"{{query}}\" के लिए कोई नौकरी नहीं मिली।",
+    "relatedJobsTitle": "इन नौकरियों में आपकी रुचि हो सकती है"
+  },
+  "notifications": {
+    "title": "सूचना",
+    "groups": {
+      "today": "आज",
+      "yesterday": "कल",
+      "earlier": "पहले"
+    },
+    "items": {
+      "subscriptionRenewal": {
+        "title": "सदस्यता नवीनीकरण",
+        "subtitle": "आपकी सदस्यता नवीनीकृत कर दी गई है"
+      },
+      "medicalCertificate": {
+        "title": "चिकित्सा स्वस्थता प्रमाणपत्र",
+        "subtitle": "वैध पासपोर्ट प्रति\nPDF, JPG, PNG (2 MB अधिकतम)"
+      },
+      "resume": {
+        "title": "रिज़्यूमे / सीवी",
+        "subtitle": "वैध पासपोर्ट प्रति\nPDF, JPG, PNG (2 MB अधिकतम)"
+      },
+      "meetingRescheduled": {
+        "title": "मीटिंग पुनर्निर्धारित",
+        "subtitle": "{{from}} से {{to}} तक पुनर्निर्धारित"
+      },
+      "completeProfile": {
+        "title": "अपनी प्रोफ़ाइल पूरी करें",
+        "subtitle": "बेहतर नौकरी मिलान पाने के लिए प्रोफ़ाइल पूरी करें"
+      }
+    },
+    "time": {
+      "hoursAgo": "{{count}} घंटा पहले",
+      "hoursAgo_plural": "{{count}} घंटे पहले",
+      "daysAgo": "{{count}} दिन पहले",
+      "daysAgo_plural": "{{count}} दिन पहले"
+    },
+    "status": {
+      "notUploaded": "अपलोड नहीं किया गया",
+      "pending": "लंबित"
+    },
+    "accept": "स्वीकारें",
+    "decline": "अस्वीकारें",
+    "percent": "{{value}} %",
+    "updateProfile": "प्रोफ़ाइल अपडेट करें",
+    "markAsRead": "पढ़ा हुआ चिह्नित करें",
+    "markAllAsRead": "सभी को पढ़ा हुआ चिह्नित करें",
+    "settingsScreen": {
+      "title": "सूचना सेटिंग्स",
+      "subtitle": "चुनें कि सूचनाएं गायब होने से पहले कितने समय तक दिखाई दें",
+      "pushToggleLabel": "पुश नोटिफिकेशन",
+      "pushToggleHint": "अपने डिवाइस पर पॉप-अप के रूप में अलर्ट प्राप्त करें। सूचनाएं फिर भी यहाँ दिखाई देती रहेंगी।",
+      "expiryLabel": "इतने समय बाद अपने आप छिपाएं",
+      "daysOption": "{{count}} दिन",
+      "save": "सहेजें",
+      "loadError": "आपकी सूचना सेटिंग्स लोड नहीं हो सकीं।",
+      "saveError": "आपकी सूचना सेटिंग्स सहेजी नहीं जा सकीं।"
+    }
+  },
+  "referEarn": {
+    "title": "रेफ़र करें और कमाएं",
+    "subtitle": "दोस्तों को आमंत्रित करें और उनके सब्सक्राइब करने पर वॉलेट क्रेडिट कमाएं",
+    "yourCode": "आपका रेफ़रल कोड",
+    "copyCode": "कॉपी करें",
+    "codeCopiedTitle": "कॉपी हो गया!",
+    "codeCopiedMessage": "आपका रेफ़रल कोड क्लिपबोर्ड पर कॉपी कर दिया गया है।",
+    "generateButton": "रेफ़रल कोड जनरेट करें",
+    "generateErrorTitle": "कोड जनरेट नहीं हो सका",
+    "generateErrorMessage": "आपका रेफ़रल कोड जनरेट करने में कुछ गड़बड़ हो गई। कृपया फिर से प्रयास करें।",
+    "shareButton": "शेयर करें",
+    "shareSubtitle": "किसी दोस्त को CrewApply पर आमंत्रित करें",
+    "shareSubject": "मेरे साथ CrewApply जॉइन करें",
+    "walletBalance": "वॉलेट बैलेंस",
+    "stats": {
+      "invited": "आमंत्रित",
+      "qualified": "योग्य",
+      "rewarded": "पुरस्कृत"
+    },
+    "history": {
+      "title": "रेफ़रल इतिहास",
+      "empty": "आपने अभी तक किसी को रेफ़र नहीं किया है।"
+    },
+    "status": {
+      "pending": "अभी तक खरीदा नहीं",
+      "qualified": "योग्य",
+      "rewarded": "पुरस्कृत",
+      "rejected": "अस्वीकृत"
+    }
+  },
+  "jobAlerts": {
+    "screenTitle": "नौकरी अलर्ट",
+    "screenSubtitle": "तेज़ आवेदनों के लिए अपने दस्तावेज़ों को प्रबंधित और अद्यतन रखें।",
+    "searchPlaceholder": "दस्तावेज़ नाम से खोजें...",
+    "noMatches": "कोई मेल नहीं मिला",
+    "emptyTitle": "अभी तक कोई नौकरी अलर्ट नहीं",
+    "emptySubtitle": "नए अवसरों की सूचना पाने के लिए अलर्ट सेट करें"
+  },
+  "cv": {
+    "header": {
+      "title": "मेरा CV",
+      "subtitle": "तेज़ आवेदन के लिए अपने दस्तावेज़ प्रबंधित करें और\nअपडेट रखें।"
+    },
+    "actions": {
+      "createCv": "CV बनाएँ",
+      "downloadCv": "CV डाउनलोड करें"
+    },
+    "addedCount": "{{count}} जोड़े गए",
+    "recordsCount": "{{count}} रिकॉर्ड",
+    "recordsCount_plural": "{{count}} रिकॉर्ड",
+    "availability": {
+      "Available": "उपलब्ध",
+      "Unavailable": "अनुपलब्ध",
+      "Considering": "विचाराधीन"
+    },
+    "personalDetails": {
+      "title": "व्यक्तिगत विवरण",
+      "complete": "{{percent}}% पूर्ण",
+      "fullName": "पूरा नाम",
+      "dateOfBirth": "जन्म तिथि",
+      "nationality": "राष्ट्रीयता",
+      "gender": "लिंग",
+      "passportNumber": "पासपोर्ट नंबर",
+      "passportExpiry": "पासपोर्ट समाप्ति",
+      "placeOfIssue": "जारी करने का स्थान",
+      "maritalStatus": "वैवाहिक स्थिति"
+    },
+    "seaExperience": {
+      "title": "समुद्री अनुभव",
+      "addLabel": "अनुभव जोड़ें",
+      "experience": "अनुभव",
+      "vessel": "जहाज़",
+      "rank": "रैंक",
+      "timePeriod": "समयावधि"
+    },
+    "education": {
+      "title": "शिक्षा",
+      "addLabel": "शिक्षा जोड़ें"
+    },
+    "skills": {
+      "title": "कौशल",
+      "addLabel": "कौशल जोड़ें"
+    },
+    "languages": {
+      "title": "भाषाएँ",
+      "addLabel": "भाषा जोड़ें"
+    },
+    "certifications": {
+      "title": "प्रमाणपत्र",
+      "addLabel": "प्रमाणपत्र जोड़ें",
+      "viewDocument": "दस्तावेज़ देखें →"
+    }
+  },
+  "documents": {
+    "header": {
+      "title": "मेरे दस्तावेज़",
+      "subtitle": "तेज़ आवेदन के लिए अपने दस्तावेज़ प्रबंधित करें और\nअपडेट रखें।"
+    },
+    "search": {
+      "placeholder": "दस्तावेज़ के नाम से खोजें..."
+    },
+    "empty": "कोई दस्तावेज़ नहीं मिला",
+    "noMatches": "कोई दस्तावेज़ मेल नहीं खाता",
+    "alertBanner": {
+      "body": "आपको {{name}} अपलोड करना होगा।",
+      "multiTitle": "{{count}} दस्तावेज़ आवश्यक हैं",
+      "multiBody": "आपको ये अपलोड करने होंगे: {{names}}।"
+    },
+    "filters": {
+      "all": "सभी",
+      "uploaded": "अपलोड किए गए",
+      "pending": "लंबित",
+      "missing": "अनुपलब्ध"
+    },
+    "status": {
+      "uploaded": "अपलोड किया गया",
+      "pending": "लंबित",
+      "notUploaded": "अपलोड नहीं किया गया"
+    },
+    "modal": {
+      "maxSize": "अधिकतम {{maxSizeMB}} MB",
+      "uploading": "अपलोड हो रहा है...",
+      "deleting": "हटाया जा रहा है...",
+      "opening": "खोला जा रहा है...",
+      "view": "देखें",
+      "takePhoto": "फ़ोटो लें",
+      "retakePhoto": "फिर से फ़ोटो लें",
+      "chooseFromGallery": "गैलरी से चुनें",
+      "replaceFromGallery": "गैलरी से बदलें",
+      "chooseFile": "फ़ाइल चुनें (PDF)",
+      "replaceFile": "फ़ाइल बदलें (PDF)",
+      "replace": "बदलें",
+      "delete": "हटाएँ",
+      "cancel": "रद्द करें",
+      "downloadingPdf": "{{docName}} डाउनलोड हो रहा है...",
+      "retry": "पुनः प्रयास करें"
+    },
+    "alerts": {
+      "fileTooLargeTitle": "फ़ाइल बहुत बड़ी है",
+      "fileTooLargeMessage": "यह दस्तावेज़ {{maxSizeMB}} MB से कम होना चाहिए।",
+      "uploadFailedTitle": "अपलोड विफल",
+      "photoUnavailableTitle": "फ़ोटो अनुपलब्ध",
+      "photoUnavailableMessage": "कैमरा / गैलरी तक पहुँच नहीं हो सकी। ऐप अनुमतियाँ जाँचें।",
+      "photoErrorTitle": "फ़ोटो त्रुटि",
+      "photoErrorMessage": "फ़ोटो चुनने में कुछ गड़बड़ हो गई। कृपया पुनः प्रयास करें।",
+      "fileErrorTitle": "फ़ाइल त्रुटि",
+      "fileErrorMessage": "फ़ाइल चुनने में कुछ गड़बड़ हो गई। कृपया पुनः प्रयास करें।",
+      "couldNotOpenTitle": "दस्तावेज़ नहीं खोला जा सका",
+      "pdfDisplayError": "यह PDF प्रदर्शित नहीं हो सका। कृपया पुनः प्रयास करें।",
+      "deleteTitle": "दस्तावेज़ हटाएँ?",
+      "deleteMessage": "इससे आपका अपलोड किया गया {{docName}} हट जाएगा। आप कभी भी नया अपलोड कर सकते हैं।",
+      "couldNotDeleteTitle": "हटाया नहीं जा सका",
+      "confirmReplaceTitle": "दस्तावेज़ बदलें?",
+      "confirmReplaceMessage": "इससे आपका अपलोड किया गया {{docName}} \"{{fileName}}\" से बदल जाएगा। जारी रखें?"
+    }
+  },
+  "nav": {
+    "home": "होम",
+    "profile": "प्रोफ़ाइल",
+    "applications": "मेरे आवेदन",
+    "jobs": "नौकरियाँ"
+  },
+  "time": {
+    "second": "सेकंड",
+    "seconds": "सेकंड",
+    "minute": "मिनट",
+    "minutes": "मिनट",
+    "hour": "घंटा",
+    "hours": "घंटे"
+  }
+}

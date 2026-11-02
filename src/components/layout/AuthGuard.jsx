@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
+import { useTranslation } from "react-i18next";
 import { tokenStorage } from "@/api/tokenStorage";
 
 /* Route protection for everything under (app).
@@ -44,6 +45,7 @@ export const isPublicPath = (pathname) =>
   PUBLIC_PATHS.some((p) => pathname === p || pathname.startsWith(`${p}/`));
 
 export function AuthGuard({ children }) {
+  const { t } = useTranslation();
   const router = useRouter();
   const pathname = usePathname() ?? "";
   const isPublic = isPublicPath(pathname);
@@ -105,7 +107,7 @@ export function AuthGuard({ children }) {
        localStorage.setItem('@crewapply:access_token', '<token>')  */
   return (
     <div className="flex min-h-dvh items-center justify-center px-[15px]">
-      <p className="sr-only">Checking your session…</p>
+      <p className="sr-only">{t("web.auth.guard.checking")}</p>
     </div>
   );
 }

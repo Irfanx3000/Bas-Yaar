@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
+import { useTranslation } from "react-i18next";
 import { bannerService } from "@/services/banner.service";
 
 /* Admin-managed promo banners, mirroring the app's PromoBannerCarousel.
@@ -31,6 +32,7 @@ import { bannerService } from "@/services/banner.service";
 const AUTOPLAY_MS = 5000;
 
 export function PromoBanner({ className = "" }) {
+  const { t } = useTranslation();
   const [banners, setBanners] = useState([]);
   const [index, setIndex] = useState(0);
 
@@ -99,7 +101,7 @@ export function PromoBanner({ className = "" }) {
               key={banner.id}
               type="button"
               onClick={() => setIndex(i)}
-              aria-label={`Show banner ${i + 1} of ${banners.length}`}
+              aria-label={t("web.ui.promoBanner.showBanner", { current: i + 1, total: banners.length })}
               aria-current={i === index}
               className={`h-1.5 cursor-pointer rounded-round transition-all duration-[280ms] ease-decelerate ${
                 i === index ? "w-5 bg-primary" : "w-1.5 bg-line"

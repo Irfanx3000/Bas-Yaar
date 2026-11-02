@@ -14,10 +14,12 @@
 
 import { useEffect, useSyncExternalStore } from "react";
 import Link from "next/link";
+import { useTranslation } from "react-i18next";
 import { Button, Card, Icon } from "@/components/ui";
 import { clearPlanSummary, planSummaryStore } from "@/lib/planSummary";
 
 export default function SubscriptionSuccessPage() {
+  const { t } = useTranslation();
   const summary = useSyncExternalStore(
     planSummaryStore.subscribe,
     planSummaryStore.read,
@@ -38,32 +40,32 @@ export default function SubscriptionSuccessPage() {
           <Icon name="check-circle" size={30} />
         </span>
 
-        <h1 className="mt-4 text-h2 font-extrabold text-heading">You&apos;re subscribed</h1>
+        <h1 className="mt-4 text-h2 font-extrabold text-heading">{t("web.account.success.title")}</h1>
         <p className="mt-1 text-md text-body">
           {summary?.planName
-            ? `${summary.planName} is active on your account.`
-            : "Your plan is active on your account."}
+            ? t("web.account.success.planActive", { plan: summary.planName })
+            : t("web.account.success.genericActive")}
         </p>
 
         {periodEnd ? (
           <p className="mt-3 rounded-md bg-primary-light px-4 py-2 text-md font-semibold text-primary">
-            Active until {new Date(periodEnd).toLocaleDateString()}
+            {t("web.account.plan.activeUntil", { date: new Date(periodEnd).toLocaleDateString() })}
           </p>
         ) : null}
 
         {summary?.walletBalanceAfter != null ? (
-          <p className="mt-2 text-sm text-hint">Wallet balance: {summary.walletBalanceAfter}</p>
+          <p className="mt-2 text-sm text-hint">{t("web.account.success.walletBalance", { amount: summary.walletBalanceAfter })}</p>
         ) : null}
 
         <div className="mt-6 flex flex-col gap-2 sm:flex-row-reverse">
           <Link href="/jobs" className="flex-1">
             <Button fullWidth icon="search">
-              Browse jobs
+              {t("web.account.success.browseJobs")}
             </Button>
           </Link>
           <Link href="/subscription" className="flex-1">
             <Button fullWidth variant="outline">
-              Manage plan
+              {t("web.account.success.managePlan")}
             </Button>
           </Link>
         </div>

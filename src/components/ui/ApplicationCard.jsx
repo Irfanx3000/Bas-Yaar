@@ -1,4 +1,7 @@
+"use client";
+
 import Link from "next/link";
+import { useTranslation } from "react-i18next";
 import { Card } from "./Card";
 import { Icon } from "./Icon";
 import { StatusBadge } from "./Badge";
@@ -6,6 +9,7 @@ import { CardMediaHeader } from "./CardMediaHeader";
 import { jobHref } from "@/lib/jobUrl";
 
 export function ApplicationCard({ application, onWithdraw }) {
+  const { t } = useTranslation();
   const href = application.jobId
     ? jobHref({ id: application.jobId, title: application.title })
     : null;
@@ -54,7 +58,7 @@ export function ApplicationCard({ application, onWithdraw }) {
                 onClick={() => onWithdraw(application)}
                 className="press relative z-10 w-full cursor-pointer rounded-xl border-[1.5px] border-line-input px-4 py-2 text-xs font-bold text-body transition-colors hover:border-danger hover:bg-danger-light/30 hover:text-danger"
               >
-                Withdraw Application
+                {t("web.jobs.card.withdraw")}
               </button>
             ) : (
               href ? (
@@ -62,12 +66,12 @@ export function ApplicationCard({ application, onWithdraw }) {
                   href={href}
                   className="relative z-10 flex w-full items-center justify-center gap-1 rounded-xl border border-primary/20 bg-primary-light px-4 py-2 text-xs font-bold text-primary transition-colors hover:bg-primary hover:text-white"
                 >
-                  View Details
+                  {t("applications.card.viewDetails")}
                   <Icon name="arrow-right" size={10} />
                 </Link>
               ) : (
                 <span className="flex w-full items-center justify-center rounded-xl bg-canvas px-4 py-2 text-xs font-medium text-hint">
-                  Details unavailable
+                  {t("web.jobs.card.detailsUnavailable")}
                 </span>
               )
             )}

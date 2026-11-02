@@ -52,7 +52,8 @@ import { APPLICATION_STATUS } from "@/constants/applications.constants";
 import { NEXT_TIER } from "@/constants/subscription.constants";
 import { TIER_LABEL } from "@/utils/subscriptionDisplay";
 import { getErrorMessage } from "@/i18n/getErrorMessage";
-import { t } from "@/i18n";
+import { useTranslation } from "react-i18next";
+import i18n from "@/i18n";
 import { jobIdFromSlug } from "@/lib/jobUrl";
 import {
   Button,
@@ -82,6 +83,14 @@ const APPLIED_STATUS_UI = {
   [APPLICATION_STATUS.SELECTED]: { tags: ["Selected"], banner: "selected" },
 };
 
+/* Badge copy for the tags above, by tag. */
+const TAG_LABEL_KEY = {
+  Applied: "jobs.details.tagApplied",
+  "Under Review": "jobs.details.tagUnderReview",
+  Interview: "jobs.details.tagInterview",
+  Selected: "jobs.details.tagSelected",
+};
+
 const APPLIED_BANNER = {
   submitted: { tone: "success", icon: "check-circle" },
   underReview: { tone: "info", icon: "hourglass-half" },
@@ -91,6 +100,7 @@ const APPLIED_BANNER = {
 };
 
 function DocumentTile({ name, missing }) {
+  const { t } = useTranslation();
   const content = (
     <>
       <Icon
@@ -99,7 +109,7 @@ function DocumentTile({ name, missing }) {
         className={missing ? "text-danger" : "text-success"}
       />
       <span className="text-xs font-semibold text-heading capitalize">
-        {String(name).replace(/[-_]/g, " ")}
+        {t(`jobs.docTypes.${String(name).toLowerCase()}`, { defaultValue: String(name).replace(/[-_]/g, " ") })}
       </span>
     </>
   );
@@ -124,6 +134,7 @@ function DocumentTile({ name, missing }) {
 }
 
 export default function JobDetailsPage({ params }) {
+  const { t } = useTranslation();
   const { slug } = use(params);
   const jobId = jobIdFromSlug(slug);
   const router = useRouter();
@@ -176,12 +187,12 @@ export default function JobDetailsPage({ params }) {
             ? "limit"
             : null;
 
-  const requiredTierLabel = TIER_LABEL[jobMinimumTier] || TIER_LABEL.start;
-  const nextTierLabel = TIER_LABEL[NEXT_TIER[userTier]] || TIER_LABEL.premium;
+  const requiredTierLabel = t(`tier.${TIER_LABEL[jobMinimumTier] ? jobMinimumTier : "start"}`);
+  const nextTierLabel = t(`tier.${TIER_LABEL[NEXT_TIER[userTier]] ? NEXT_TIER[userTier] : "premium"}`);
 
   const load = useCallback(async () => {
     if (!jobId) {
-      setError("That job link doesn't look right.");
+      setError(i18n.t("web.jobs.details.badLink"));
       setLoading(false);
       return;
     }
@@ -246,7 +257,7 @@ export default function JobDetailsPage({ params }) {
   if (error || !job) {
     return (
       <div className="mx-auto max-w-6xl px-[15px] py-6 lg:px-6">
-        <ErrorState message={error || "That job could not be found."} onRetry={retry} />
+        <ErrorState message={error || t("web.jobs.details.notFound")} onRetry={retry} />
       </div>
     );
   }
@@ -318,7 +329,7 @@ export default function JobDetailsPage({ params }) {
           <button
             type="button"
             onClick={() => router.back()}
-            aria-label="Go back"
+            aria-label={t("web.jobs.details.goBack")}
             className="glass absolute top-4 left-4 flex size-10 items-center justify-center rounded-round text-heading shadow-float"
           >
             <Icon name="chevron-left" size={14} />
@@ -327,12 +338,12 @@ export default function JobDetailsPage({ params }) {
           <div className="flex flex-wrap gap-[5px]">
             {isAppliedMode ? (
               isRejected ? (
-                <StatusBadge status="rejected" />
+                <StatusBadge status="rejected" label={t("jobs.details.tagRejected")} />
               ) : (
-                statusUi.tags.map((tag) => <StatusBadge key={tag} status={tag} label={tag} />)
+                statusUi.tags.map((tag) => <StatusBadge key={tag} status={tag} label={t(TAG_LABEL_KEY[tag])} />)
               )
             ) : job.isFeatured ? (
-              <StatusBadge status="featured" />
+              <StatusBadge status="featured" label={t("jobs.details.tagFeatured")} />
             ) : null}
           </div>
         </div>
@@ -389,10 +400,10 @@ export default function JobDetailsPage({ params }) {
             value={tab}
             onChange={setTab}
             tabs={[
-              { value: "overview", label: "Overview" },
+              { value: "overview", label: t("jobs.details.tabOverview") },
               {
                 value: "requirements",
-                label: "Requirements",
+                label: t("jobs.details.tabRequirements"),
                 /* The app puts a red count badge on the Requirements tab when
                    documents are missing — that is how you find out which tab to
                    open. Suppressed in applied mode with the other missing flags. */
@@ -403,13 +414,13 @@ export default function JobDetailsPage({ params }) {
 
           {tab === "overview" ? (
             <Card className="mt-4">
-              <h2 className="text-lg font-bold text-heading">About the Job</h2>
+              <h2 className="text-lg font-bold text-heading">{t("jobs.details.aboutTitle")}</h2>
               <p className="mt-2 max-w-prose whitespace-pre-line text-md text-body">
-                {job.description || "No description was provided for this position."}
+                {job.description || t("jobs.details.noDescription")}
               </p>
               {job.responsibilities?.length ? (
                 <>
-                  <h3 className="mt-4 text-md font-bold text-heading">Responsibilities</h3>
+                  <h3 className="mt-4 text-md font-bold text-heading">{t("web.jobs.details.responsibilities")}</h3>
                   <ul className="mt-2 max-w-prose list-disc space-y-1 pl-5 text-md text-body">
                     {job.responsibilities.map((r) => <li key={r}>{r}</li>)}
                   </ul>
@@ -417,7 +428,7 @@ export default function JobDetailsPage({ params }) {
               ) : null}
               {job.benefits?.length ? (
                 <>
-                  <h3 className="mt-4 text-md font-bold text-heading">Benefits</h3>
+                  <h3 className="mt-4 text-md font-bold text-heading">{t("web.jobs.details.benefits")}</h3>
                   <ul className="mt-2 max-w-prose list-disc space-y-1 pl-5 text-md text-body">
                     {job.benefits.map((b) => <li key={b}>{b}</li>)}
                   </ul>
@@ -426,13 +437,13 @@ export default function JobDetailsPage({ params }) {
             </Card>
           ) : (
             <Card className="mt-4">
-              <h2 className="text-lg font-bold text-heading">Requirements</h2>
+              <h2 className="text-lg font-bold text-heading">{t("jobs.details.tabRequirements")}</h2>
               {job.requirements?.length ? (
                 <ul className="mt-2 max-w-prose list-disc space-y-1 pl-5 text-md text-body">
                   {job.requirements.map((r) => <li key={r}>{r}</li>)}
                 </ul>
               ) : (
-                <p className="mt-2 text-md text-body">No specific requirements were listed.</p>
+                <p className="mt-2 text-md text-body">{t("web.jobs.details.noRequirements")}</p>
               )}
               {job.requiredSkills?.length ? (
                 <div className="mt-4 flex flex-wrap gap-[5px]">
@@ -441,12 +452,12 @@ export default function JobDetailsPage({ params }) {
               ) : null}
               <dl className="mt-4 grid grid-cols-2 gap-3 text-md sm:grid-cols-3">
                 {[
-                  ["Department", job.department],
-                  ["Rank", job.rank],
-                  ["Vessel", job.vesselType],
-                  ["Vacancies", job.vacancies],
-                  ["Joining", job.joiningDate ? new Date(job.joiningDate).toLocaleDateString() : null],
-                  ["Deadline", job.applicationDeadline ? new Date(job.applicationDeadline).toLocaleDateString() : null],
+                  [t("jobs.filterModal.department"), job.department],
+                  [t("web.jobs.details.rank"), job.rank],
+                  [t("web.jobs.details.vessel"), job.vesselType],
+                  [t("web.jobs.details.vacancies"), job.vacancies],
+                  [t("web.jobs.details.joining"), job.joiningDate ? new Date(job.joiningDate).toLocaleDateString() : null],
+                  [t("web.jobs.details.deadline"), job.applicationDeadline ? new Date(job.applicationDeadline).toLocaleDateString() : null],
                 ]
                   .filter(([, v]) => v)
                   .map(([label, value]) => (
@@ -469,7 +480,7 @@ export default function JobDetailsPage({ params }) {
                   {t(isAppliedMode ? "jobs.details.documentsSubmitted" : "jobs.details.documentsRequired")}
                 </h2>
                 <Link href="/documents" className="text-sm font-semibold text-primary hover:underline">
-                  View All
+                  {t("common.viewAll")}
                 </Link>
               </div>
 

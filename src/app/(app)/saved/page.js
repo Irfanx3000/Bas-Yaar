@@ -12,6 +12,7 @@
  */
 
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useSavedJobs } from "@/hooks/useSavedJobs";
 import {
   Button,
@@ -27,6 +28,7 @@ import Link from "next/link";
 import { jobHref } from "@/lib/jobUrl";
 
 export default function SavedJobsPage() {
+  const { t } = useTranslation();
   const {
     jobs,
     totalCount,
@@ -46,9 +48,9 @@ export default function SavedJobsPage() {
     <div className="mx-auto max-w-6xl px-[15px] pb-8 lg:px-6">
       <SectionTitle
         className="pt-2"
-        action={!isLoading ? <span className="text-sm text-body">{totalCount} saved</span> : null}
+        action={!isLoading ? <span className="text-sm text-body">{t("web.jobs.saved.count", { count: totalCount })}</span> : null}
       >
-        Saved jobs
+        {t("jobs.saved.title")}
       </SectionTitle>
 
       <form
@@ -63,12 +65,12 @@ export default function SavedJobsPage() {
           <input
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Search your saved jobs"
-            aria-label="Search saved jobs"
+            placeholder={t("web.jobs.saved.searchPlaceholder")}
+            aria-label={t("web.jobs.saved.searchLabel")}
             className="w-full bg-transparent text-md text-heading outline-none focus-visible:outline-none placeholder:text-hint"
           />
         </label>
-        <Button type="submit">Search</Button>
+        <Button type="submit">{t("search.title")}</Button>
       </form>
 
       {appliedFilterChips?.length ? (
@@ -87,11 +89,11 @@ export default function SavedJobsPage() {
         ) : jobs.length === 0 ? (
           <EmptyState
             icon="bookmark"
-            title="No saved jobs yet"
-            message="Tap the bookmark on any job to keep it here for later."
+            title={t("jobs.saved.emptyTitle")}
+            message={t("web.jobs.saved.emptyMessage")}
             action={
               <Link href="/jobs">
-                <Button>Browse jobs</Button>
+                <Button>{t("web.jobs.dashboard.browseJobs")}</Button>
               </Link>
             }
           />

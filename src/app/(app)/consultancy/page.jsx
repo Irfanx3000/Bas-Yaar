@@ -44,7 +44,7 @@ import { formatCurrency, formatDate } from "@/utils/format";
 import { formatTime12h } from "@/lib/time";
 import { showAlert } from "@/utils/alertRef";
 import { getErrorMessage } from "@/i18n/getErrorMessage";
-import { t } from "@/i18n";
+import { useTranslation } from "react-i18next";
 import { Button, Card, Icon, LoadingState, Select } from "@/components/ui";
 
 const TOPIC_VALUES = ["career_guidance", "resume_review", "interview_prep", "visa_support", "sea_time"];
@@ -55,6 +55,7 @@ const TOPIC_VALUES = ["career_guidance", "resume_review", "interview_prep", "vis
 const WEEKDAY_KEYS = ["sun", "mon", "tue", "wed", "thurs", "fri", "sat"];
 
 function Stepper({ step }) {
+  const { t } = useTranslation();
   const dot = (n, label) => (
     <span className="flex items-center gap-2">
       <span
@@ -88,6 +89,7 @@ function ReviewRow({ label, value }) {
 }
 
 export default function ConsultancyPage() {
+  const { t } = useTranslation();
   const router = useRouter();
   const resumeInputRef = useRef(null);
 
@@ -226,7 +228,7 @@ export default function ConsultancyPage() {
             type="button"
             onClick={() => hook.handleMonthChange(-1)}
             disabled={!hook.canGoPrevMonth}
-            aria-label="Previous month"
+            aria-label={t("web.account.consultancy.previousMonth")}
             className="flex size-9 cursor-pointer items-center justify-center rounded-round text-heading hover:bg-canvas-top disabled:cursor-not-allowed disabled:text-line"
           >
             <Icon name="chevron-left" size={13} />
@@ -235,7 +237,7 @@ export default function ConsultancyPage() {
           <button
             type="button"
             onClick={() => hook.handleMonthChange(1)}
-            aria-label="Next month"
+            aria-label={t("web.account.consultancy.nextMonth")}
             className="flex size-9 cursor-pointer items-center justify-center rounded-round text-heading hover:bg-canvas-top"
           >
             <Icon name="chevron-right" size={13} />
@@ -279,7 +281,7 @@ export default function ConsultancyPage() {
         </div>
 
         {hook.isLoadingAvailability ? (
-          <p className="mt-2 text-center text-sm text-hint">Loading availability…</p>
+          <p className="mt-2 text-center text-sm text-hint">{t("web.account.consultancy.loadingAvailability")}</p>
         ) : null}
       </Card>
 
@@ -343,7 +345,7 @@ export default function ConsultancyPage() {
 
           <span className="min-w-0 flex-1">
             {hook.isLoadingResume ? (
-              <span className="text-sm text-hint">Loading…</span>
+              <span className="text-sm text-hint">{t("common.loading")}</span>
             ) : hook.resume ? (
               <>
                 <span className="block truncate text-md font-semibold text-heading">
@@ -366,7 +368,7 @@ export default function ConsultancyPage() {
 
           {hook.resume ? (
             <Button variant="text" size="sm" loading={openingResume} onClick={handleViewResume} icon="eye">
-              View
+              {t("documents.modal.view")}
             </Button>
           ) : null}
 

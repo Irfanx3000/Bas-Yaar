@@ -20,10 +20,12 @@ import { jobTaxonomyService } from "@/services/jobTaxonomy.service";
 import { preferencesService } from "@/services/preferences.service";
 import { CATEGORIES as FALLBACK_CATEGORIES } from "@/constants/categories.constants";
 import { showToast } from "@/utils/toastRef";
-import { t } from "@/i18n";
+import { useTranslation } from "react-i18next";
+import i18n from "@/i18n";
 import { Button, Icon, InlineAlert, LoadingState } from "@/components/ui";
 
 export default function PreferencesPage() {
+  const { t } = useTranslation();
   const router = useRouter();
   const [categories, setCategories] = useState(FALLBACK_CATEGORIES);
   const [selected, setSelected] = useState([]);
@@ -40,7 +42,7 @@ export default function PreferencesPage() {
         setSelected(preferred);
       })
       .catch(() => {
-        if (!cancelled) setError(t("profile.preferencesScreen.loadError"));
+        if (!cancelled) setError(i18n.t("profile.preferencesScreen.loadError"));
       })
       .finally(() => {
         if (!cancelled) setIsLoading(false);
@@ -58,7 +60,7 @@ export default function PreferencesPage() {
     setError("");
     try {
       await preferencesService.updatePreferences(selected);
-      showToast({ message: "Preferences saved", tone: "success", icon: "check" });
+      showToast({ message: i18n.t("web.account.preferences.saved"), tone: "success", icon: "check" });
       router.push("/profile");
     } catch {
       setError(t("profile.preferencesScreen.saveError"));
@@ -74,7 +76,7 @@ export default function PreferencesPage() {
           className="mb-2 inline-flex items-center gap-1.5 text-sm font-semibold text-primary hover:underline"
         >
           <Icon name="chevron-left" size={11} />
-          Profile
+          {t("nav.profile")}
         </Link>
         <h1 className="text-h2 font-extrabold text-heading">{t("profile.preferencesScreen.title")}</h1>
         <p className="mt-[2px] text-md text-body">{t("profile.preferencesScreen.subtitle")}</p>

@@ -39,6 +39,8 @@ import { getRankOptions, DESIGNATIONS } from "@/constants/maritime.constants";
 import { getErrorMessage } from "@/i18n/getErrorMessage";
 import { COUNTRY_OPTIONS, getStateOptions } from "@/utils/geo.utils";
 import { getPhoneLengthRange } from "@/constants/phoneLength.constants";
+import { useTranslation } from "react-i18next";
+import { LanguageList } from "@/components/LanguageList";
 import { Button, Card, DatePicker, Icon, InlineAlert, Input, Select } from "@/components/ui";
 
 const TOTAL_STEPS = 5;
@@ -46,9 +48,9 @@ const OTP_LENGTH = 6;
 const RESEND_SECONDS = 60;
 
 const GENDERS = [
-  { value: "Male", icon: "mars" },
-  { value: "Female", icon: "venus" },
-  { value: "Others", icon: "genderless" },
+  { value: "Male", labelKey: "auth.tellUs.male", icon: "mars" },
+  { value: "Female", labelKey: "auth.tellUs.female", icon: "venus" },
+  { value: "Others", labelKey: "auth.tellUs.others", icon: "genderless" },
 ];
 
 /* The API wants country NAMES; the dataset is keyed by ISO code, and states are
@@ -83,10 +85,12 @@ const toLocalPhone = (raw, dial, max) => {
 };
 
 export default function SignupPage() {
+  const { t } = useTranslation();
   const router = useRouter();
   const { departmentOptions } = useJobTaxonomyOptions();
 
   const [step, setStep] = useState(1);
+  const [pickLanguage, setPickLanguage] = useState(false);
   const [done, setDone] = useState(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState(null);
@@ -246,7 +250,7 @@ export default function SignupPage() {
     setNotice(null);
     try {
       await authService.sendOTP(form.email.trim());
-      setNotice("A new verification code has been sent to your email.");
+      setNotice(t("auth.otp.otpSentBody"));
       startCooldown();
     } catch (err) {
       setError(getErrorMessage(err));
@@ -265,7 +269,7 @@ export default function SignupPage() {
     if (form.experienceEndDate) payload.experienceEndDate = form.experienceEndDate;
 
     if (Object.keys(payload).length === 0) {
-      setDone(true);
+      setPickLanguage(true);
       return;
     }
 
@@ -276,7 +280,7 @@ export default function SignupPage() {
       /* Deliberately swallowed — see above. It is saveable later from /profile. */
     } finally {
       setBusy(false);
-      setDone(true);
+      setPickLanguage(true);
     }
   };
 
@@ -290,6 +294,9 @@ export default function SignupPage() {
   };
 
   if (done) return <AllSet router={router} />;
+  /* Last thing asked, once every step is behind them — the account exists, so
+     the choice is theirs from the first screen they land on. */
+  if (pickLanguage) return <LanguageStep onContinue={() => setDone(true)} />;
 
   return (
     <main className="relative isolate flex min-h-dvh items-center justify-center px-[15px] py-8">
@@ -301,21 +308,21 @@ export default function SignupPage() {
             type="button"
             onClick={back}
             disabled={step <= 1 || step >= 4}
-            aria-label="Back"
+            aria-label={t("common.back")}
             className="cursor-pointer rounded-round p-2 text-hint hover:bg-primary-light hover:text-primary disabled:cursor-not-allowed disabled:opacity-30"
           >
             <Icon name="chevron-left" size={14} />
           </button>
           <div className="flex-1">
             <p className="text-center text-sm font-medium text-body">
-              Step {step} of {TOTAL_STEPS}
+              {t("auth.common.stepIndicator", { current: step, total: TOTAL_STEPS })}
             </p>
             <div
               role="progressbar"
               aria-valuenow={step}
               aria-valuemin={1}
               aria-valuemax={TOTAL_STEPS}
-              aria-label={`Step ${step} of ${TOTAL_STEPS}`}
+              aria-label={t("auth.common.stepIndicator", { current: step, total: TOTAL_STEPS })}
               className="mt-2 h-1.5 w-full overflow-hidden rounded-round bg-primary-tint"
             >
               <div
@@ -380,25 +387,25 @@ export default function SignupPage() {
             icon={step === 3 || step === 4 ? undefined : "arrow-right"}
             iconPosition="right"
           >
-            {step === 3 ? "Send Verification Code" : step === 4 ? "Verify" : "Next"}
+            {step === 3 ? t("auth.stayConnected.sendCode") : step === 4 ? t("auth.otp.verify") : t("common.next")}
           </Button>
 
           {step === 5 ? (
             <button
               type="button"
-              onClick={() => setDone(true)}
+              onClick={() => setPickLanguage(true)}
               className="mt-2 w-full cursor-pointer py-2 text-md font-semibold text-body hover:text-heading"
             >
-              Skip
+              {t("auth.maritime.skip")}
             </button>
           ) : null}
         </form>
 
         {step < 4 ? (
           <p className="mt-4 text-center text-md text-body">
-            Already have an account?{" "}
+            {t("auth.common.alreadyHaveAccount")}{" "}
             <Link href="/login" className="font-semibold text-primary hover:underline">
-              Login
+              {t("auth.common.login")}
             </Link>
           </p>
         ) : null}
@@ -428,19 +435,20 @@ function StepHeading({ title, subtitle }) {
 }
 
 function StepOne({ form, set }) {
+  const { t } = useTranslation();
   return (
     <>
-      <StepHeading title="Tell Us About Yourself" subtitle="Let's start with some basic information." />
+      <StepHeading title={t("auth.tellUs.title")} subtitle={t("auth.common.basicInfoSubtitle")} />
 
       <Input
-        label="Full Name"
+        label={t("auth.tellUs.fullNameLabel")}
         required
         minLength={2}
         maxLength={50}
         autoFocus
         value={form.name}
         onChange={set("name")}
-        placeholder="Enter full name"
+        placeholder={t("auth.tellUs.fullNamePlaceholder")}
       />
 
       {/* yearsBack=80 so the year dropdown actually reaches a plausible date of
@@ -448,7 +456,7 @@ function StepOne({ form, set }) {
           is UTC and would let someone born today be rejected — or accepted —
           depending on their timezone. */}
       <DatePicker
-        label="Date of Birth"
+        label={t("auth.tellUs.dobLabel")}
         required
         max={todayISO()}
         yearsBack={80}
@@ -460,14 +468,14 @@ function StepOne({ form, set }) {
            screens later. */
         error={
           form.dateOfBirth && !isOldEnough(form.dateOfBirth)
-            ? "You must be at least 18 years old to register."
+            ? t("auth.tellUs.ageRequirementBody")
             : undefined
         }
       />
 
       <fieldset className="mb-3">
         <legend className="mb-[5px] block text-sm font-medium text-body">
-          Gender
+          {t("auth.tellUs.genderLabel")}
           <span className="ml-[2px] text-danger" aria-hidden="true">*</span>
         </legend>
         <div className="grid grid-cols-3 gap-2">
@@ -486,7 +494,7 @@ function StepOne({ form, set }) {
                 }`}
               >
                 <Icon name={g.icon} size={13} />
-                {g.value}
+                {t(g.labelKey)}
               </button>
             );
           })}
@@ -506,27 +514,28 @@ const COUNTRY_CODE_OPTIONS = COUNTRY_OPTIONS.map((c) => ({ value: c.value, label
    the search exists to avoid. Copy and gating mirror that screen: state waits for
    a country, city waits for a state. */
 function StepTwo({ form, set, stateOptions, cityOptions, citiesLoading }) {
+  const { t } = useTranslation();
   return (
     <>
-      <StepHeading title="Where are you located?" subtitle="This helps us match you to the right vacancies." />
+      <StepHeading title={t("auth.location.title")} subtitle={t("web.auth.signup.locationSubtitle")} />
 
       <Select
-        label="Nationality"
+        label={t("auth.location.nationalityLabel")}
         required
         searchable
-        searchPlaceholder="Search nationality..."
-        placeholder="Select your nationality"
+        searchPlaceholder={t("auth.location.searchNationality")}
+        placeholder={t("auth.location.nationalityPlaceholder")}
         options={NATIONALITY_OPTIONS}
         value={form.nationality}
         onChange={set("nationality")}
       />
 
       <Select
-        label="Country"
+        label={t("auth.location.countryLabel")}
         required
         searchable
-        searchPlaceholder="Search country..."
-        placeholder="Select your Country"
+        searchPlaceholder={t("auth.location.searchCountry")}
+        placeholder={t("auth.location.countryPlaceholder")}
         options={COUNTRY_CODE_OPTIONS}
         value={form.countryCode}
         onChange={set("countryCode")}
@@ -535,10 +544,10 @@ function StepTwo({ form, set, stateOptions, cityOptions, citiesLoading }) {
       {/* State and city are optional server-side — some countries have no
           subdivisions in the dataset — so neither carries an asterisk. */}
       <Select
-        label="State / Province"
+        label={t("auth.location.stateLabel")}
         searchable
-        searchPlaceholder="Search state..."
-        placeholder={form.countryCode ? "Select your state" : "Select a country first"}
+        searchPlaceholder={t("auth.location.searchState")}
+        placeholder={form.countryCode ? t("auth.location.statePlaceholderEnabled") : t("auth.location.statePlaceholderDisabled")}
         options={stateOptions}
         value={form.stateCode}
         onChange={set("stateCode")}
@@ -546,10 +555,10 @@ function StepTwo({ form, set, stateOptions, cityOptions, citiesLoading }) {
       />
 
       <Select
-        label="City"
+        label={t("auth.location.cityLabel")}
         searchable
-        searchPlaceholder="Search city..."
-        placeholder={form.stateCode ? (citiesLoading ? "Loading cities..." : "Select your city") : "Select a state first"}
+        searchPlaceholder={t("auth.location.searchCity")}
+        placeholder={form.stateCode ? (citiesLoading ? t("common.loading") : t("auth.location.cityPlaceholderEnabled")) : t("auth.location.cityPlaceholderDisabled")}
         options={cityOptions}
         value={form.city}
         onChange={set("city")}
@@ -561,6 +570,7 @@ function StepTwo({ form, set, stateOptions, cityOptions, citiesLoading }) {
 }
 
 function StepThree({ form, set, dial, phoneRange }) {
+  const { t } = useTranslation();
   /* One toggle PER field. A single shared toggle revealed both passwords at
      once — the confirm field included — when the user only asked to check one. */
   const [showPassword, setShowPassword] = useState(false);
@@ -570,23 +580,24 @@ function StepThree({ form, set, dial, phoneRange }) {
     form.confirmPassword.length > 0 && form.password !== form.confirmPassword;
 
   const { min, max } = phoneRange;
-  const lengthText = min === max ? `${min}-digit` : `${min}–${max} digit`;
   /* Error only once the field has been left, so it does not shout while the
      number is still being typed. Too long is impossible — input is capped. */
   const phoneError =
     phoneTouched && form.phone.length < min
       ? form.phone.length === 0
-        ? "Enter your mobile number."
-        : `Enter a valid ${lengthText} mobile number.`
+        ? t("web.auth.signup.phoneRequired")
+        : min === max
+          ? t("web.auth.signup.phoneInvalidExact", { count: min })
+          : t("web.auth.signup.phoneInvalidRange", { min, max })
       : undefined;
 
   return (
     <>
-      <StepHeading title="Let's Stay Connected" subtitle="We'll use these to verify your account." />
+      <StepHeading title={t("auth.stayConnected.title")} subtitle={t("web.auth.signup.contactSubtitle")} />
 
       <div>
         <label htmlFor="phone" className="mb-[5px] block text-sm font-medium text-body">
-          Mobile Number
+          {t("auth.stayConnected.mobileLabel")}
           <span className="ml-[2px] text-danger" aria-hidden="true">*</span>
         </label>
         {/* items-start, not the default stretch: stretch sized the dial box to the
@@ -610,59 +621,65 @@ function StepThree({ form, set, dial, phoneRange }) {
             value={form.phone}
             onChange={(e) => set("phone")(toLocalPhone(e.target.value, dial, max))}
             onBlur={() => setPhoneTouched(true)}
-            placeholder="Enter your phone number"
-            hint={phoneError ? undefined : `${lengthText} number, without the country code.`}
+            placeholder={t("auth.stayConnected.mobilePlaceholder")}
+            hint={
+              phoneError
+                ? undefined
+                : min === max
+                  ? t("web.auth.signup.phoneHintExact", { count: min })
+                  : t("web.auth.signup.phoneHintRange", { min, max })
+            }
             error={phoneError}
           />
         </div>
       </div>
 
       <Input
-        label="Email Address"
+        label={t("auth.stayConnected.emailLabel")}
         type="email"
         required
         autoComplete="email"
         value={form.email}
         onChange={set("email")}
-        placeholder="Enter your email address"
-        hint="Your verification code goes here."
+        placeholder={t("auth.stayConnected.emailPlaceholder")}
+        hint={t("web.auth.signup.emailHint")}
       />
 
       <Input
-        label="Set Password"
+        label={t("auth.stayConnected.setPasswordLabel")}
         type={showPassword ? "text" : "password"}
         required
         minLength={8}
         autoComplete="new-password"
         iconRight={showPassword ? "eye-slash" : "eye"}
         onIconRightClick={() => setShowPassword((v) => !v)}
-        iconRightLabel={showPassword ? "Hide password" : "Show password"}
+        iconRightLabel={showPassword ? t("web.auth.signup.hidePassword") : t("web.auth.signup.showPassword")}
         value={form.password}
         onChange={set("password")}
-        placeholder="Set Password"
-        hint="At least 8 characters."
+        placeholder={t("auth.stayConnected.setPasswordPlaceholder")}
+        hint={t("auth.stayConnected.passwordShortBody")}
       />
 
       <Input
-        label="Confirm Password"
+        label={t("auth.stayConnected.confirmPasswordLabel")}
         type={showConfirm ? "text" : "password"}
         required
         autoComplete="new-password"
         iconRight={showConfirm ? "eye-slash" : "eye"}
         onIconRightClick={() => setShowConfirm((v) => !v)}
-        iconRightLabel={showConfirm ? "Hide password" : "Show password"}
+        iconRightLabel={showConfirm ? t("web.auth.signup.hidePassword") : t("web.auth.signup.showPassword")}
         value={form.confirmPassword}
         onChange={set("confirmPassword")}
-        placeholder="Re-enter Password"
-        error={mismatch ? "Those passwords do not match." : undefined}
+        placeholder={t("auth.stayConnected.confirmPasswordPlaceholder")}
+        error={mismatch ? t("auth.stayConnected.passwordMismatchBody") : undefined}
       />
 
       <Input
-        label="Referral Code"
+        label={t("auth.stayConnected.referralCodeLabel")}
         maxLength={20}
         value={form.referralCode}
         onChange={set("referralCode")}
-        placeholder="Optional"
+        placeholder={t("auth.stayConnected.referralCodePlaceholder")}
       />
     </>
   );
@@ -673,6 +690,7 @@ function StepThree({ form, set, dial, phoneRange }) {
    anywhere distributes across all six. Without that, six inputs would be a
    downgrade on the single field they replace. */
 function StepFour({ form, set, cooldown, onResend, onEdit }) {
+  const { t } = useTranslation();
   const digits = form.otp.padEnd(OTP_LENGTH, " ").split("").slice(0, OTP_LENGTH);
 
   const focusBox = (index) =>
@@ -693,17 +711,17 @@ function StepFour({ form, set, cooldown, onResend, onEdit }) {
           a legacy name). This step showed the phone number, which told people to
           watch their SMS for a message that never comes. Copy is the app's
           auth.otp.* strings; Edit returns to step 3, where the email is typed. */}
-      <StepHeading title="Verify Your Email" subtitle={`Enter the ${OTP_LENGTH}-Digit Code`} />
+      <StepHeading title={t("auth.otp.title")} subtitle={t("auth.otp.subtitle")} />
 
       <div className="mb-4">
         <div className="mb-[5px] flex items-center justify-between gap-2">
-          <span className="text-sm font-medium text-body">Email Address</span>
+          <span className="text-sm font-medium text-body">{t("auth.otp.emailLabel")}</span>
           <button
             type="button"
             onClick={onEdit}
             className="shrink-0 cursor-pointer text-sm font-semibold text-primary hover:underline"
           >
-            Edit
+            {t("auth.otp.edit")}
           </button>
         </div>
         <p className="flex min-h-[50px] items-center rounded-[12px] border border-line-input bg-canvas-top px-4 text-md break-all text-heading">
@@ -724,7 +742,7 @@ function StepFour({ form, set, cooldown, onResend, onEdit }) {
             maxLength={1}
             autoComplete={i === 0 ? "one-time-code" : "off"}
             autoFocus={i === 0}
-            aria-label={`Digit ${i + 1}`}
+            aria-label={t("web.auth.signup.otpDigit", { n: i + 1 })}
             value={digit.trim()}
             onChange={(e) => setDigit(i, e.target.value.replace(/\D/g, "").slice(-1))}
             onKeyDown={(e) => {
@@ -736,12 +754,12 @@ function StepFour({ form, set, cooldown, onResend, onEdit }) {
       </div>
 
       <p className="mb-3 text-center text-sm text-body">
-        Didn&apos;t receive OTP?{" "}
+        {t("auth.otp.didntReceive")}{" "}
         {cooldown > 0 ? (
-          <span className="text-hint">Resend in {cooldown}s</span>
+          <span className="text-hint">{t("web.auth.signup.resendIn", { seconds: cooldown })}</span>
         ) : (
           <button type="button" onClick={onResend} className="cursor-pointer font-semibold text-primary hover:underline">
-            Resend OTP
+            {t("auth.otp.resend")}
           </button>
         )}
       </p>
@@ -750,23 +768,24 @@ function StepFour({ form, set, cooldown, onResend, onEdit }) {
 }
 
 function StepFive({ form, set, departmentOptions, rankOptions }) {
+  const { t } = useTranslation();
   return (
     <>
-      <StepHeading title="Your Maritime Profile" subtitle="Tell us about your professional background." />
+      <StepHeading title={t("auth.maritime.title")} subtitle={t("auth.maritime.subtitle")} />
 
       {/* Nothing here is required — the app lets this whole step be skipped, and
           the server accepts an empty payload. So no asterisks. */}
       <Select
-        label="Department"
-        placeholder="Select your department"
+        label={t("auth.maritime.departmentLabel")}
+        placeholder={t("auth.maritime.departmentPlaceholder")}
         options={departmentOptions}
         value={form.department}
         onChange={set("department")}
       />
 
       <Select
-        label="Rank"
-        placeholder={form.department ? "Select your rank" : "Choose a department first"}
+        label={t("auth.maritime.rankLabel")}
+        placeholder={form.department ? t("auth.maritime.rankPlaceholderEnabled") : t("auth.maritime.rankPlaceholderDisabled")}
         options={rankOptions}
         value={form.rank}
         onChange={set("rank")}
@@ -774,21 +793,21 @@ function StepFive({ form, set, departmentOptions, rankOptions }) {
       />
 
       <Select
-        label="Designation"
-        placeholder="Select your designation"
+        label={t("auth.maritime.designationLabel")}
+        placeholder={t("auth.maritime.designationPlaceholder")}
         options={DESIGNATIONS}
         value={form.designation}
         onChange={set("designation")}
       />
 
       <fieldset>
-        <legend className="mb-[5px] block text-sm font-medium text-body">Experience</legend>
+        <legend className="mb-[5px] block text-sm font-medium text-body">{t("auth.maritime.experienceLabel")}</legend>
         <div className="grid grid-cols-2 gap-2">
           {/* A sea career, not a lifetime — 60 back is generous and keeps the
               year list short enough to scan. */}
           <DatePicker
-            label="Start Date"
-            placeholder="Start Date"
+            label={t("auth.maritime.startDate")}
+            placeholder={t("auth.maritime.startDate")}
             yearsBack={60}
             yearsForward={0}
             max={todayISO()}
@@ -796,8 +815,8 @@ function StepFive({ form, set, departmentOptions, rankOptions }) {
             onChange={set("experienceStartDate")}
           />
           <DatePicker
-            label="End Date"
-            placeholder="End Date"
+            label={t("auth.maritime.endDate")}
+            placeholder={t("auth.maritime.endDate")}
             yearsBack={60}
             yearsForward={0}
             min={form.experienceStartDate || undefined}
@@ -810,7 +829,27 @@ function StepFive({ form, set, departmentOptions, rankOptions }) {
   );
 }
 
+/* Asked last, once the account exists — the app's LanguageScreen, shared with
+   /language. Picking switches the page under them live, so "All Set" that
+   follows is already in their language. */
+function LanguageStep({ onContinue }) {
+  const { t } = useTranslation();
+  return (
+    <main className="relative isolate flex min-h-dvh items-center justify-center px-[15px] py-8">
+      <Backdrop />
+      <Card className="w-full max-w-md" elevation="md" radius="lg">
+        <StepHeading title={t("language.title")} subtitle={t("language.subtitle")} />
+        <LanguageList />
+        <Button fullWidth className="mt-2" icon="arrow-right" iconPosition="right" onClick={onContinue}>
+          {t("auth.maritime.continue")}
+        </Button>
+      </Card>
+    </main>
+  );
+}
+
 function AllSet({ router }) {
+  const { t } = useTranslation();
   return (
     <main className="relative isolate flex min-h-dvh items-center justify-center px-[15px] py-8">
       <Backdrop />
@@ -819,17 +858,18 @@ function AllSet({ router }) {
           <Icon name="check-circle" size={30} />
         </span>
 
-        <h1 className="mt-4 text-h2 font-extrabold text-primary-vivid">You&apos;re All Set!</h1>
+        <h1 className="mt-4 text-h2 font-extrabold text-primary-vivid">{t("auth.success.title")}</h1>
         <p className="mt-1 text-md text-body">
-          Start exploring jobs and apply to your dream role.
+          {t("auth.success.subtitle")}
         </p>
 
         <div className="mt-6 space-y-2">
           <Button fullWidth icon="arrow-right" iconPosition="right" onClick={() => router.replace("/jobs")}>
-            Explore Jobs
+            {/* The copy ends in "→"; the icon already draws the arrow. */}
+            {t("auth.success.exploreJobs").replace(/\s*→$/, "")}
           </Button>
           <Button fullWidth variant="outline" onClick={() => router.replace("/profile")}>
-            Complete Profile
+            {t("auth.success.completeProfile")}
           </Button>
         </div>
       </Card>

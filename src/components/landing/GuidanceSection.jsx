@@ -1,8 +1,12 @@
+"use client";
+
 import Image from 'next/image';
 import Link from 'next/link';
 import { Icon } from '@/components/ui/Icon';
+import { useTranslation } from "react-i18next";
 
 export function GuidanceSection() {
+  const { t } = useTranslation();
   const featureBadges = [];
 
   return (
@@ -14,7 +18,7 @@ export function GuidanceSection() {
           <div className="absolute inset-0 z-0">
              <Image 
                src="/banner 2.png"
-               alt="Get Expert Guidance Graphic"
+               alt={t("web.landing.guidance.imageAlt")}
                fill
                className="object-cover object-center lg:object-right"
              />
@@ -28,20 +32,20 @@ export function GuidanceSection() {
             {/* Left Content (Text & CTA) */}
             <div className="flex-1 flex flex-col justify-center max-w-md lg:max-w-lg z-20">
               <h2 className="text-sm font-bold tracking-wide text-muted uppercase mb-3">
-                NOT SURE WHAT'S NEXT?
+                {t("web.landing.guidance.eyebrow")}
               </h2>
               <h3 className="text-h2 lg:text-h1 font-extrabold leading-tight mb-4">
-                <span className="text-heading">Get Expert </span>
-                <span className="text-primary">Guidance.</span>
+                <span className="text-heading">{t("web.landing.guidance.title")}</span>
+                <span className="text-primary">{t("web.landing.guidance.titleHighlight")}</span>
               </h3>
               <p className="text-lg text-body font-medium mb-8 max-w-md">
-                Get personalised guidance for your maritime career through one-on-one consultations with industry experts.
+                {t("web.landing.guidance.subtitle")}
               </p>
 
               <div className="flex">
                 <Link href="/consultancy" className="inline-flex items-center justify-center bg-primary text-white rounded-full px-6 py-3 font-semibold hover:bg-primary-hover transition-colors shadow-sm">
-                  <span className="hidden lg:inline">Book a Consultation</span>
-                  <span className="lg:hidden inline-flex items-center gap-2">Book a Consultation <span>&rarr;</span></span>
+                  <span className="hidden lg:inline">{t("web.landing.guidance.bookConsultation")}</span>
+                  <span className="lg:hidden inline-flex items-center gap-2">{t("web.landing.guidance.bookConsultation")} <span>&rarr;</span></span>
                 </Link>
               </div>
 
@@ -58,15 +62,15 @@ export function GuidanceSection() {
                     ))}
                   </div>
                   <div>
-                    <h4 className="font-semibold text-heading text-sm sm:text-base">Trusted by Professionals</h4>
-                    <p className="text-xs sm:text-sm text-body">Get guidance from experienced maritime professionals.</p>
+                    <h4 className="font-semibold text-heading text-sm sm:text-base">{t("web.landing.guidance.trustedTitle")}</h4>
+                    <p className="text-xs sm:text-sm text-body">{t("web.landing.guidance.trustedDesc")}</p>
                   </div>
                 </div>
                 
                 {/* Playful Slogan */}
                 <div className="text-right mt-2">
                   <p className="text-2xl font-medium text-primary inline-block" style={{ fontFamily: '"Caveat", cursive', transform: 'rotate(-2deg)' }}>
-                    Same Oceans. Bigger Opportunities.
+                    {t("web.landing.common.slogan")}
                     <svg className="w-full h-2 text-primary/40 mt-1" viewBox="0 0 100 10" preserveAspectRatio="none">
                       <path d="M0 5 Q 50 10 100 2" stroke="currentColor" strokeWidth="2" fill="none" />
                     </svg>

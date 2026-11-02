@@ -29,6 +29,7 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { PersonalInfoModal } from "@/components/profile/PersonalInfoModal";
 import { useProfile } from "@/context/ProfileContext";
 import { useCareerProfile } from "@/context/CareerProfileContext";
@@ -86,6 +87,7 @@ function CardHeading({ icon, title, action }) {
 }
 
 export default function ProfilePage() {
+  const { t } = useTranslation();
   const { profile, completion, loading, refresh: refreshProfile } = useProfile() ?? {};
   const [editingPersonal, setEditingPersonal] = useState(false);
   const {
@@ -116,18 +118,18 @@ export default function ProfilePage() {
 
   // Derive missing profile fields for below-100% prompt
   const missingItems = [];
-  if (!profile?.avatarUrl) missingItems.push({ label: "Profile photo", href: null, action: () => setEditingPersonal(true) });
-  if (!profile?.rank) missingItems.push({ label: "Rank / Position", href: null, action: () => setEditingPersonal(true) });
-  if (!profile?.phone) missingItems.push({ label: "Phone number", href: null, action: () => setEditingPersonal(true) });
-  if (!profile?.location) missingItems.push({ label: "Location", href: null, action: () => setEditingPersonal(true) });
-  if (education.length === 0) missingItems.push({ label: "Education", href: "/cv", action: null });
-  if (skills.length === 0) missingItems.push({ label: "Skills", href: "/cv", action: null });
+  if (!profile?.avatarUrl) missingItems.push({ labelKey: "web.profile.overview.missing.photo", href: null, action: () => setEditingPersonal(true) });
+  if (!profile?.rank) missingItems.push({ labelKey: "web.profile.overview.missing.rank", href: null, action: () => setEditingPersonal(true) });
+  if (!profile?.phone) missingItems.push({ labelKey: "profile.personalInfo.labels.phone", href: null, action: () => setEditingPersonal(true) });
+  if (!profile?.location) missingItems.push({ labelKey: "careerProfile.contact.location", href: null, action: () => setEditingPersonal(true) });
+  if (education.length === 0) missingItems.push({ labelKey: "careerProfile.sections.education", href: "/cv", action: null });
+  if (skills.length === 0) missingItems.push({ labelKey: "careerProfile.sections.skills", href: "/cv", action: null });
 
   return (
     <div className="mx-auto max-w-5xl px-[15px] pb-8 lg:px-6">
       <header className="pt-2 pb-4">
-        <h1 className="text-h2 font-extrabold text-heading">Personal Overview</h1>
-        <p className="mt-[2px] text-md text-body">Manage your profile details and career status.</p>
+        <h1 className="text-h2 font-extrabold text-heading">{t("profile.personalOverview")}</h1>
+        <p className="mt-[2px] text-md text-body">{t("web.profile.overview.subtitle")}</p>
       </header>
 
       <div className="lg:grid lg:grid-cols-2 lg:items-start lg:gap-4">
@@ -145,21 +147,21 @@ export default function ProfilePage() {
 
               <div className="min-w-0 flex-1">
                 <h2 className="truncate text-h3 font-extrabold text-heading">
-                  {profile?.name || "Your name"}
+                  {profile?.name || t("web.profile.overview.yourName")}
                 </h2>
                 {profile?.rank ? (
                   <p className="mt-[2px] text-md font-semibold text-primary">{profile.rank}</p>
                 ) : (
-                  <p className="mt-[2px] text-md text-hint">No rank set</p>
+                  <p className="mt-[2px] text-md text-hint">{t("web.profile.overview.noRank")}</p>
                 )}
                 {profile?.id ? (
                   <p className="mt-[2px] text-sm text-hint">
-                    Seafarer ID: {String(profile.id).slice(-8).toUpperCase()}
+                    {t("web.profile.overview.seafarerId", { id: String(profile.id).slice(-8).toUpperCase() })}
                   </p>
                 ) : null}
 
                 <div className="mt-2 flex flex-wrap items-center gap-2">
-                  <StatusBadge status="selected" label="Available" />
+                  <StatusBadge status="selected" label={t("web.profile.overview.available")} />
                   {maritime.department ? <Chip tone="neutral">{maritime.department}</Chip> : null}
                 </div>
               </div>
@@ -170,39 +172,39 @@ export default function ProfilePage() {
                 className="flex shrink-0 cursor-pointer items-center gap-1 rounded-lg border border-line-soft bg-canvas px-2.5 py-1 text-xs font-bold text-primary transition-colors hover:border-primary hover:bg-primary-light"
               >
                 <Icon name="pencil-alt" size={11} />
-                Edit
+                {t("web.profile.common.edit")}
               </button>
             </div>
 
             {completion?.percentage != null ? (
               <div className="mt-4 border-t border-line-soft pt-3">
-                <ProgressBar value={completion.percentage} label="Profile strength" />
+                <ProgressBar value={completion.percentage} label={t("web.profile.overview.strength")} />
                 {completionPct < 100 && missingItems.length > 0 ? (
                   <div className="mt-3 rounded-xl border border-warning/30 bg-warning-light/40 p-3">
                     <div className="flex items-center gap-1.5 text-xs font-extrabold uppercase tracking-wider text-warning-text">
                       <Icon name="exclamation-circle" size={13} />
-                      Complete missing fields (+{100 - completionPct}%)
+                      {t("web.profile.overview.completeMissing", { pct: 100 - completionPct })}
                     </div>
                     <div className="mt-2 flex flex-wrap items-center gap-1.5">
                       {missingItems.slice(0, 4).map((item) =>
                         item.href ? (
                           <Link
-                            key={item.label}
+                            key={item.labelKey}
                             href={item.href}
                             className="inline-flex items-center gap-1 rounded-md border border-warning/40 bg-surface px-2.5 py-1 text-xs font-bold text-heading transition-colors hover:border-primary hover:text-primary"
                           >
                             <Icon name="plus" size={9} />
-                            {item.label}
+                            {t(item.labelKey)}
                           </Link>
                         ) : (
                           <button
-                            key={item.label}
+                            key={item.labelKey}
                             type="button"
                             onClick={item.action}
                             className="inline-flex items-center gap-1 rounded-md border border-warning/40 bg-surface px-2.5 py-1 text-xs font-bold text-heading transition-colors hover:border-primary hover:text-primary"
                           >
                             <Icon name="plus" size={9} />
-                            {item.label}
+                            {t(item.labelKey)}
                           </button>
                         )
                       )}
@@ -217,7 +219,7 @@ export default function ProfilePage() {
           <Card radius="lg">
             <CardHeading
               icon="user"
-              title="Personal Info"
+              title={t("web.profile.overview.personalInfo")}
               action={
                 <button
                   type="button"
@@ -225,14 +227,14 @@ export default function ProfilePage() {
                   className="flex items-center gap-1 cursor-pointer rounded-lg border border-line-soft bg-canvas px-2.5 py-1 text-xs font-bold text-primary transition-colors hover:border-primary hover:bg-primary-light"
                 >
                   <Icon name="pencil-alt" size={11} />
-                  Edit
+                  {t("web.profile.common.edit")}
                 </button>
               }
             />
             <div className="divide-y divide-line-soft">
-              <Row icon="email" label="Email" value={profile?.email} />
-              <Row icon="phone-alt" label="Phone" value={profile?.phone} />
-              <Row icon="map-marker-alt" label="Location" value={profile?.location} />
+              <Row icon="email" label={t("careerProfile.contact.email")} value={profile?.email} />
+              <Row icon="phone-alt" label={t("careerProfile.contact.phone")} value={profile?.phone} />
+              <Row icon="map-marker-alt" label={t("careerProfile.contact.location")} value={profile?.location} />
             </div>
           </Card>
         </div>
@@ -242,14 +244,14 @@ export default function ProfilePage() {
           <Card radius="lg">
             <CardHeading
               icon="education"
-              title="Education"
+              title={t("careerProfile.sections.education")}
               action={
                 <Link
                   href="/cv"
                   className="flex items-center gap-1 rounded-lg border border-line-soft bg-canvas px-2.5 py-1 text-xs font-bold text-primary transition-colors hover:border-primary hover:bg-primary-light"
                 >
                   <Icon name="pencil-alt" size={11} />
-                  {education.length ? "Edit" : "Add"}
+                  {education.length ? t("web.profile.common.edit") : t("web.profile.common.add")}
                 </Link>
               }
             />
@@ -259,11 +261,11 @@ export default function ProfilePage() {
             ) : education.length === 0 ? (
               <EmptyState
                 icon="education"
-                title="No education added"
-                message="Add your qualifications so employers can verify them."
+                title={t("web.profile.overview.noEducation")}
+                message={t("web.profile.overview.noEducationBody")}
                 action={
                   <Link href="/cv">
-                    <Button size="sm">Add education</Button>
+                    <Button size="sm">{t("careerProfile.education.add")}</Button>
                   </Link>
                 }
               />
@@ -302,29 +304,29 @@ export default function ProfilePage() {
           <Card radius="lg">
             <CardHeading
               icon="cog"
-              title="Preferences"
+              title={t("profile.menu.preferences.title")}
               action={
                 <Link
                   href="/preferences"
                   className="flex items-center gap-1 rounded-lg border border-line-soft bg-canvas px-2.5 py-1 text-xs font-bold text-primary transition-colors hover:border-primary hover:bg-primary-light"
                 >
                   <Icon name="pencil-alt" size={11} />
-                  Edit
+                  {t("web.profile.common.edit")}
                 </Link>
               }
             />
 
-            <p className="mb-2 text-sm font-medium text-body">Job type</p>
+            <p className="mb-2 text-sm font-medium text-body">{t("web.profile.overview.jobType")}</p>
             <div className="flex flex-wrap gap-2">
               {maritime.department ? <Chip>{maritime.department}</Chip> : null}
               {maritime.rank ? <Chip tone="neutral">{maritime.rank}</Chip> : null}
               {maritime.designation ? <Chip tone="neutral">{maritime.designation}</Chip> : null}
               {!maritime.department && !maritime.rank && !maritime.designation ? (
-                <p className="text-md text-hint">Nothing set yet.</p>
+                <p className="text-md text-hint">{t("web.profile.overview.nothingSet")}</p>
               ) : null}
             </div>
 
-            <p className="mt-4 mb-2 text-sm font-medium text-body">Skills</p>
+            <p className="mt-4 mb-2 text-sm font-medium text-body">{t("careerProfile.sections.skills")}</p>
             <div className="flex flex-wrap gap-2">
               {skills.length ? (
                 skills.map((skill) => (
@@ -334,7 +336,7 @@ export default function ProfilePage() {
                 ))
               ) : (
                 <Link href="/cv" className="text-md font-semibold text-primary hover:underline">
-                  Add your skills
+                  {t("web.profile.overview.addSkills")}
                 </Link>
               )}
             </div>

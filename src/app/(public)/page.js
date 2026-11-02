@@ -1,3 +1,5 @@
+"use client";
+
 import Image from "next/image";
 import { Navbar } from "@/components/landing/Navbar";
 import { HeroContent } from "@/components/landing/HeroContent";
@@ -7,14 +9,16 @@ import { DocumentsSection } from "@/components/landing/DocumentsSection";
 import { GuidanceSection } from "@/components/landing/GuidanceSection";
 import { TestimonialsSection } from "@/components/landing/TestimonialsSection";
 import { FooterSection } from "@/components/landing/FooterSection";
+import { useTranslation } from "react-i18next";
 
 export default function HomePage() {
+  const { t } = useTranslation();
   return (
     <>
       <main className="relative flex flex-col min-h-screen w-full overflow-hidden">
         <Image
           src="/landingpage-desktop-bg.jpeg"
-          alt="Hero Background"
+          alt={t("web.landing.common.heroBgAlt")}
           fill
           priority
           className="object-cover object-center -z-10"

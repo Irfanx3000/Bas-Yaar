@@ -41,7 +41,7 @@
 
 import { useWallet } from "@/hooks/useWallet";
 import { formatCurrency, formatDate } from "@/utils/format";
-import { t } from "@/i18n";
+import { useTranslation } from "react-i18next";
 import { Card, EmptyState, ErrorState, Icon, LoadingState, Modal, Pagination } from "@/components/ui";
 
 /* Keyed on the model's own enum (walletTransaction.model.js), which is
@@ -66,6 +66,7 @@ function StatTile({ label, value }) {
 }
 
 function TransactionRow({ transaction, onSelect }) {
+  const { t } = useTranslation();
   const isCredit = transaction.amount >= 0;
   const meta = metaFor(transaction.type);
 
@@ -114,6 +115,7 @@ function DetailRow({ label, value }) {
 }
 
 function TransactionDetail({ transaction, loading }) {
+  const { t } = useTranslation();
   if (loading || !transaction) return <LoadingState rows={2} />;
 
   const isCredit = transaction.amount >= 0;
@@ -170,6 +172,7 @@ function TransactionDetail({ transaction, loading }) {
 }
 
 export default function WalletPage() {
+  const { t } = useTranslation();
   const {
     balance,
     stats,

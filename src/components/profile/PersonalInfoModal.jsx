@@ -47,7 +47,7 @@ import { usePersonalInformation } from "@/hooks/usePersonalInformation";
 import { PERSONAL_INFO_CONSTANTS } from "@/constants/personalInformation.constants";
 import { getPhoneLengthRange } from "@/constants/phoneLength.constants";
 import { showToast } from "@/utils/toastRef";
-import { t } from "@/i18n";
+import { useTranslation } from "react-i18next";
 import { Avatar, Button, DatePicker, Icon, Input, LoadingState, Modal, Select } from "@/components/ui";
 
 /* "DD-MM-YYYY" ⇄ "YYYY-MM-DD". Split on the separator rather than parsing to a
@@ -62,27 +62,45 @@ const fromPickerDate = (iso) => {
   return parts.length === 3 ? `${parts[2]}-${parts[1]}-${parts[0]}` : "";
 };
 
-const OPTIONS = {
-  gender: PERSONAL_INFO_CONSTANTS.GENDER_OPTIONS.map((o) => ({ value: o.value, label: t(o.labelKey) })),
-  maritalStatus: PERSONAL_INFO_CONSTANTS.MARITAL_STATUS_OPTIONS.map((o) => ({
-    value: o.value,
-    label: t(o.labelKey),
-  })),
+/* The hook reports validation errors as the English strings in
+   PERSONAL_INFO_CONSTANTS; they are translated here, where they are shown. */
+const V = PERSONAL_INFO_CONSTANTS.VALIDATION;
+const ERROR_KEY = {
+  [V.REQUIRED]: "careerProfile.editor.errors.required",
+  [V.INVALID_PHONE]: "web.profile.personalInfo.errors.invalidPhone",
+  [V.MIN_AGE_ERROR]: "web.profile.personalInfo.errors.minAge",
+  [V.MAX_AGE_ERROR]: "web.profile.personalInfo.errors.maxAge",
+  [V.FUTURE_DOB_ERROR]: "web.profile.personalInfo.errors.futureDob",
+  [V.INVALID_DATE_ERROR]: "documents.certMetadata.invalidDate",
 };
-
-const label = (key) => t(`profile.personalInfo.labels.${key}`);
-const placeholder = (key) => t(`profile.personalInfo.placeholders.${key}`);
 
 function SectionTitle({ children }) {
   return <p className="mt-5 mb-2 text-md font-bold text-heading first:mt-0">{children}</p>;
 }
 
 export function PersonalInfoModal({ onClose, onSaved }) {
+  const { t } = useTranslation();
+  const OPTIONS = {
+    gender: PERSONAL_INFO_CONSTANTS.GENDER_OPTIONS.map((o) => ({ value: o.value, label: t(o.labelKey) })),
+    maritalStatus: PERSONAL_INFO_CONSTANTS.MARITAL_STATUS_OPTIONS.map((o) => ({
+      value: o.value,
+      label: t(o.labelKey),
+    })),
+  };
+
+  const label = (key) => t(`profile.personalInfo.labels.${key}`);
+  const placeholder = (key) => t(`profile.personalInfo.placeholders.${key}`);
+
+  const fieldError = (key) => {
+    const message = errors[key];
+    return message && ERROR_KEY[message] ? t(ERROR_KEY[message]) : message;
+  };
+
   const photoInputRef = useRef(null);
 
   const { formValues, errors, isLoading, isSaving, setFieldValue, handleSave, handlePhotoUpload, handlePhotoDelete } =
     usePersonalInformation((updated) => {
-      showToast({ message: "Profile updated", tone: "success", icon: "user" });
+      showToast({ message: t("web.profile.personalInfo.updated"), tone: "success", icon: "user" });
       onSaved?.(updated);
       onClose?.();
     });
@@ -155,11 +173,11 @@ export function PersonalInfoModal({ onClose, onSaved }) {
           <div className="flex flex-wrap items-center gap-3">
             <Avatar src={photoSrc} name={formValues.fullName} size="lg" />
             <Button variant="outline" size="sm" icon="camera" onClick={() => photoInputRef.current?.click()}>
-              {photoSrc ? "Change" : "Upload"}
+              {photoSrc ? t("web.profile.personalInfo.changePhoto") : t("web.profile.personalInfo.uploadPhoto")}
             </Button>
             {photoSrc ? (
               <Button variant="text" tone="danger" size="sm" icon="trash-alt" onClick={removePhoto}>
-                Remove
+                {t("web.profile.personalInfo.removePhoto")}
               </Button>
             ) : null}
             {/* profileUpload's own filter — image only, 5 MB, converted to WebP
@@ -175,7 +193,7 @@ export function PersonalInfoModal({ onClose, onSaved }) {
           {photoTouched ? (
             <p className="mt-2 text-sm text-hint">
               <Icon name="info-circle" size={12} className="mr-1 inline align-[-1px]" />
-              Applied when you save.
+              {t("web.profile.personalInfo.appliedOnSave")}
             </p>
           ) : null}
 
@@ -186,7 +204,7 @@ export function PersonalInfoModal({ onClose, onSaved }) {
               placeholder={placeholder("fullName")}
               required
               value={formValues.fullName ?? ""}
-              error={errors.fullName}
+              error={fieldError("fullName")}
               onChange={(e) => setFieldValue("fullName", e.target.value)}
             />
 
@@ -196,7 +214,7 @@ export function PersonalInfoModal({ onClose, onSaved }) {
                 placeholder={placeholder("dob")}
                 required
                 value={toPickerDate(formValues.dob)}
-                error={errors.dob}
+                error={fieldError("dob")}
                 onChange={(iso) => setFieldValue("dob", fromPickerDate(iso))}
                 /* 18–100 is the hook's own rule; the picker simply cannot
                    offer what it would reject. */
@@ -212,7 +230,7 @@ export function PersonalInfoModal({ onClose, onSaved }) {
                 required
                 options={OPTIONS.gender}
                 value={formValues.gender ?? ""}
-                error={errors.gender}
+                error={fieldError("gender")}
                 onChange={(value) => setFieldValue("gender", value)}
               />
             </div>
@@ -224,7 +242,7 @@ export function PersonalInfoModal({ onClose, onSaved }) {
                 required
                 options={OPTIONS.maritalStatus}
                 value={formValues.maritalStatus ?? ""}
-                error={errors.maritalStatus}
+                error={fieldError("maritalStatus")}
                 onChange={(value) => setFieldValue("maritalStatus", value)}
               />
               {/* Read-only, as in the app. Nationality is set at registration and
@@ -234,7 +252,7 @@ export function PersonalInfoModal({ onClose, onSaved }) {
                 value={formValues.nationality ?? ""}
                 readOnly
                 disabled
-                hint="Set at registration"
+                hint={t("web.profile.personalInfo.setAtRegistration")}
               />
             </div>
           </div>
@@ -247,7 +265,7 @@ export function PersonalInfoModal({ onClose, onSaved }) {
               value={formValues.email ?? ""}
               readOnly
               disabled
-              hint="Contact support to change your email"
+              hint={t("web.profile.personalInfo.emailHint")}
             />
 
             <div className="mb-3">
@@ -270,7 +288,7 @@ export function PersonalInfoModal({ onClose, onSaved }) {
                   required
                   inputMode="numeric"
                   value={formValues.phone ?? ""}
-                  error={errors.phone}
+                  error={fieldError("phone")}
                   /* Digits only, capped at that country's real maximum — the
                      app strips non-digits here for the same reason. */
                   onChange={(e) => setFieldValue("phone", e.target.value.replace(/\D/g, "").slice(0, phoneMax))}
@@ -284,7 +302,7 @@ export function PersonalInfoModal({ onClose, onSaved }) {
               placeholder={placeholder("altPhone")}
               inputMode="tel"
               value={formValues.altPhone ?? ""}
-              error={errors.altPhone}
+              error={fieldError("altPhone")}
               onChange={(e) => setFieldValue("altPhone", e.target.value)}
             />
           </div>
@@ -296,7 +314,7 @@ export function PersonalInfoModal({ onClose, onSaved }) {
             required
             icon="map-marker-alt"
             value={formValues.location ?? ""}
-            error={errors.location}
+            error={fieldError("location")}
             onChange={(e) => setFieldValue("location", e.target.value)}
           />
         </form>

@@ -1,17 +1,21 @@
+"use client";
+
+import { useTranslation } from "react-i18next";
 import { Card } from "../ui/Card";
 import { Icon } from "../ui/Icon";
 import { Button } from "../ui/Button";
 import { useRouter } from "next/navigation";
 
 export function SubscriptionHeader() {
+  const { t } = useTranslation();
   const router = useRouter();
   return (
     <div className="flex flex-col gap-6">
       <div className="relative">
         <Button variant="text" icon="arrow-left" onClick={() => router.back()} className="absolute top-1 left-0 !px-2 z-10" />
         <div className="text-center px-10 sm:px-12">
-          <h1 className="text-h3 sm:text-h2 font-extrabold text-heading leading-tight">Subscription and Plans</h1>
-          <p className="text-body text-sm mt-2">Choose the plan that helps you get closer to your dream job.</p>
+          <h1 className="text-h3 sm:text-h2 font-extrabold text-heading leading-tight">{t("subscription.screenTitle")}</h1>
+          <p className="text-body text-sm mt-2">{t("subscription.screenSubtitle")}</p>
         </div>
       </div>
       
@@ -21,8 +25,8 @@ export function SubscriptionHeader() {
             <Icon name="gem" size={32} />
           </div>
           <div>
-            <h3 className="font-bold text-primary-vivid text-md">Unlock more opportunities</h3>
-            <p className="text-body text-sm mt-1 leading-snug">Upgrade your plan to apply to more jobs, get featured and receive priority support.</p>
+            <h3 className="font-bold text-primary-vivid text-md">{t("subscription.bannerHeading")}</h3>
+            <p className="text-body text-sm mt-1 leading-snug">{t("subscription.bannerBody")}</p>
           </div>
         </div>
       </Card>

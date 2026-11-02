@@ -1,3 +1,7 @@
+"use client";
+
+import { useTranslation } from "react-i18next";
+
 /* StatusBadge is ported from the app's StatusBadge.jsx, including its status
  * vocabulary and its oddities — see APPLIED below. Pill radius, 8px/5px padding,
  * 10px bold UPPERCASE with 0.5px tracking.
@@ -10,19 +14,19 @@
 /* The app maps several server statuses onto one badge, so the same map lives
  * here rather than being re-derived per screen. */
 const STATUS = {
-  featured: ["bg-primary-light", "text-primary", "Featured"],
-  applied: ["bg-[#EAF0F9]", "text-[#2F80ED]", "Applied"],
-  interview: ["bg-info-light", "text-info-text", "Interview"],
-  interview_scheduled: ["bg-info-light", "text-info-text", "Interview"],
-  selected: ["bg-success-light", "text-success-text", "Selected"],
-  offered: ["bg-success-light", "text-success-text", "Selected"],
-  confirmed: ["bg-success-light", "text-success-text", "Selected"],
-  under_review: ["bg-warning-light", "text-warning-text", "Under Review"],
-  awaiting_confirmation: ["bg-warning-light", "text-warning-text", "Under Review"],
-  rejected: ["bg-danger-light", "text-danger-text", "Rejected"],
-  declined: ["bg-danger-light", "text-danger-text", "Declined"],
-  closed: ["bg-slate-100", "text-slate-600", "Closed"],
-  withdrawn: ["bg-slate-100", "text-slate-600", "Withdrawn"],
+  featured: ["bg-primary-light", "text-primary", "jobs.details.tagFeatured"],
+  applied: ["bg-[#EAF0F9]", "text-[#2F80ED]", "jobs.details.tagApplied"],
+  interview: ["bg-info-light", "text-info-text", "jobs.details.tagInterview"],
+  interview_scheduled: ["bg-info-light", "text-info-text", "jobs.details.tagInterview"],
+  selected: ["bg-success-light", "text-success-text", "jobs.details.tagSelected"],
+  offered: ["bg-success-light", "text-success-text", "jobs.details.tagSelected"],
+  confirmed: ["bg-success-light", "text-success-text", "jobs.details.tagSelected"],
+  under_review: ["bg-warning-light", "text-warning-text", "jobs.details.tagUnderReview"],
+  awaiting_confirmation: ["bg-warning-light", "text-warning-text", "jobs.details.tagUnderReview"],
+  rejected: ["bg-danger-light", "text-danger-text", "jobs.details.tagRejected"],
+  declined: ["bg-danger-light", "text-danger-text", "web.ui.badge.declined"],
+  closed: ["bg-slate-100", "text-slate-600", "applications.tabs.closed"],
+  withdrawn: ["bg-slate-100", "text-slate-600", "web.ui.badge.withdrawn"],
 };
 
 
@@ -33,7 +37,11 @@ const STATUS = {
 
 export function StatusBadge({ status, label, className = "" }) {
   const key = String(status ?? "").toLowerCase().replace(/\s+/g, "_");
-  const [bg, fg, fallback] = STATUS[key] ?? ["bg-canvas", "text-body", status];
+  const { t } = useTranslation();
+  const known = STATUS[key];
+  const [bg, fg] = known ?? ["bg-canvas", "text-body"];
+  // Unknown statuses fall back to the raw server value, untranslated.
+  const fallback = known ? t(known[2]) : status;
 
   return (
     <span
@@ -52,6 +60,7 @@ const CHIP_TONE = {
 };
 
 export function Chip({ children, tone = "default", onRemove, className = "" }) {
+  const { t } = useTranslation();
   return (
     <span
       className={`inline-flex items-center gap-[5px] rounded-round px-3 py-[5px] text-xs font-semibold ${
@@ -63,7 +72,7 @@ export function Chip({ children, tone = "default", onRemove, className = "" }) {
         <button
           type="button"
           onClick={onRemove}
-          aria-label={`Remove ${typeof children === "string" ? children : "filter"}`}
+          aria-label={t("web.ui.badge.remove", { name: typeof children === "string" ? children : t("web.ui.badge.filter") })}
           className="-mr-1 cursor-pointer rounded-round px-1 leading-none opacity-70 hover:opacity-100"
         >
           ×

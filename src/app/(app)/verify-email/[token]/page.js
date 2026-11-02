@@ -21,11 +21,13 @@
 
 import { use, useEffect, useState } from "react";
 import Link from "next/link";
+import { useTranslation } from "react-i18next";
 import apiClient from "@/api/client";
 import { getErrorMessage } from "@/i18n/getErrorMessage";
 import { Button, Card, Icon } from "@/components/ui";
 
 export default function VerifyEmailPage({ params }) {
+  const { t } = useTranslation();
   const { token } = use(params);
   const [state, setState] = useState("verifying");
   const [error, setError] = useState(null);
@@ -54,20 +56,20 @@ export default function VerifyEmailPage({ params }) {
     verifying: {
       icon: "sync-alt",
       tone: "bg-primary-light text-primary",
-      title: "Verifying your email…",
-      body: "This only takes a moment.",
+      title: t("web.auth.verifyEmail.verifyingTitle"),
+      body: t("web.auth.verifyEmail.verifyingBody"),
     },
     verified: {
       icon: "check-circle",
       tone: "bg-success-light text-success",
-      title: "Email verified",
-      body: "Your address is confirmed. You can sign in now.",
+      title: t("web.auth.verifyEmail.verifiedTitle"),
+      body: t("web.auth.verifyEmail.verifiedBody"),
     },
     failed: {
       icon: "exclamation-circle",
       tone: "bg-danger-light text-danger",
-      title: "That link didn't work",
-      body: error || "The link may have expired or already been used.",
+      title: t("web.auth.verifyEmail.failedTitle"),
+      body: error || t("web.auth.verifyEmail.failedBody"),
     },
   }[state];
 
@@ -83,7 +85,7 @@ export default function VerifyEmailPage({ params }) {
 
         {state !== "verifying" ? (
           <Link href="/login" className="mt-5 block">
-            <Button fullWidth>Go to sign in</Button>
+            <Button fullWidth>{t("web.auth.verifyEmail.goToLogin")}</Button>
           </Link>
         ) : null}
       </Card>

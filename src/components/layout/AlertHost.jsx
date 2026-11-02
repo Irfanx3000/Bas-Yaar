@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { setAlertHost } from "@/utils/alertRef";
-import { t } from "@/i18n";
+import { useTranslation } from "react-i18next";
 import { Button, Icon, Modal } from "@/components/ui";
 
 /* Renders the app's global alerts.
@@ -30,6 +30,7 @@ const TONE = {
 };
 
 export function AlertHost() {
+  const { t } = useTranslation();
   const [alert, setAlert] = useState(null);
 
   useEffect(() => {
@@ -57,7 +58,7 @@ export function AlertHost() {
 
   const buttons = alert.buttons?.length
     ? alert.buttons
-    : [{ text: "OK", style: "default" }];
+    : [{ text: t("common.ok"), style: "default" }];
 
   return (
     <Modal

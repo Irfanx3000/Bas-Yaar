@@ -3,8 +3,10 @@
 import { useRef } from 'react';
 import Link from 'next/link';
 import { Icon } from '@/components/ui/Icon';
+import { useTranslation } from "react-i18next";
 
 export function TestimonialsSection() {
+  const { t } = useTranslation();
   const scrollRef = useRef(null);
   
   const scroll = (direction) => {
@@ -15,27 +17,27 @@ export function TestimonialsSection() {
   };
   const testimonials = [
     {
-      quote: "“CrewApply made it so much easier for me to manage my applications and keep track of everything in one place.”",
+      quoteKey: "web.landing.testimonials.items.rohit.quote",
       author: "Rohit S.",
-      role: "Deck Officer",
+      roleKey: "web.landing.testimonials.items.rohit.role",
       image: "https://images.unsplash.com/photo-1577744386762-cb6daea7d341?auto=format&fit=crop&w=400&q=80"
     },
     {
-      quote: "“A very useful platform for anyone looking to build a career in the cruise industry. The document management feature is a game changer.”",
+      quoteKey: "web.landing.testimonials.items.priya.quote",
       author: "Priya M.",
-      role: "Hospitality Crew",
+      roleKey: "web.landing.testimonials.items.priya.role",
       image: "https://images.unsplash.com/photo-1599839619722-39751411ea63?auto=format&fit=crop&w=400&q=80"
     },
     {
-      quote: "“The best part is the application tracking. I always know the status, and the consultation feature really helped me plan my next step.”",
+      quoteKey: "web.landing.testimonials.items.ahmed.quote",
       author: "Ahmed K.",
-      role: "Engine Cadet",
+      roleKey: "web.landing.testimonials.items.ahmed.role",
       image: "https://images.unsplash.com/photo-1504322676766-417240f993d0?auto=format&fit=crop&w=400&q=80"
     },
     {
-      quote: "“I finally feel in control of my maritime career. The interface is clean, fast, and gives me exactly what I need.”",
+      quoteKey: "web.landing.testimonials.items.carlos.quote",
       author: "Carlos D.",
-      role: "Chief Engineer",
+      roleKey: "web.landing.testimonials.items.carlos.role",
       image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=400&q=80"
     }
   ];
@@ -48,19 +50,19 @@ export function TestimonialsSection() {
         <div className="flex flex-col lg:flex-row lg:items-end justify-between mb-8 lg:mb-12 gap-6">
           <div className="max-w-2xl text-center lg:text-left mx-auto lg:mx-0">
             <h2 className="text-sm font-bold tracking-wide text-muted uppercase mb-2">
-              REAL PEOPLE. REAL JOURNEYS.
+              {t("web.landing.testimonials.eyebrow")}
             </h2>
             <h3 className="text-h2 lg:text-h1 font-extrabold leading-tight mb-2">
-              <span className="text-heading">Trusted by </span><br className="hidden lg:block" />
-              <span className="text-primary">Maritime Professionals.</span>
+              <span className="text-heading">{t("web.landing.testimonials.title")}</span><br className="hidden lg:block" />
+              <span className="text-primary">{t("web.landing.testimonials.titleHighlight")}</span>
             </h3>
             <p className="text-lg text-body font-medium block lg:hidden mt-4">
-              Hear from crew members who've found better opportunities and taken control of their careers with CrewApply.
+              {t("web.landing.testimonials.subtitle")}
             </p>
           </div>
           <div className="hidden lg:flex shrink-0">
             <Link href="/stories" className="text-primary font-bold hover:gap-2 transition-all flex items-center gap-1">
-              View More Stories <span>&rarr;</span>
+              {t("web.landing.testimonials.viewMore")} <span>&rarr;</span>
             </Link>
           </div>
         </div>
@@ -78,11 +80,11 @@ export function TestimonialsSection() {
           </div>
 
           <div ref={scrollRef} className="flex overflow-x-auto snap-x snap-mandatory no-scrollbar gap-4 md:gap-6 pb-4">
-            {testimonials.map((t, i) => (
+            {testimonials.map((item, i) => (
               <div key={i} className="min-w-[280px] w-[80vw] max-w-[320px] md:min-w-[340px] md:w-[calc(33.333%-16px)] md:shrink-0 snap-center bg-white border border-line-soft rounded-2xl shadow-sm p-4 flex flex-col md:flex-row items-center gap-4 md:gap-4 hover:shadow-md transition-shadow">
                 
                 <div className="relative w-full md:w-28 md:shrink-0 aspect-[4/3] md:aspect-[3/4] rounded-xl overflow-hidden bg-gray-100 flex items-center justify-center group cursor-pointer mb-4 md:mb-0">
-                   <img src={t.image} alt={t.author} className="absolute inset-0 w-full h-full object-cover" />
+                   <img src={item.image} alt={item.author} className="absolute inset-0 w-full h-full object-cover" />
                    {/* Video Play Button Overlay */}
                    <div className="w-10 h-10 rounded-full bg-primary/90 text-white flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform z-10 relative">
                      <Icon name="play" size={16} className="ml-1" />
@@ -90,10 +92,10 @@ export function TestimonialsSection() {
                 </div>
                 
                 <div className="flex flex-col flex-1 w-full text-left">
-                  <p className="text-body text-sm mb-4 flex-1 font-medium italic">{t.quote}</p>
+                  <p className="text-body text-sm mb-4 flex-1 font-medium italic">{t(item.quoteKey)}</p>
                   <div>
-                    <h4 className="font-bold text-heading text-sm">{t.author}</h4>
-                    <p className="text-xs text-body">{t.role}</p>
+                    <h4 className="font-bold text-heading text-sm">{item.author}</h4>
+                    <p className="text-xs text-body">{t(item.roleKey)}</p>
                   </div>
                 </div>
 
@@ -118,8 +120,8 @@ export function TestimonialsSection() {
                 <Icon name="users" size={24} />
               </div>
               <div>
-                <h4 className="font-bold text-heading text-sm sm:text-base leading-tight">A Smarter Way to Build Your Career.</h4>
-                <p className="text-xs text-body mt-1">Join thousands of maritime professionals who trust CrewApply.</p>
+                <h4 className="font-bold text-heading text-sm sm:text-base leading-tight">{t("web.landing.common.smarterWay")}</h4>
+                <p className="text-xs text-body mt-1">{t("web.landing.testimonials.joinDesc")}</p>
               </div>
             </div>
             <Link href="/signup" className="w-10 h-10 shrink-0 bg-primary text-white rounded-full flex items-center justify-center hover:bg-primary-hover transition-colors shadow-sm">
@@ -129,7 +131,7 @@ export function TestimonialsSection() {
           
           <div className="text-center mt-6">
             <Link href="/stories" className="inline-flex items-center gap-2 text-primary font-bold hover:gap-3 transition-all">
-              View More Stories <span>&rarr;</span>
+              {t("web.landing.testimonials.viewMore")} <span>&rarr;</span>
             </Link>
           </div>
         </div>

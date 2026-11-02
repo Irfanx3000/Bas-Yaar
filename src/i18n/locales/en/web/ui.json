@@ -1,0 +1,43 @@
+{
+  "badge": {
+    "declined": "Declined",
+    "withdrawn": "Withdrawn",
+    "filter": "filter",
+    "remove": "Remove {{name}}"
+  },
+  "cardMedia": {
+    "vesselImage": "Vessel Image"
+  },
+  "datePicker": {
+    "placeholder": "DD-MM-YYYY",
+    "chooseDate": "Choose a date",
+    "previousMonth": "Previous month",
+    "nextMonth": "Next month",
+    "clear": "Clear"
+  },
+  "display": {
+    "changePhoto": "Change photo",
+    "progress": "Progress"
+  },
+  "feedback": {
+    "loadFailed": "Couldn't load this",
+    "tryAgain": "Try again"
+  },
+  "modal": {
+    "close": "Close",
+    "confirmTitle": "Are you sure?",
+    "confirm": "Confirm"
+  },
+  "pagination": {
+    "label": "Pagination",
+    "previousPage": "Previous page",
+    "nextPage": "Next page"
+  },
+  "promoBanner": {
+    "showBanner": "Show banner {{current}} of {{total}}"
+  },
+  "select": {
+    "placeholder": "Select an option",
+    "noOptions": "No options"
+  }
+}

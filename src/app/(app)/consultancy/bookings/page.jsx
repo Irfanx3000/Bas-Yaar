@@ -22,7 +22,7 @@ import Link from "next/link";
 import { useConsultancyBookings } from "@/hooks/useConsultancyBookings";
 import { formatDate } from "@/utils/format";
 import { formatTime12h } from "@/lib/time";
-import { t } from "@/i18n";
+import { useTranslation } from "react-i18next";
 import { Button, Card, EmptyState, Icon, LoadingState, StatusBadge } from "@/components/ui";
 
 const TOPIC_LABEL_KEYS = {
@@ -43,6 +43,7 @@ const STATUS_LABEL_KEYS = {
 };
 
 function BookingCard({ booking }) {
+  const { t } = useTranslation();
   const slot = booking.slot;
 
   return (
@@ -87,6 +88,7 @@ function BookingCard({ booking }) {
 }
 
 export default function ConsultancyBookingsPage() {
+  const { t } = useTranslation();
   const { bookings, isLoading } = useConsultancyBookings();
 
   return (
@@ -95,7 +97,7 @@ export default function ConsultancyBookingsPage() {
         <h1 className="text-h2 font-extrabold text-heading">{t("consultancy.myBookings.screenTitle")}</h1>
         <Link href="/consultancy" className="shrink-0">
           <Button variant="outline" size="sm" icon="calendar-alt">
-            Book a session
+            {t("web.account.consultancy.bookSession")}
           </Button>
         </Link>
       </header>
@@ -109,7 +111,7 @@ export default function ConsultancyBookingsPage() {
           message={t("consultancy.myBookings.emptySubtitle")}
           action={
             <Link href="/consultancy">
-              <Button>Book a session</Button>
+              <Button>{t("web.account.consultancy.bookSession")}</Button>
             </Link>
           }
         />
